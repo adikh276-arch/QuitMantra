@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QuitMantra — Lotus Garden</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #01080d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  #app-wrap {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  #pond-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    border-radius: 44px;
+  }
+  #ui {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---- HEADER ---- */
+  #header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 52px 24px 0;
+    pointer-events: none;
+  }
+  #wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.85);
+  }
+  #settings-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: all;
+    cursor: pointer;
+  }
+
+  /* ---- DAY COUNTER ---- */
+  #day-counter {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
+  #sober-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: rgba(0,180,166,0.7);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  #day-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 88px;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow: 0 0 40px rgba(0,180,166,0.4), 0 2px 20px rgba(0,0,0,0.6);
+    letter-spacing: -0.02em;
+    transition: all 0.4s ease;
+  }
+  #day-suffix {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 18px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  #milestone-badge {
+    margin-top: 16px;
+    padding: 6px 16px;
+    background: rgba(0,180,166,0.15);
+    border: 1px solid rgba(0,180,166,0.3);
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(0,220,200,0.9);
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(8px);
+    transition: all 0.5s ease;
+  }
+
+  /* ---- BOTTOM SHEET ---- */
+  #bottom-sheet {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, rgba(4,18,24,0.92) 0%, rgba(3,14,20,0.98) 100%);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0 0 44px 44px;
+    padding: 16px 20px 36px;
+    pointer-events: all;
+  }
+  #sheet-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  #stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .stat-item {
+    text-align: center;
+    flex: 1;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  #next-milestone {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .milestone-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00b4a6;
+    box-shadow: 0 0 8px rgba(0,180,166,0.6);
+    flex-shrink: 0;
+  }
+  .milestone-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+  }
+  .milestone-text strong {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+  #craving-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #00b4a6, #007a72);
+    border: none;
+    border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    margin-bottom: 10px;
+    animation: breathe 3s ease-in-out infinite;
+    pointer-events: all;
+  }
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 4px 20px rgba(0,180,166,0.35); }
+    50% { box-shadow: 0 4px 35px rgba(0,180,166,0.65); }
+  }
+  #guide-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    cursor: pointer;
+    pointer-events: all;
+  }
+  #guide-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a5c5a, #0d3a38);
+    border: 1.5px solid rgba(0,180,166,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .guide-info { flex: 1; }
+  .guide-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+  .guide-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 1px;
+  }
+  .guide-arrow {
+    color: rgba(255,255,255,0.3);
+    font-size: 14px;
+  }
+
+  /* ---- DAY SLIDER (DEMO CONTROL) ---- */
+  #demo-control {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: all;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  #demo-control label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  #day-slider {
+    width: 120px;
+    accent-color: #00b4a6;
+    cursor: pointer;
+  }
+  #slider-val {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #00b4a6;
+    min-width: 40px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app-wrap">
+  <canvas id="pond-canvas"></canvas>
+
+  <div id="ui">
+    <div id="header">
+      <div id="wordmark">QuitMantra</div>
+      <div id="settings-btn">
+        <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="day-counter">
+      <div id="sober-label">Sober</div>
+      <div id="day-number">1</div>
+      <div id="day-suffix">days</div>
+      <div id="milestone-badge">🌱 First seed planted</div>
+    </div>
+
+    <div id="bottom-sheet">
+      <div id="sheet-handle"></div>
+      <div id="stats-row">
+        <div class="stat-item">
+          <div class="stat-num" id="stat-days">1</div>
+          <div class="stat-label">Days</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-weeks">0</div>
+          <div class="stat-label">Weeks</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-hours">24</div>
+          <div class="stat-label">Hours</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-badges">0</div>
+          <div class="stat-label">Badges</div>
+        </div>
+      </div>
+
+      <div id="next-milestone">
+        <div class="milestone-dot"></div>
+        <div class="milestone-text" id="milestone-text">
+          <strong>Day 7 — First Bloom</strong><br>Keep going, your lotus is budding
+        </div>
+      </div>
+
+      <button id="craving-btn">I feel a craving</button>
+
+      <div id="guide-card">
+        <div id="guide-avatar">🧘</div>
+        <div class="guide-info">
+          <div class="guide-name">Talk to a guide</div>
+          <div class="guide-sub">Connect with a wellness counselor</div>
+        </div>
+        <div class="guide-arrow">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO CONTROL — outside app wrap so it floats above -->
+<div id="demo-control" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:999;">
+  <label>Demo Day</label>
+  <input type="range" id="day-slider" min="0" max="30" value="1" step="1">
+  <span id="slider-val">Day 1</span>
+</div>
+
+<script>
+// =============================================
+//  QUITMANTRA — PIXIJS LOTUS POND
+// =============================================
+
+const W = 390, H = 844;
+const WATER_Y = 310; // where water surface begins
+
+// Init PixiJS
+const app = new PIXI.Application({
+  view: document.getElementById('pond-canvas'),
+  width: W, height: H,
+  antialias: true,
+  backgroundColor: 0x020c12,
+  resolution: Math.min(window.devicePixelRatio || 1, 2),
+  autoDensity: true,
+});
+
+// =============================================
+//  LAYERS (back → front)
+// =============================================
+const layers = {
+  sky:        new PIXI.Container(),
+  stars:      new PIXI.Container(),
+  mistBg:     new PIXI.Container(),
+  water:      new PIXI.Container(),
+  waterFx:    new PIXI.Container(),
+  fish:       new PIXI.Container(),
+  lilypads:   new PIXI.Container(),
+  lotuses:    new PIXI.Container(),
+  ripples:    new PIXI.Container(),
+  dragonfly:  new PIXI.Container(),
+  fireflies:  new PIXI.Container(),
+  mistFg:     new PIXI.Container(),
+};
+Object.values(layers).forEach(l => app.stage.addChild(l));
+
+// =============================================
+//  SKY GRADIENT
+// =============================================
+function buildSky() {
+  // Layered sky bands
+  const skyColors = [
+    [0, 0x010810],
+    [0.25, 0x030f1a],
+    [0.55, 0x061820],
+    [0.75, 0x0a2535],
+    [1.0, 0x0d3040],
+  ];
+  const g = new PIXI.Graphics();
+  const bandCount = skyColors.length - 1;
+  for (let i = 0; i < bandCount; i++) {
+    const y0 = skyColors[i][0] * WATER_Y;
+    const y1 = skyColors[i+1][0] * WATER_Y;
+    const h = y1 - y0;
+    g.beginFill(skyColors[i+1][1]);
+    g.drawRect(0, y0, W, h + 1);
+    g.endFill();
+  }
+  layers.sky.addChild(g);
+
+  // Moon
+  const moon = new PIXI.Graphics();
+  moon.beginFill(0xeef6ff, 0.9);
+  moon.drawCircle(0, 0, 18);
+  moon.endFill();
+  // Shadow crescent
+  moon.beginFill(0x041520, 0.85);
+  moon.drawCircle(6, -3, 16);
+  moon.endFill();
+  moon.x = W * 0.75; moon.y = 80;
+  // Glow
+  const moonGlow = new PIXI.Graphics();
+  moonGlow.beginFill(0x9ec8ff, 0.07);
+  moonGlow.drawCircle(0, 0, 55);
+  moonGlow.endFill();
+  moonGlow.x = moon.x; moonGlow.y = moon.y;
+  layers.sky.addChild(moonGlow, moon);
+
+  // Horizon golden glow
+  const glow = new PIXI.Graphics();
+  glow.beginFill(0xf4a857, 0.1);
+  glow.drawEllipse(W * 0.45, WATER_Y + 5, 200, 55);
+  glow.endFill();
+  layers.sky.addChild(glow);
+}
+
+// =============================================
+//  STARS
+// =============================================
+const starObjs = [];
+function buildStars() {
+  for (let i = 0; i < 80; i++) {
+    const g = new PIXI.Graphics();
+    const size = 0.5 + Math.random() * 1.5;
+    g.beginFill(0xffffff, 0.7 + Math.random() * 0.3);
+    g.drawCircle(0, 0, size);
+    g.endFill();
+    g.x = Math.random() * W;
+    g.y = Math.random() * (WATER_Y - 30);
+    g._phase = Math.random() * Math.PI * 2;
+    g._speed = 0.4 + Math.random() * 1.2;
+    g._base = 0.4 + Math.random() * 0.5;
+    starObjs.push(g);
+    layers.stars.addChild(g);
+  }
+}
+
+// =============================================
+//  WATER BODY
+// =============================================
+const waterGraphics = new PIXI.Graphics();
+const waterSurface = new PIXI.Graphics();
+const waterShimmer = new PIXI.Graphics();
+function buildWater() {
+  // Water body
+  waterGraphics.beginFill(0x041620);
+  waterGraphics.drawRect(0, WATER_Y, W, H - WATER_Y);
+  waterGraphics.endFill();
+  // Deep center pool
+  waterGraphics.beginFill(0x020d16, 0.5);
+  waterGraphics.drawEllipse(W * 0.48, WATER_Y + 160, 180, 120);
+  waterGraphics.endFill();
+  layers.water.addChild(waterGraphics, waterSurface, waterShimmer);
+}
+
+function animateWater(t) {
+  // Animated surface wave
+  waterSurface.clear();
+  waterSurface.lineStyle(1.5, 0x00b4a6, 0.25);
+  waterSurface.moveTo(0, WATER_Y);
+  for (let x = 0; x <= W; x += 4) {
+    const y = WATER_Y
+      + Math.sin(x * 0.018 + t * 0.8) * 2.5
+      + Math.sin(x * 0.04 + t * 1.4) * 1.2;
+    if (x === 0) waterSurface.moveTo(x, y);
+    else waterSurface.lineTo(x, y);
+  }
+  // Secondary wave
+  waterSurface.lineStyle(1, 0x00b4a6, 0.1);
+  for (let x = 0; x <= W; x += 4) {
+    const y = WATER_Y + 10
+      + Math.sin(x * 0.025 + t * 0.6 + 1) * 1.8
+      + Math.sin(x * 0.06 + t * 1.1) * 0.8;
+    if (x === 0) waterSurface.moveTo(x, y);
+    else waterSurface.lineTo(x, y);
+  }
+
+  // Light shimmer streaks on water
+  waterShimmer.clear();
+  for (let i = 0; i < 3; i++) {
+    const alpha = (Math.sin(t * 0.5 + i * 2.1) * 0.5 + 0.5) * 0.07;
+    waterShimmer.beginFill(0xb0e8e0, alpha);
+    const sx = W * 0.2 + i * W * 0.25;
+    waterShimmer.drawEllipse(sx, WATER_Y + 80 + i * 30, 30 + i * 15, 8);
+    waterShimmer.endFill();
+  }
+}
+
+// =============================================
+//  MIST
+// =============================================
+function buildMist() {
+  // Background mist (near horizon)
+  const mistBg = new PIXI.Graphics();
+  mistBg.beginFill(0x8ecfcf, 0.04);
+  mistBg.drawEllipse(W * 0.5, WATER_Y + 20, W * 0.9, 50);
+  mistBg.endFill();
+  mistBg.beginFill(0x8ecfcf, 0.03);
+  mistBg.drawEllipse(W * 0.3, WATER_Y + 30, W * 0.5, 35);
+  mistBg.endFill();
+  layers.mistBg.addChild(mistBg);
+
+  // Foreground mist strips (animated)
+  for (let i = 0; i < 4; i++) {
+    const m = new PIXI.Graphics();
+    m.beginFill(0xaae0d8, 0.025 + i * 0.01);
+    m.drawEllipse(0, 0, 120 + i * 40, 18);
+    m.endFill();
+    m.x = 30 + i * 85;
+    m.y = WATER_Y + 15 + i * 12;
+    m._phase = i * 1.4;
+    layers.mistFg.addChild(m);
+  }
+}
+
+// =============================================
+//  LOTUS POSITIONS — 20 spots on the pond
+// =============================================
+const LOTUS_POSITIONS = [
+  { x: 195, y: WATER_Y + 60 },
+  { x: 120, y: WATER_Y + 85 },
+  { x: 270, y: WATER_Y + 75 },
+  { x: 80,  y: WATER_Y + 130 },
+  { x: 320, y: WATER_Y + 110 },
+  { x: 165, y: WATER_Y + 140 },
+  { x: 230, y: WATER_Y + 155 },
+  { x: 55,  y: WATER_Y + 185 },
+  { x: 340, y: WATER_Y + 170 },
+  { x: 145, y: WATER_Y + 210 },
+  { x: 285, y: WATER_Y + 220 },
+  { x: 100, y: WATER_Y + 250 },
+  { x: 210, y: WATER_Y + 260 },
+  { x: 360, y: WATER_Y + 230 },
+  { x: 60,  y: WATER_Y + 300 },
+  { x: 175, y: WATER_Y + 310 },
+  { x: 305, y: WATER_Y + 290 },
+  { x: 255, y: WATER_Y + 340 },
+  { x: 120, y: WATER_Y + 360 },
+  { x: 340, y: WATER_Y + 350 },
+];
+
+// =============================================
+//  DRAW LOTUS at (x,y) with stage 0..1
+// =============================================
+function drawLotus(g, x, y, stage, sway) {
+  if (stage <= 0) return;
+
+  const s = Math.max(0, Math.min(1, stage));
+  const stemH = 18 + s * 22;
+  const topX = x + sway * 8;
+  const topY = y - stemH;
+
+  // STEM
+  g.lineStyle(2, 0x2a6b2a, 0.7 + s * 0.2);
+  g.moveTo(x, y);
+  g.bezierCurveTo(x + sway * 3, y - stemH * 0.5, topX - sway, topY + 5, topX, topY);
+
+  // LILY PAD (appears at stage > 0.15)
+  if (s > 0.15) {
+    const padAlpha = Math.min(1, (s - 0.15) / 0.3);
+    const padW = 10 + s * 20;
+    const padH = padW * 0.45;
+    const padX = x + sway * 2;
+    const padY = y - 4;
+
+    g.lineStyle(1, 0x1d5c1d, 0.5 * padAlpha);
+    g.beginFill(0x2d7a35, 0.7 * padAlpha);
+    g.drawEllipse(padX, padY, padW, padH);
+    g.endFill();
+    // Pad notch line
+    g.lineStyle(0.8, 0x1d5c1d, 0.4 * padAlpha);
+    g.moveTo(padX, padY);
+    g.lineTo(padX, padY - padH * 0.95);
+    // Pad vein
+    g.lineStyle(0.5, 0x1d5c1d, 0.2 * padAlpha);
+    g.moveTo(padX, padY);
+    g.lineTo(padX - padW * 0.7, padY - padH * 0.5);
+    g.moveTo(padX, padY);
+    g.lineTo(padX + padW * 0.7, padY - padH * 0.5);
+  }
+
+  // PETALS
+  const petalSize = 5 + s * 14;
+
+  if (s < 0.35) {
+    // STAGE 1: tight bud
+    const budH = 8 + s * 10;
+    g.lineStyle(0.5, 0xff9fb2, 0.5);
+    g.beginFill(0xd4e8b0, 0.9);
+    g.drawEllipse(topX, topY - budH * 0.4, 3.5, budH * 0.6);
+    g.endFill();
+    g.beginFill(0xffb3c6, 0.8);
+    g.drawEllipse(topX - 2, topY - budH * 0.35, 3, budH * 0.5);
+    g.endFill();
+    g.beginFill(0xffb3c6, 0.8);
+    g.drawEllipse(topX + 2, topY - budH * 0.35, 3, budH * 0.5);
+    g.endFill();
+
+  } else if (s < 0.65) {
+    // STAGE 2: half open
+    const openFactor = (s - 0.35) / 0.3;
+    const numPetals = 6;
+    for (let i = 0; i < numPetals; i++) {
+      const angle = (i / numPetals) * Math.PI * 2;
+      const spread = openFactor * 0.7;
+      const px = topX + Math.sin(angle) * petalSize * spread * 0.6;
+      const py = topY + Math.cos(angle) * petalSize * spread * 0.25 - petalSize * (1 - openFactor) * 0.4;
+      const pw = petalSize * 0.38;
+      const ph = petalSize * 0.75;
+      const alpha = 0.7 + openFactor * 0.25;
+      const col = i % 2 === 0 ? 0xffb3c6 : 0xffc8d4;
+      g.lineStyle(0.4, 0xff9fb2, 0.4);
+      g.beginFill(col, alpha);
+      g.drawEllipse(px, py, pw, ph);
+      g.endFill();
+    }
+    // Center
+    g.beginFill(0xfff0b0, 0.8);
+    g.drawCircle(topX, topY, petalSize * 0.18);
+    g.endFill();
+
+  } else {
+    // STAGE 3: full bloom
+    const numOuter = 9;
+    const numInner = 6;
+
+    // Outer petals
+    for (let i = 0; i < numOuter; i++) {
+      const angle = (i / numOuter) * Math.PI * 2;
+      const px = topX + Math.sin(angle) * petalSize * 0.62;
+      const py = topY + Math.cos(angle) * petalSize * 0.32;
+      const col = i % 3 === 0 ? 0xffd6e0 : i % 3 === 1 ? 0xffb3c6 : 0xffc0d0;
+      g.lineStyle(0.4, 0xff85a5, 0.35);
+      g.beginFill(col, 0.82);
+      g.drawEllipse(px, py, petalSize * 0.38, petalSize * 0.68);
+      g.endFill();
+    }
+    // Inner petals
+    for (let i = 0; i < numInner; i++) {
+      const angle = (i / numInner) * Math.PI * 2 + 0.35;
+      const px = topX + Math.sin(angle) * petalSize * 0.32;
+      const py = topY + Math.cos(angle) * petalSize * 0.18;
+      g.lineStyle(0.3, 0xffaac0, 0.3);
+      g.beginFill(0xffe8ef, 0.9);
+      g.drawEllipse(px, py, petalSize * 0.28, petalSize * 0.48);
+      g.endFill();
+    }
+    // Golden center
+    g.lineStyle(0);
+    g.beginFill(0xf5c842, 1);
+    g.drawCircle(topX, topY, petalSize * 0.22);
+    g.endFill();
+    g.beginFill(0xe8a820, 0.8);
+    g.drawCircle(topX, topY, petalSize * 0.13);
+    g.endFill();
+    // Stamens
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      g.beginFill(0xf5c842, 0.7);
+      g.drawCircle(topX + Math.sin(a) * petalSize * 0.17, topY + Math.cos(a) * petalSize * 0.1, 1.2);
+      g.endFill();
+    }
+    // Soft glow under full bloom
+    g.beginFill(0xffb3c6, 0.06);
+    g.drawCircle(topX, topY, petalSize * 1.1);
+    g.endFill();
+  }
+}
+
+// =============================================
+//  LOTUS OBJECTS
+// =============================================
+const lotusGraphics = [];
+const lotusData = LOTUS_POSITIONS.map((pos, i) => ({
+  ...pos,
+  gfx: (() => {
+    const g = new PIXI.Graphics();
+    layers.lotuses.addChild(g);
+    lotusGraphics.push(g);
+    return g;
+  })(),
+  sway: 0,
+  swayTarget: 0,
+  phase: Math.random() * Math.PI * 2,
+  swaySpeed: 0.3 + Math.random() * 0.4,
+  active: false,
+  stage: 0,
+  targetStage: 0,
+}));
+
+function renderLotuses(currentDay, t) {
+  lotusData.forEach((l, i) => {
+    const isActive = i < currentDay;
+    if (!isActive) {
+      l.gfx.clear();
+      return;
+    }
+    // Stage based on how long ago this lotus was planted
+    const daysOld = currentDay - i;
+    const target = Math.min(1, daysOld / 5); // fully blooms after 5 days
+    l.targetStage = target;
+    l.stage += (l.targetStage - l.stage) * 0.05;
+
+    // Sway
+    l.sway = Math.sin(t * l.swaySpeed + l.phase) * 0.5;
+
+    l.gfx.clear();
+    drawLotus(l.gfx, l.x, l.y, l.stage, l.sway);
+  });
+}
+
+// =============================================
+//  FISH
+// =============================================
+const fishData = [
+  { color: 0xff6b35, accent: 0xffffff, size: 1.0, pathOffset: 0,    depth: 0.6, speed: 0.22 },
+  { color: 0xff4444, accent: 0xffcc88, size: 0.7, pathOffset: 2.1,  depth: 0.8, speed: 0.17 },
+  { color: 0xffffff, accent: 0xff8844, size: 0.85, pathOffset: 4.3, depth: 0.7, speed: 0.25 },
+];
+const fishGfx = [];
+fishData.forEach(f => {
+  const g = new PIXI.Graphics();
+  layers.fish.addChild(g);
+  fishGfx.push(g);
+});
+
+function drawFish(g, x, y, angle, scale, color, accent, alpha) {
+  g.clear();
+  g.alpha = alpha;
+
+  // Body
+  g.lineStyle(0);
+  g.beginFill(color, 0.9);
+  // Draw fish body as squashed ellipse
+  const bw = 16 * scale, bh = 7 * scale;
+  g.drawEllipse(x, y, bw, bh);
+  g.endFill();
+
+  // Tail
+  g.beginFill(color, 0.8);
+  const tx = x - Math.cos(angle) * bw;
+  const ty = y - Math.sin(angle) * bw;
+  g.drawPolygon([
+    tx, ty,
+    tx - Math.cos(angle - 0.9) * bh * 2,
+    ty - Math.sin(angle - 0.9) * bh * 2,
+    tx - Math.cos(angle + 0.9) * bh * 2,
+    ty - Math.sin(angle + 0.9) * bh * 2,
+  ]);
+  g.endFill();
+
+  // Accent patches
+  g.beginFill(accent, 0.7);
+  g.drawEllipse(x + Math.cos(angle) * bw * 0.3, y + Math.sin(angle) * bw * 0.3, bw * 0.35, bh * 0.6);
+  g.endFill();
+
+  // Eye
+  g.beginFill(0x111111);
+  const ex = x + Math.cos(angle) * bw * 0.55;
+  const ey = y + Math.sin(angle) * bw * 0.55 - bh * 0.2;
+  g.drawCircle(ex, ey, 1.5 * scale);
+  g.endFill();
+}
+
+function animateFish(t, currentDay) {
+  fishData.forEach((f, i) => {
+    const visible = currentDay >= 3 + i * 2;
+    if (!visible) { fishGfx[i].alpha = 0; return; }
+
+    // Swim path: figure-8-ish loop across pond
+    const cx = W * 0.48, cy = WATER_Y + 150;
+    const rx = 130, ry = 70;
+    const tOffset = t * f.speed + f.pathOffset;
+    const x = cx + Math.cos(tOffset) * rx;
+    const y = cy + Math.sin(tOffset * 2) * ry * 0.5;
+    const angle = Math.atan2(
+      Math.cos(tOffset * 2) * ry * 0.5 * 2 * f.speed,
+      -Math.sin(tOffset) * rx * f.speed
+    );
+    const alpha = 0.35 + f.depth * 0.4;
+    drawFish(fishGfx[i], x, y, angle, f.size, f.color, f.accent, alpha);
+  });
+}
+
+// =============================================
+//  RIPPLES
+// =============================================
+const ripples = [];
+const rippleContainer = new PIXI.Graphics();
+layers.ripples.addChild(rippleContainer);
+let rippleTimer = 0;
+
+function spawnRipple() {
+  const rx = 60 + Math.random() * 270;
+  const ry = WATER_Y + 40 + Math.random() * 270;
+  ripples.push({ x: rx, y: ry, r: 2, maxR: 30 + Math.random() * 25, alpha: 0.6, life: 0 });
+}
+
+function animateRipples(dt) {
+  rippleContainer.clear();
+  rippleTimer += dt;
+  if (rippleTimer > 90) {
+    spawnRipple();
+    rippleTimer = 0;
+  }
+  for (let i = ripples.length - 1; i >= 0; i--) {
+    const r = ripples[i];
+    r.r += 0.5;
+    r.alpha -= 0.008;
+    r.life++;
+    if (r.alpha <= 0 || r.r > r.maxR) { ripples.splice(i, 1); continue; }
+    rippleContainer.lineStyle(1, 0x00b4a6, r.alpha * 0.4);
+    rippleContainer.drawEllipse(r.x, r.y, r.r, r.r * 0.4);
+    // Second inner ring
+    if (r.r > 6) {
+      rippleContainer.lineStyle(0.5, 0x00b4a6, r.alpha * 0.2);
+      rippleContainer.drawEllipse(r.x, r.y, r.r * 0.6, r.r * 0.6 * 0.4);
+    }
+  }
+}
+
+// =============================================
+//  DRAGONFLY
+// =============================================
+const dfGfx = new PIXI.Graphics();
+layers.dragonfly.addChild(dfGfx);
+let dfX = 150, dfY = WATER_Y + 80;
+let dfTargetX = 200, dfTargetY = WATER_Y + 100;
+let dfRetargetTimer = 0;
+
+function drawDragonfly(x, y, t) {
+  dfGfx.clear();
+  const wingBeat = Math.sin(t * 18) * 0.3 + 0.7;
+
+  // Body
+  dfGfx.lineStyle(0);
+  dfGfx.beginFill(0x00e5cc, 0.9);
+  dfGfx.drawEllipse(x, y, 8, 3);
+  dfGfx.endFill();
+  // Tail segments
+  for (let i = 1; i <= 4; i++) {
+    dfGfx.beginFill(0x00c4a6, 0.8 - i * 0.1);
+    dfGfx.drawEllipse(x - 5 - i * 4, y + i * 0.5, 3 - i * 0.3, 1.5 - i * 0.2);
+    dfGfx.endFill();
+  }
+  // Head
+  dfGfx.beginFill(0x00e5cc);
+  dfGfx.drawCircle(x + 9, y, 3);
+  dfGfx.endFill();
+  dfGfx.beginFill(0x111);
+  dfGfx.drawCircle(x + 10.5, y - 0.5, 1);
+  dfGfx.endFill();
+
+  // Wings
+  const wy = y - 2;
+  dfGfx.lineStyle(0.8, 0xb0f0e8, 0.55 * wingBeat);
+  dfGfx.beginFill(0x80e8d8, 0.18 * wingBeat);
+  dfGfx.drawEllipse(x + 2, wy - 5, 14, 5);
+  dfGfx.endFill();
+  dfGfx.beginFill(0x80e8d8, 0.15 * wingBeat);
+  dfGfx.drawEllipse(x + 2, wy + 5, 14, 5);
+  dfGfx.endFill();
+  dfGfx.beginFill(0xa0f0e8, 0.15 * wingBeat);
+  dfGfx.drawEllipse(x - 4, wy - 4, 11, 4);
+  dfGfx.endFill();
+  dfGfx.beginFill(0xa0f0e8, 0.12 * wingBeat);
+  dfGfx.drawEllipse(x - 4, wy + 4, 11, 4);
+  dfGfx.endFill();
+}
+
+function animateDragonfly(t, dt, currentDay) {
+  if (currentDay < 7) { dfGfx.alpha = 0; return; }
+  dfGfx.alpha = Math.min(1, (currentDay - 7) / 3);
+
+  dfRetargetTimer += dt;
+  if (dfRetargetTimer > 180) {
+    dfTargetX = 60 + Math.random() * 260;
+    dfTargetY = WATER_Y + 30 + Math.random() * 180;
+    dfRetargetTimer = 0;
+  }
+  const ease = 0.03;
+  dfX += (dfTargetX - dfX) * ease;
+  dfY += (dfTargetY - dfY) * ease + Math.sin(t * 3.5) * 0.5;
+
+  drawDragonfly(dfX, dfY, t);
+}
+
+// =============================================
+//  FIREFLIES
+// =============================================
+const fireflies = [];
+const ffContainer = new PIXI.Graphics();
+layers.fireflies.addChild(ffContainer);
+
+function initFireflies() {
+  for (let i = 0; i < 18; i++) {
+    fireflies.push({
+      x: 20 + Math.random() * (W - 40),
+      y: WATER_Y + 20 + Math.random() * 250,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.3,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.6 + Math.random() * 0.9,
+      size: 1.5 + Math.random() * 1.5,
+    });
+  }
+}
+
+function animateFireflies(t, currentDay) {
+  if (currentDay < 5) { ffContainer.alpha = 0; return; }
+  ffContainer.alpha = Math.min(1, (currentDay - 5) / 5) * 0.85;
+  ffContainer.clear();
+
+  fireflies.forEach(f => {
+    f.x += f.vx + Math.sin(t * 0.3 + f.phase) * 0.3;
+    f.y += f.vy + Math.cos(t * 0.4 + f.phase * 1.3) * 0.25;
+    if (f.x < 10) f.x = W - 10;
+    if (f.x > W - 10) f.x = 10;
+    if (f.y < WATER_Y + 15) f.y = WATER_Y + 220;
+    if (f.y > WATER_Y + 280) f.y = WATER_Y + 20;
+
+    const glow = (Math.sin(t * f.speed + f.phase) * 0.5 + 0.5);
+    const alpha = 0.3 + glow * 0.7;
+    const r = f.size * (0.7 + glow * 0.5);
+
+    ffContainer.beginFill(0xf4ff80, alpha * 0.15);
+    ffContainer.drawCircle(f.x, f.y, r * 4);
+    ffContainer.endFill();
+    ffContainer.beginFill(0xf0ff60, alpha * 0.6);
+    ffContainer.drawCircle(f.x, f.y, r);
+    ffContainer.endFill();
+    ffContainer.beginFill(0xffffff, alpha * 0.9);
+    ffContainer.drawCircle(f.x, f.y, r * 0.4);
+    ffContainer.endFill();
+  });
+}
+
+// =============================================
+//  UI UPDATE
+// =============================================
+const milestones = [
+  { day: 1,  badge: '🌱', text: '<strong>Day 7 — First Bloom</strong><br>Keep going, your lotus is budding' },
+  { day: 7,  badge: '🪷', text: '<strong>Day 21 — The Pond Awakens</strong><br>More lotuses are on their way' },
+  { day: 14, badge: '✨', text: '<strong>Day 30 — Dragonfly Days</strong><br>Your garden is full of life' },
+  { day: 21, badge: '🌊', text: '<strong>Day 60 — Sacred Waters</strong><br>A breathtaking garden awaits' },
+  { day: 30, badge: '🌟', text: '<strong>Sacred Garden reached!</strong><br>You have transformed completely' },
+];
+
+function getMilestone(day) {
+  let current = milestones[0];
+  for (const m of milestones) {
+    if (day >= m.day) current = m;
+  }
+  return current;
+}
+
+function updateUI(day) {
+  document.getElementById('day-number').textContent = day;
+  document.getElementById('stat-days').textContent = day;
+  document.getElementById('stat-weeks').textContent = Math.floor(day / 7);
+  document.getElementById('stat-hours').textContent = (day * 24).toLocaleString();
+  const badges = milestones.filter(m => day >= m.day).length;
+  document.getElementById('stat-badges').textContent = badges;
+
+  const m = getMilestone(day);
+  document.getElementById('milestone-badge').textContent = m.badge + ' ' + (
+    day < 7 ? 'First seed planted' :
+    day < 14 ? 'First Bloom unlocked' :
+    day < 21 ? 'Dragonfly Days coming' :
+    day < 30 ? 'Sacred Waters ahead' : 'Sacred Garden reached'
+  );
+  document.getElementById('milestone-text').innerHTML = m.text;
+}
+
+// =============================================
+//  BUILD EVERYTHING
+// =============================================
+buildSky();
+buildStars();
+buildWater();
+buildMist();
+initFireflies();
+
+// =============================================
+//  MAIN ANIMATION LOOP
+// =============================================
+let currentDay = 1;
+let tick = 0;
+
+app.ticker.add((delta) => {
+  tick += delta * 0.016; // approx seconds
+
+  // Stars twinkling
+  starObjs.forEach(s => {
+    s.alpha = s._base + Math.sin(tick * s._speed + s._phase) * 0.3;
+  });
+
+  // Mist drift
+  layers.mistFg.children.forEach((m, i) => {
+    m.x += Math.sin(tick * 0.2 + m._phase) * 0.3;
+  });
+
+  animateWater(tick);
+  animateFish(tick, currentDay);
+  animateRipples(delta);
+  animateDragonfly(tick, delta, currentDay);
+  animateFireflies(tick, currentDay);
+  renderLotuses(currentDay, tick);
+});
+
+// =============================================
+//  SLIDER CONTROL
+// =============================================
+const slider = document.getElementById('day-slider');
+const sliderVal = document.getElementById('slider-val');
+
+slider.addEventListener('input', () => {
+  currentDay = parseInt(slider.value);
+  sliderVal.textContent = 'Day ' + currentDay;
+  updateUI(currentDay);
+});
+
+// Initial UI
+updateUI(1);
+
+// Tap pond to create ripple
+document.getElementById('app-wrap').addEventListener('click', (e) => {
+  const rect = document.getElementById('app-wrap').getBoundingClientRect();
+  const px = (e.clientX - rect.left) * (W / rect.width);
+  const py = (e.clientY - rect.top) * (H / rect.height);
+  if (py > WATER_Y) {
+    ripples.push({ x: px, y: py, r: 2, maxR: 45, alpha: 0.8, life: 0 });
+    ripples.push({ x: px, y: py, r: 2, maxR: 30, alpha: 0.5, life: 0 });
+  }
+});
+
+console.log('🪷 QuitMantra Lotus Pond loaded. Use the slider to grow your garden.');
+</script>
+</body>
+</html>
