@@ -2,1062 +2,711 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>QuitMantra — Lotus Garden</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #01080d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden;
-  }
-  #app-wrap {
-    position: relative;
-    width: 390px;
-    height: 844px;
-    border-radius: 44px;
-    overflow: hidden;
-    box-shadow: 0 40px 120px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.06);
-  }
-  #pond-canvas {
-    position: absolute;
-    top: 0; left: 0;
-    border-radius: 44px;
-  }
-  #ui {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ---- HEADER ---- */
-  #header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 52px 24px 0;
-    pointer-events: none;
-  }
-  #wordmark {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 18px;
-    letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.85);
-  }
-  #settings-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: all;
-    cursor: pointer;
-  }
-
-  /* ---- DAY COUNTER ---- */
-  #day-counter {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 40px;
-  }
-  #sober-label {
-    font-family: 'Inter', sans-serif;
-    font-weight: 300;
-    font-size: 10px;
-    letter-spacing: 0.35em;
-    color: rgba(0,180,166,0.7);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  #day-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 88px;
-    line-height: 1;
-    color: #ffffff;
-    text-shadow: 0 0 40px rgba(0,180,166,0.4), 0 2px 20px rgba(0,0,0,0.6);
-    letter-spacing: -0.02em;
-    transition: all 0.4s ease;
-  }
-  #day-suffix {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 18px;
-    letter-spacing: 0.2em;
-    color: rgba(255,255,255,0.5);
-    margin-top: 4px;
-  }
-  #milestone-badge {
-    margin-top: 16px;
-    padding: 6px 16px;
-    background: rgba(0,180,166,0.15);
-    border: 1px solid rgba(0,180,166,0.3);
-    border-radius: 20px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: rgba(0,220,200,0.9);
-    letter-spacing: 0.05em;
-    backdrop-filter: blur(8px);
-    transition: all 0.5s ease;
-  }
-
-  /* ---- BOTTOM SHEET ---- */
-  #bottom-sheet {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(180deg, rgba(4,18,24,0.92) 0%, rgba(3,14,20,0.98) 100%);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    border-radius: 0 0 44px 44px;
-    padding: 16px 20px 36px;
-    pointer-events: all;
-  }
-  #sheet-handle {
-    width: 36px; height: 4px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 2px;
-    margin: 0 auto 16px;
-  }
-  #stats-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .stat-item {
-    text-align: center;
-    flex: 1;
-  }
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: #ffffff;
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 3px;
-  }
-  #next-milestone {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .milestone-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #00b4a6;
-    box-shadow: 0 0 8px rgba(0,180,166,0.6);
-    flex-shrink: 0;
-  }
-  .milestone-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.4;
-  }
-  .milestone-text strong {
-    color: rgba(255,255,255,0.9);
-    font-weight: 500;
-  }
-  #craving-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, #00b4a6, #007a72);
-    border: none;
-    border-radius: 16px;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: white;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    margin-bottom: 10px;
-    animation: breathe 3s ease-in-out infinite;
-    pointer-events: all;
-  }
-  @keyframes breathe {
-    0%, 100% { box-shadow: 0 4px 20px rgba(0,180,166,0.35); }
-    50% { box-shadow: 0 4px 35px rgba(0,180,166,0.65); }
-  }
-  #guide-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 14px;
-    cursor: pointer;
-    pointer-events: all;
-  }
-  #guide-avatar {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1a5c5a, #0d3a38);
-    border: 1.5px solid rgba(0,180,166,0.4);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .guide-info { flex: 1; }
-  .guide-name {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-  }
-  .guide-sub {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    margin-top: 1px;
-  }
-  .guide-arrow {
-    color: rgba(255,255,255,0.3);
-    font-size: 14px;
-  }
-
-  /* ---- DAY SLIDER (DEMO CONTROL) ---- */
-  #demo-control {
-    position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 8px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    pointer-events: all;
-    z-index: 100;
-    white-space: nowrap;
-  }
-  #demo-control label {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  #day-slider {
-    width: 120px;
-    accent-color: #00b4a6;
-    cursor: pointer;
-  }
-  #slider-val {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: #00b4a6;
-    min-width: 40px;
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#ddd5c8;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif}
+#phone{position:relative;width:390px;height:844px;border-radius:50px;overflow:hidden;box-shadow:0 60px 160px rgba(0,0,0,0.45),0 0 0 1px rgba(255,255,255,0.3);background:#fef6ec}
+#scene{position:absolute;top:0;left:0;width:390px;height:520px;overflow:hidden}
+#scene-bg{position:absolute;top:0;left:0;width:100%;height:100%}
+#pixi-canvas{position:absolute;top:0;left:0;pointer-events:none}
+#topbar{position:absolute;top:0;left:0;right:0;padding:52px 22px 0;display:flex;justify-content:space-between;align-items:center;z-index:10}
+#wordmark{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:19px;letter-spacing:0.1em;color:rgba(255,255,255,0.95);text-shadow:0 1px 10px rgba(0,0,0,0.3)}
+.icon-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.22);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;cursor:pointer}
+#day-overlay{position:absolute;top:138px;left:0;right:0;display:flex;flex-direction:column;align-items:center;z-index:10;pointer-events:none}
+#sober-tag{font-family:'DM Sans',sans-serif;font-weight:300;font-size:9px;letter-spacing:0.42em;text-transform:uppercase;color:rgba(255,255,255,0.78);text-shadow:0 1px 6px rgba(0,0,0,0.25);margin-bottom:4px}
+#day-num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:98px;line-height:1;color:#fff;text-shadow:0 2px 28px rgba(100,60,10,0.22),0 0 50px rgba(255,210,130,0.25);letter-spacing:-0.03em}
+#day-word{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:20px;color:rgba(255,255,255,0.72);letter-spacing:0.2em;margin-top:2px;text-shadow:0 1px 8px rgba(0,0,0,0.2)}
+#badge-pill{margin-top:14px;padding:5px 15px;background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.38);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;color:rgba(255,255,255,0.92);letter-spacing:0.03em}
+#sheet{position:absolute;bottom:0;left:0;right:0;background:#fffcf8;border-radius:0 0 50px 50px;border-top:1px solid rgba(200,180,150,0.18);padding:14px 20px 32px;z-index:10;height:334px}
+#handle{width:38px;height:4px;background:#e0d4c4;border-radius:2px;margin:0 auto 18px}
+#stats{display:flex;justify-content:space-around;margin-bottom:16px}
+.stat{text-align:center}
+.stat-n{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;color:#2c1f0e;line-height:1}
+.stat-l{font-family:'DM Sans',sans-serif;font-weight:300;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#a08060;margin-top:3px}
+#next-ms{background:#fdf4ea;border:1px solid #f0ddc4;border-radius:14px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.ms-dot{width:8px;height:8px;border-radius:50%;background:#d4804a;flex-shrink:0;box-shadow:0 0 6px rgba(212,128,74,0.5)}
+.ms-txt{font-family:'DM Sans',sans-serif;font-size:12px;color:#7a5030;line-height:1.45}
+.ms-txt strong{color:#3c2010;font-weight:500}
+#craving-btn{width:100%;padding:15px;border:none;border-radius:16px;cursor:pointer;background:linear-gradient(135deg,#e8845a,#c86030);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:white;letter-spacing:0.02em;margin-bottom:10px;animation:breathe 3.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{box-shadow:0 4px 18px rgba(200,96,48,0.35)}50%{box-shadow:0 6px 32px rgba(200,96,48,0.58)}}
+#guide-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1px solid #eeddc8;border-radius:14px;cursor:pointer}
+#guide-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f0c888,#d89848);border:2px solid rgba(255,200,100,0.4);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.gi{flex:1}.gn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#2c1f0e}.gs{font-family:'DM Sans',sans-serif;font-size:11px;color:#a08060;margin-top:1px}.ga{color:#c8a888;font-size:16px}
+#demo{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(40,20,0,0.78);backdrop-filter:blur(12px);border:1px solid rgba(255,200,150,0.22);border-radius:24px;padding:9px 18px;display:flex;align-items:center;gap:12px;z-index:999;white-space:nowrap}
+#demo label{font-family:'DM Sans',sans-serif;font-size:10px;color:rgba(255,220,180,0.68);letter-spacing:0.12em;text-transform:uppercase}
+#day-slider{width:130px;accent-color:#e8845a;cursor:pointer}
+#slider-v{font-family:'DM Sans',sans-serif;font-size:12px;color:#e8a870;min-width:44px;font-weight:500}
+#loading{position:absolute;inset:0;background:#fef6ec;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;border-radius:50px;transition:opacity 0.7s ease}
+#loading.gone{opacity:0;pointer-events:none}
+.ll{font-size:38px;animation:lp 2s ease-in-out infinite}
+@keyframes lp{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.08)}}
+.lt{font-family:'Cormorant Garamond',serif;font-size:18px;color:#8a6040;margin-top:12px;letter-spacing:0.08em}
 </style>
 </head>
 <body>
-
-<div id="app-wrap">
-  <canvas id="pond-canvas"></canvas>
-
-  <div id="ui">
-    <div id="header">
-      <div id="wordmark">QuitMantra</div>
-      <div id="settings-btn">
-        <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      </div>
+<div id="phone">
+  <div id="scene">
+    <div id="scene-bg">
+      <svg width="390" height="520" viewBox="0 0 390 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a8d0ec"/>
+            <stop offset="32%" stop-color="#cce4f4"/>
+            <stop offset="62%" stop-color="#eecfa8"/>
+            <stop offset="100%" stop-color="#f8c488"/>
+          </linearGradient>
+          <radialGradient id="sunG" cx="67%" cy="55%" r="48%">
+            <stop offset="0%" stop-color="#fffac0"/>
+            <stop offset="18%" stop-color="#ffe888" stop-opacity="0.65"/>
+            <stop offset="50%" stop-color="#ffd060" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#ffb840" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="pondG" x1="0.18" y1="0" x2="0.82" y2="1">
+            <stop offset="0%" stop-color="#a0ddd2"/>
+            <stop offset="30%" stop-color="#72c0b0"/>
+            <stop offset="68%" stop-color="#48a898"/>
+            <stop offset="100%" stop-color="#328c80"/>
+          </linearGradient>
+          <radialGradient id="pondSh" cx="34%" cy="28%" r="58%">
+            <stop offset="0%" stop-color="white" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="h1G" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#bcdda8"/><stop offset="100%" stop-color="#98cc80"/></linearGradient>
+          <linearGradient id="h2G" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#88c46e"/><stop offset="100%" stop-color="#68aa50"/></linearGradient>
+          <linearGradient id="h3G" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#76b655"/><stop offset="100%" stop-color="#569c38"/></linearGradient>
+          <linearGradient id="bnkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#64a844"/><stop offset="100%" stop-color="#488c2c"/></linearGradient>
+          <filter id="bl3"><feGaussianBlur stdDeviation="3"/></filter>
+          <filter id="bl6"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="bl1"><feGaussianBlur stdDeviation="1.5"/></filter>
+        </defs>
+        <rect width="390" height="520" fill="url(#skyG)"/>
+        <ellipse cx="262" cy="206" rx="215" ry="175" fill="url(#sunG)"/>
+        <circle cx="264" cy="202" r="24" fill="#fffce8" opacity="0.88"/>
+        <circle cx="264" cy="202" r="17" fill="#ffffe8" opacity="0.95"/>
+        <!-- Sun rays -->
+        <g stroke="#ffe880" stroke-width="1" opacity="0.25">
+          <line x1="264" y1="172" x2="264" y2="162"/><line x1="264" y1="232" x2="264" y2="242"/>
+          <line x1="234" y1="202" x2="224" y2="202"/><line x1="294" y1="202" x2="304" y2="202"/>
+          <line x1="243" y1="181" x2="236" y2="174"/><line x1="285" y1="223" x2="292" y2="230"/>
+          <line x1="285" y1="181" x2="292" y2="174"/><line x1="243" y1="223" x2="236" y2="230"/>
+        </g>
+        <!-- Clouds -->
+        <g opacity="0.58" filter="url(#bl3)">
+          <ellipse cx="74" cy="86" rx="54" ry="20" fill="white"/>
+          <ellipse cx="98" cy="78" rx="34" ry="18" fill="white"/>
+          <ellipse cx="50" cy="82" rx="30" ry="15" fill="white"/>
+        </g>
+        <g opacity="0.48" filter="url(#bl3)">
+          <ellipse cx="312" cy="68" rx="46" ry="17" fill="white"/>
+          <ellipse cx="335" cy="61" rx="28" ry="15" fill="white"/>
+          <ellipse cx="291" cy="64" rx="25" ry="13" fill="white"/>
+        </g>
+        <g opacity="0.32" filter="url(#bl3)">
+          <ellipse cx="175" cy="108" rx="38" ry="13" fill="white"/>
+          <ellipse cx="194" cy="102" rx="22" ry="12" fill="white"/>
+        </g>
+        <!-- Far hills -->
+        <path d="M0,190 Q32,158 82,172 Q130,184 180,160 Q230,136 282,155 Q334,172 390,156 L390,232 L0,232Z" fill="url(#h1G)" opacity="0.68"/>
+        <!-- Trees far -->
+        <g fill="#86ba62" opacity="0.52">
+          <ellipse cx="40" cy="172" rx="16" ry="13"/><ellipse cx="56" cy="165" rx="13" ry="11"/>
+          <ellipse cx="146" cy="162" rx="18" ry="14"/><ellipse cx="165" cy="156" rx="13" ry="11"/>
+          <ellipse cx="318" cy="158" rx="20" ry="15"/><ellipse cx="300" cy="165" rx="13" ry="10"/>
+          <ellipse cx="338" cy="165" rx="14" ry="11"/><ellipse cx="354" cy="160" rx="11" ry="9"/>
+        </g>
+        <!-- Mid hills -->
+        <path d="M0,222 Q52,192 112,206 Q170,222 228,200 Q286,180 344,204 Q368,216 390,204 L390,272 L0,272Z" fill="url(#h2G)"/>
+        <!-- Near hills -->
+        <path d="M0,258 Q44,238 98,251 Q150,263 212,242 Q266,226 324,248 Q358,260 390,246 L390,308 L0,308Z" fill="url(#h3G)"/>
+        <!-- Reeds L -->
+        <g fill="#488c2c" opacity="0.88">
+          <rect x="9" y="258" width="3.5" height="54" rx="1.8" transform="rotate(-5,9,258)"/>
+          <rect x="20" y="254" width="3" height="58" rx="1.5" transform="rotate(4,20,254)"/>
+          <rect x="32" y="260" width="2.5" height="47" rx="1.2" transform="rotate(-2,32,260)"/>
+          <rect x="44" y="264" width="2" height="41" rx="1" transform="rotate(6,44,264)"/>
+          <ellipse cx="8" cy="256" rx="5.5" ry="3" transform="rotate(-38,8,256)" fill="#6a7028"/>
+          <ellipse cx="20" cy="252" rx="5" ry="2.8" transform="rotate(24,20,252)" fill="#6a7028"/>
+          <ellipse cx="31" cy="258" rx="4.2" ry="2.2" transform="rotate(-14,31,258)" fill="#6a7028"/>
+          <ellipse cx="44" cy="262" rx="3.8" ry="2" transform="rotate(34,44,262)" fill="#7a8038"/>
+        </g>
+        <!-- Reeds R -->
+        <g fill="#488c2c" opacity="0.88">
+          <rect x="345" y="256" width="3.5" height="57" rx="1.8" transform="rotate(6,345,256)"/>
+          <rect x="357" y="260" width="3" height="52" rx="1.5" transform="rotate(-4,357,260)"/>
+          <rect x="368" y="254" width="2.5" height="50" rx="1.2" transform="rotate(5,368,254)"/>
+          <rect x="379" y="262" width="2" height="44" rx="1" transform="rotate(-7,379,262)"/>
+          <ellipse cx="346" cy="253" rx="5.2" ry="2.9" transform="rotate(30,346,253)" fill="#6a7028"/>
+          <ellipse cx="357" cy="257" rx="4.8" ry="2.6" transform="rotate(-20,357,257)" fill="#6a7028"/>
+          <ellipse cx="368" cy="251" rx="4.2" ry="2.2" transform="rotate(17,368,251)" fill="#6a7028"/>
+          <ellipse cx="379" cy="260" rx="3.8" ry="2" transform="rotate(-32,379,260)" fill="#7a8038"/>
+        </g>
+        <!-- Pond -->
+        <ellipse cx="195" cy="392" rx="182" ry="106" fill="url(#pondG)"/>
+        <ellipse cx="195" cy="392" rx="182" ry="106" fill="url(#pondSh)"/>
+        <!-- Pond ripple rings -->
+        <g stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none">
+          <ellipse cx="195" cy="392" rx="142" ry="52"/>
+          <ellipse cx="180" cy="403" rx="100" ry="36"/>
+          <ellipse cx="218" cy="376" rx="82" ry="29"/>
+        </g>
+        <!-- Reflection streaks -->
+        <g opacity="0.14" filter="url(#bl1)">
+          <ellipse cx="145" cy="368" rx="50" ry="7" fill="white" transform="rotate(-9,145,368)"/>
+          <ellipse cx="272" cy="377" rx="38" ry="6" fill="white" transform="rotate(8,272,377)"/>
+          <ellipse cx="195" cy="418" rx="65" ry="8" fill="white" transform="rotate(-3,195,418)"/>
+          <ellipse cx="108" cy="402" rx="28" ry="5" fill="white" transform="rotate(5,108,402)"/>
+        </g>
+        <!-- Pond edge -->
+        <ellipse cx="195" cy="392" rx="182" ry="106" fill="none" stroke="#bce8e0" stroke-width="2.5" opacity="0.32"/>
+        <!-- Bank -->
+        <path d="M0,466 Q56,446 122,457 Q190,445 252,458 Q320,445 390,460 L390,520 L0,520Z" fill="url(#bnkG)"/>
+        <!-- Grass tufts -->
+        <g fill="#5e9c38">
+          <path d="M38,468 Q35,452 34,443 Q38,453 41,468Z"/><path d="M46,466 Q45,449 47,441 Q50,452 50,466Z"/>
+          <path d="M128,458 Q125,442 124,433 Q128,443 131,458Z"/><path d="M136,456 Q135,440 137,432 Q140,442 140,456Z"/>
+          <path d="M254,460 Q252,444 251,435 Q255,445 257,460Z"/><path d="M262,458 Q261,442 263,434 Q266,444 266,458Z"/>
+          <path d="M344,462 Q342,446 341,437 Q345,447 347,462Z"/><path d="M352,460 Q351,444 353,436 Q356,446 356,460Z"/>
+        </g>
+        <!-- Small wildflowers on bank -->
+        <g>
+          <circle cx="62" cy="464" r="3.5" fill="#ffd0a0" opacity="0.82"/>
+          <circle cx="62" cy="464" r="1.8" fill="#ff9040" opacity="0.9"/>
+          <circle cx="68" cy="462" r="2.5" fill="#ffeecc" opacity="0.75"/>
+          <circle cx="168" cy="454" r="3" fill="#ffcccc" opacity="0.8"/>
+          <circle cx="168" cy="454" r="1.4" fill="#ff6060" opacity="0.88"/>
+          <circle cx="308" cy="458" r="3.5" fill="#ffd0a0" opacity="0.82"/>
+          <circle cx="308" cy="458" r="1.8" fill="#ffaa40" opacity="0.9"/>
+          <circle cx="315" cy="456" r="2.2" fill="#ffeedd" opacity="0.7"/>
+        </g>
+      </svg>
     </div>
+    <canvas id="pixi-canvas" width="390" height="520"></canvas>
+  </div>
 
-    <div id="day-counter">
-      <div id="sober-label">Sober</div>
-      <div id="day-number">1</div>
-      <div id="day-suffix">days</div>
-      <div id="milestone-badge">🌱 First seed planted</div>
-    </div>
-
-    <div id="bottom-sheet">
-      <div id="sheet-handle"></div>
-      <div id="stats-row">
-        <div class="stat-item">
-          <div class="stat-num" id="stat-days">1</div>
-          <div class="stat-label">Days</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" id="stat-weeks">0</div>
-          <div class="stat-label">Weeks</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" id="stat-hours">24</div>
-          <div class="stat-label">Hours</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num" id="stat-badges">0</div>
-          <div class="stat-label">Badges</div>
-        </div>
-      </div>
-
-      <div id="next-milestone">
-        <div class="milestone-dot"></div>
-        <div class="milestone-text" id="milestone-text">
-          <strong>Day 7 — First Bloom</strong><br>Keep going, your lotus is budding
-        </div>
-      </div>
-
-      <button id="craving-btn">I feel a craving</button>
-
-      <div id="guide-card">
-        <div id="guide-avatar">🧘</div>
-        <div class="guide-info">
-          <div class="guide-name">Talk to a guide</div>
-          <div class="guide-sub">Connect with a wellness counselor</div>
-        </div>
-        <div class="guide-arrow">›</div>
-      </div>
+  <div id="topbar">
+    <div id="wordmark">QuitMantra</div>
+    <div class="icon-btn">
+      <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.6" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
     </div>
   </div>
+
+  <div id="day-overlay">
+    <div id="sober-tag">Sober</div>
+    <div id="day-num">1</div>
+    <div id="day-word">days</div>
+    <div id="badge-pill">🌱 First seed planted</div>
+  </div>
+
+  <div id="sheet">
+    <div id="handle"></div>
+    <div id="stats">
+      <div class="stat"><div class="stat-n" id="s-days">1</div><div class="stat-l">Days</div></div>
+      <div class="stat"><div class="stat-n" id="s-weeks">0</div><div class="stat-l">Weeks</div></div>
+      <div class="stat"><div class="stat-n" id="s-hours">24</div><div class="stat-l">Hours</div></div>
+      <div class="stat"><div class="stat-n" id="s-badges">0</div><div class="stat-l">Badges</div></div>
+    </div>
+    <div id="next-ms">
+      <div class="ms-dot"></div>
+      <div class="ms-txt" id="ms-txt"><strong>Day 7 — First Bloom</strong><br>Keep going, your lotus is budding 🌱</div>
+    </div>
+    <button id="craving-btn">I feel a craving</button>
+    <div id="guide-card">
+      <div id="guide-ava">🧘</div>
+      <div class="gi"><div class="gn">Talk to a guide</div><div class="gs">Connect with a wellness counselor</div></div>
+      <div class="ga">›</div>
+    </div>
+  </div>
+
+  <div id="loading"><div class="ll">🪷</div><div class="lt">Preparing your garden…</div></div>
 </div>
 
-<!-- DEMO CONTROL — outside app wrap so it floats above -->
-<div id="demo-control" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:999;">
-  <label>Demo Day</label>
-  <input type="range" id="day-slider" min="0" max="30" value="1" step="1">
-  <span id="slider-val">Day 1</span>
+<div id="demo">
+  <label>Day</label>
+  <input type="range" id="day-slider" min="0" max="20" value="1" step="1">
+  <span id="slider-v">Day 1</span>
 </div>
 
 <script>
-// =============================================
-//  QUITMANTRA — PIXIJS LOTUS POND
-// =============================================
+// ══════════════════════════════════════════
+//  ILLUSTRATED SVG SPRITES
+// ══════════════════════════════════════════
+const S = {
 
-const W = 390, H = 844;
-const WATER_Y = 310; // where water surface begins
+pad:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 44" width="72" height="44">
+<defs>
+  <radialGradient id="pg" cx="36%" cy="30%" r="70%">
+    <stop offset="0%" stop-color="#9ed88e"/>
+    <stop offset="55%" stop-color="#62b452"/>
+    <stop offset="100%" stop-color="#3c8840"/>
+  </radialGradient>
+</defs>
+<path d="M36,24 L40,4 A30,22 0 1,0 32,4 Z" fill="url(#pg)"/>
+<g stroke="#2e7838" stroke-width="0.8" opacity="0.4" fill="none">
+  <line x1="36" y1="4" x2="36" y2="42"/>
+  <line x1="36" y1="24" x2="8" y2="12"/><line x1="36" y1="24" x2="64" y2="12"/>
+  <line x1="36" y1="24" x2="5" y2="30"/><line x1="36" y1="24" x2="67" y2="30"/>
+  <line x1="36" y1="24" x2="14" y2="42"/><line x1="36" y1="24" x2="58" y2="42"/>
+</g>
+<ellipse cx="23" cy="13" rx="10" ry="6" fill="white" opacity="0.13" transform="rotate(-22,23,13)"/>
+<path d="M36,24 L40,4 A30,22 0 1,0 32,4 Z" fill="none" stroke="#46a050" stroke-width="0.9" opacity="0.3"/>
+</svg>`,
 
-// Init PixiJS
-const app = new PIXI.Application({
-  view: document.getElementById('pond-canvas'),
-  width: W, height: H,
-  antialias: true,
-  backgroundColor: 0x020c12,
-  resolution: Math.min(window.devicePixelRatio || 1, 2),
-  autoDensity: true,
-});
+bud:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 54" width="32" height="54">
+<defs>
+  <linearGradient id="st" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#58962e"/><stop offset="100%" stop-color="#7eba50"/></linearGradient>
+  <linearGradient id="bd" x1="0.3" y1="1" x2="0.6" y2="0"><stop offset="0%" stop-color="#c4e888"/><stop offset="45%" stop-color="#eec8d4"/><stop offset="100%" stop-color="#ffd8e8"/></linearGradient>
+  <linearGradient id="sp" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#58a83c"/><stop offset="100%" stop-color="#86c85a"/></linearGradient>
+</defs>
+<path d="M16,54 Q15,40 16,22" stroke="url(#st)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+<path d="M16,26 Q9,23 7,16 Q11,18 16,22Z" fill="url(#sp)" opacity="0.9"/>
+<path d="M16,26 Q23,23 25,16 Q21,18 16,22Z" fill="#6eb048" opacity="0.88"/>
+<ellipse cx="16" cy="16" rx="6.5" ry="11" fill="url(#bd)"/>
+<ellipse cx="12.5" cy="12" rx="2.5" ry="5.5" fill="white" opacity="0.17" transform="rotate(-12,12.5,12)"/>
+<path d="M16,11 C14,9 13,6 16,4 C19,6 18,9 16,11Z" fill="#ffb8cc" opacity="0.88"/>
+</svg>`,
 
-// =============================================
-//  LAYERS (back → front)
-// =============================================
-const layers = {
-  sky:        new PIXI.Container(),
-  stars:      new PIXI.Container(),
-  mistBg:     new PIXI.Container(),
-  water:      new PIXI.Container(),
-  waterFx:    new PIXI.Container(),
-  fish:       new PIXI.Container(),
-  lilypads:   new PIXI.Container(),
-  lotuses:    new PIXI.Container(),
-  ripples:    new PIXI.Container(),
-  dragonfly:  new PIXI.Container(),
-  fireflies:  new PIXI.Container(),
-  mistFg:     new PIXI.Container(),
+halfbud:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 66" width="48" height="66">
+<defs>
+  <linearGradient id="st2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#58962e"/><stop offset="100%" stop-color="#7eba50"/></linearGradient>
+  <linearGradient id="po" x1="0.25" y1="1" x2="0.6" y2="0"><stop offset="0%" stop-color="#ffaac4"/><stop offset="100%" stop-color="#fff8fc"/></linearGradient>
+  <linearGradient id="pi" x1="0.25" y1="1" x2="0.6" y2="0"><stop offset="0%" stop-color="#ff90b0"/><stop offset="100%" stop-color="#ffdce8"/></linearGradient>
+  <linearGradient id="sp2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#489640"/><stop offset="100%" stop-color="#7cbe55"/></linearGradient>
+</defs>
+<path d="M24,66 Q23,52 24,30" stroke="url(#st2)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+<path d="M24,48 L27,38 A13,10 0 1,0 21,38 Z" fill="#58aa58" opacity="0.82"/>
+<path d="M24,34 Q15,30 12,22 Q17,24 24,30Z" fill="url(#sp2)"/>
+<path d="M24,34 Q33,30 36,22 Q31,24 24,30Z" fill="#66a840"/>
+<path d="M24,32 C18,27 15,20 17,13 C20,18 22,24 24,27 C26,24 28,18 31,13 C33,20 30,27 24,32Z" transform="rotate(-22,24,23)" fill="url(#po)" stroke="#ffc0d4" stroke-width="0.45" opacity="0.88"/>
+<path d="M24,32 C18,27 15,20 17,13 C20,18 22,24 24,27 C26,24 28,18 31,13 C33,20 30,27 24,32Z" transform="rotate(22,24,23)" fill="url(#po)" stroke="#ffc0d4" stroke-width="0.45" opacity="0.84"/>
+<ellipse cx="24" cy="20" rx="7.5" ry="13" fill="url(#po)"/>
+<path d="M24,31 C19,27 16,21 18,14 C20,19 22,25 24,27 C26,25 28,19 30,14 C32,21 29,27 24,31Z" fill="url(#pi)" opacity="0.65"/>
+<ellipse cx="20" cy="15" rx="3" ry="7" fill="white" opacity="0.16" transform="rotate(-9,20,15)"/>
+</svg>`,
+
+halfbloom:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 74" width="74" height="74">
+<defs>
+  <linearGradient id="st3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#58962e"/><stop offset="100%" stop-color="#7eba50"/></linearGradient>
+  <linearGradient id="op3" x1="0.28" y1="1" x2="0.6" y2="0"><stop offset="0%" stop-color="#ffaac4"/><stop offset="55%" stop-color="#fff2f8"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+  <linearGradient id="ip3" x1="0.28" y1="1" x2="0.6" y2="0"><stop offset="0%" stop-color="#ff90b2"/><stop offset="100%" stop-color="#ffdde8"/></linearGradient>
+  <radialGradient id="c3" cx="40%" cy="36%"><stop offset="0%" stop-color="#fffac0"/><stop offset="48%" stop-color="#f8d83c"/><stop offset="100%" stop-color="#e8b020"/></radialGradient>
+</defs>
+<path d="M37,74 Q36,60 37,42" stroke="url(#st3)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+<path d="M37,56 L40,42 A18,14 0 1,0 34,42 Z" fill="#58aa58" opacity="0.85"/>
+<g stroke="#2e8038" stroke-width="0.7" opacity="0.35" fill="none">
+  <line x1="37" y1="42" x2="37" y2="56"/>
+  <line x1="37" y1="49" x2="21" y2="44"/><line x1="37" y1="49" x2="53" y2="44"/>
+</g>
+<g fill="url(#op3)" stroke="#ffc0d4" stroke-width="0.5" opacity="0.93">
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(0,37,32)"/>
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(51,37,32)"/>
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(102,37,32)"/>
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(153,37,32)"/>
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(204,37,32)"/>
+  <path d="M37,44 C31,39 27,30 29,20 C32,27 35,34 37,38 C39,34 42,27 45,20 C47,30 43,39 37,44Z" transform="rotate(255,37,32)"/>
+</g>
+<g fill="url(#ip3)" stroke="#ffa0bc" stroke-width="0.4">
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(25,37,32)"/>
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(85,37,32)"/>
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(145,37,32)"/>
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(205,37,32)"/>
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(265,37,32)"/>
+  <path d="M37,40 C32,36 29,28 31,20 C33,26 35,31 37,34 C39,31 41,26 43,20 C45,28 42,36 37,40Z" transform="rotate(325,37,32)"/>
+</g>
+<circle cx="37" cy="32" r="9.5" fill="url(#c3)"/>
+<circle cx="37" cy="32" r="5.8" fill="#f8e458"/>
+<g fill="#c89020"><circle cx="37" cy="25.8" r="1.4"/><circle cx="42.5" cy="28" r="1.4"/><circle cx="42.5" cy="34.5" r="1.4"/><circle cx="37" cy="37.8" r="1.4"/><circle cx="31.5" cy="34.5" r="1.4"/><circle cx="31.5" cy="28" r="1.4"/></g>
+</svg>`,
+
+fullbloom:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102 88" width="102" height="88">
+<defs>
+  <linearGradient id="st4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#58962e"/><stop offset="100%" stop-color="#7eba50"/></linearGradient>
+  <linearGradient id="op4" x1="0.22" y1="1" x2="0.62" y2="0"><stop offset="0%" stop-color="#ffaac4"/><stop offset="42%" stop-color="#fff4f8"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+  <linearGradient id="ip4" x1="0.22" y1="1" x2="0.62" y2="0"><stop offset="0%" stop-color="#ff8cb0"/><stop offset="100%" stop-color="#ffe0ee"/></linearGradient>
+  <radialGradient id="c4" cx="36%" cy="34%"><stop offset="0%" stop-color="#fffee8"/><stop offset="38%" stop-color="#f8e050"/><stop offset="78%" stop-color="#f0c028"/><stop offset="100%" stop-color="#e0a818"/></radialGradient>
+  <radialGradient id="gl4" cx="50%" cy="50%"><stop offset="0%" stop-color="#ffd8e8" stop-opacity="0.26"/><stop offset="100%" stop-color="#ffd8e8" stop-opacity="0"/></radialGradient>
+</defs>
+<path d="M51,88 Q50,74 51,56" stroke="url(#st4)" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+<path d="M51,70 L55,54 A22,17 0 1,0 47,54 Z" fill="#58aa58" opacity="0.9"/>
+<g stroke="#2e7838" stroke-width="0.75" opacity="0.36" fill="none">
+  <line x1="51" y1="54" x2="51" y2="70"/>
+  <line x1="51" y1="62" x2="31" y2="54"/><line x1="51" y1="62" x2="71" y2="54"/>
+</g>
+<circle cx="51" cy="39" r="44" fill="url(#gl4)"/>
+<g fill="url(#op4)" stroke="#ffacc4" stroke-width="0.5" opacity="0.93">
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(0,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(40,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(80,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(120,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(160,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(200,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(240,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(280,51,39)"/>
+  <path d="M51,54 C44,48 39,37 41,24 C44,32 48,41 51,46 C54,41 58,32 61,24 C63,37 58,48 51,54Z" transform="rotate(320,51,39)"/>
+</g>
+<g fill="url(#ip4)" stroke="#ff9abc" stroke-width="0.4">
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(20,51,39)"/>
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(80,51,39)"/>
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(140,51,39)"/>
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(200,51,39)"/>
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(260,51,39)"/>
+  <path d="M51,48 C46,43 43,35 45,25 C47,31 49,37 51,41 C53,37 55,31 57,25 C59,35 56,43 51,48Z" transform="rotate(320,51,39)"/>
+</g>
+<circle cx="51" cy="39" r="12.5" fill="url(#c4)"/>
+<circle cx="51" cy="39" r="7.8" fill="#f8e455"/>
+<circle cx="51" cy="39" r="4.8" fill="#faf06a"/>
+<g fill="#b88010">
+  <circle cx="51" cy="31.8" r="1.65"/><circle cx="57" cy="33.8" r="1.65"/>
+  <circle cx="58.5" cy="39.5" r="1.65"/><circle cx="56" cy="45.2" r="1.65"/>
+  <circle cx="51" cy="44.8" r="1.65"/><circle cx="46" cy="45.2" r="1.65"/>
+  <circle cx="43.5" cy="39.5" r="1.65"/><circle cx="45" cy="33.8" r="1.65"/>
+</g>
+<g fill="#ffe898">
+  <circle cx="51" cy="27.5" r="1.1"/><circle cx="57.8" cy="29.5" r="1.1"/>
+  <circle cx="60.5" cy="35.5" r="1.1"/><circle cx="58.5" cy="43" r="1.1"/>
+  <circle cx="43.5" cy="43" r="1.1"/><circle cx="41.5" cy="35.5" r="1.1"/>
+  <circle cx="44.2" cy="29.5" r="1.1"/>
+</g>
+</svg>`,
+
+koi:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 33" width="82" height="33">
+<defs>
+  <linearGradient id="kb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff5c28"/><stop offset="42%" stop-color="#ff8848"/><stop offset="100%" stop-color="#ffa868"/></linearGradient>
+  <linearGradient id="kw" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ffeee6"/><stop offset="100%" stop-color="#ffffff"/></linearGradient>
+</defs>
+<path d="M10,16.5 L3,6 L1,16.5 L3,27 Z" fill="#e04c1a" opacity="0.82"/>
+<path d="M10,16.5 L6,10 L4,16.5 L6,23Z" fill="#ff7030" opacity="0.58"/>
+<ellipse cx="43" cy="16.5" rx="32" ry="12.5" fill="url(#kb)"/>
+<ellipse cx="38" cy="20" rx="20" ry="7.5" fill="white" opacity="0.52"/>
+<ellipse cx="56" cy="13.5" rx="14.5" ry="9.5" fill="url(#kw)" opacity="0.82"/>
+<ellipse cx="58" cy="12.5" rx="6.5" ry="5.5" fill="#ff7030" opacity="0.52"/>
+<path d="M32,5 Q40,1.5 54,4.5 Q47,6.5 32,5Z" fill="#e55828" opacity="0.7"/>
+<path d="M38,21 Q33,28 28,30 Q32,23 38,21Z" fill="#ff6830" opacity="0.56"/>
+<path d="M50,23 Q46,29 42,30 Q44,24 50,23Z" fill="#ff7840" opacity="0.48"/>
+<g fill="none" stroke="#cc4418" stroke-width="0.55" opacity="0.18">
+  <path d="M22,11 Q27,9 31,11"/><path d="M22,20 Q27,22 31,20"/>
+  <path d="M30,9 Q35,7 41,9"/><path d="M30,22 Q35,24 41,22"/>
+  <path d="M38,8 Q44,6 49,8"/><path d="M38,23 Q44,25 49,23"/>
+</g>
+<ellipse cx="71" cy="16.5" rx="11.5" ry="10.5" fill="#ff7640"/>
+<ellipse cx="69" cy="20" rx="4.5" ry="2.8" fill="#ff5820" opacity="0.28"/>
+<circle cx="74.5" cy="12.5" r="3.8" fill="#080400"/>
+<circle cx="75.5" cy="11.5" r="1.4" fill="white" opacity="0.88"/>
+<ellipse cx="79.5" cy="15.5" r="1.1" fill="#bb4818" opacity="0.6"/>
+<path d="M79.5,17 Q81,18.5 79.5,20" stroke="#bb4018" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M79.5,16 Q83.5,12.5 83,9.5" stroke="#cc5028" stroke-width="0.95" fill="none" stroke-linecap="round"/>
+<path d="M79.5,17.5 Q83.5,21 83,24" stroke="#cc5028" stroke-width="0.95" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+koi2:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 82 33" width="82" height="33">
+<defs>
+  <linearGradient id="kb2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f0ece5"/><stop offset="40%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f4ece2"/></linearGradient>
+</defs>
+<path d="M10,16.5 L3,6 L1,16.5 L3,27 Z" fill="#d8d0c4" opacity="0.78"/>
+<path d="M10,16.5 L6,10 L4,16.5 L6,23Z" fill="#e8e0d8" opacity="0.58"/>
+<ellipse cx="43" cy="16.5" rx="32" ry="12.5" fill="url(#kb2)"/>
+<ellipse cx="30" cy="13" rx="13" ry="8.5" fill="#ff5a28" opacity="0.7"/>
+<ellipse cx="56" cy="18" rx="10.5" ry="7" fill="#ff8840" opacity="0.52"/>
+<ellipse cx="38" cy="21" rx="18" ry="6.5" fill="#f5ddd4" opacity="0.58"/>
+<path d="M32,5 Q40,1.5 54,4.5 Q47,6.5 32,5Z" fill="#e0d4c4" opacity="0.65"/>
+<path d="M38,21 Q33,28 28,30 Q32,23 38,21Z" fill="#ecdcd0" opacity="0.52"/>
+<g fill="none" stroke="#c4a888" stroke-width="0.5" opacity="0.2">
+  <path d="M22,11 Q27,9 31,11"/><path d="M30,9 Q35,7 41,9"/>
+  <path d="M38,8 Q44,6 49,8"/>
+</g>
+<ellipse cx="71" cy="16.5" rx="11.5" ry="10.5" fill="#f4eae0"/>
+<circle cx="74.5" cy="12.5" r="3.8" fill="#080400"/>
+<circle cx="75.5" cy="11.5" r="1.4" fill="white" opacity="0.88"/>
+<ellipse cx="79.5" cy="15.5" r="1.1" fill="#a88858" opacity="0.58"/>
+<path d="M79.5,17 Q81,18.5 79.5,20" stroke="#a87848" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+<path d="M79.5,16 Q83.5,12.5 83,9.5" stroke="#b88858" stroke-width="0.95" fill="none" stroke-linecap="round"/>
+<path d="M79.5,17.5 Q83.5,21 83,24" stroke="#b88858" stroke-width="0.95" fill="none" stroke-linecap="round"/>
+</svg>`,
+
+df:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 33" width="62" height="33">
+<defs><linearGradient id="dfb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#00c4a4"/><stop offset="100%" stop-color="#00e8bc"/></linearGradient></defs>
+<ellipse cx="27" cy="10.5" rx="18" ry="6.8" fill="#c4f8ee" opacity="0.5" stroke="#6cd0bc" stroke-width="0.82"/>
+<ellipse cx="37" cy="9.5" rx="13.5" ry="5.2" fill="#d8faf4" opacity="0.44" stroke="#6cd0bc" stroke-width="0.65"/>
+<ellipse cx="27" cy="22.5" rx="18" ry="6.8" fill="#c4f8ee" opacity="0.46" stroke="#6cd0bc" stroke-width="0.82"/>
+<ellipse cx="37" cy="23.5" rx="13.5" ry="5.2" fill="#d8faf4" opacity="0.4" stroke="#6cd0bc" stroke-width="0.65"/>
+<g stroke="#48bca8" stroke-width="0.45" opacity="0.42" fill="none">
+  <line x1="17" y1="10.5" x2="44" y2="10.5"/><line x1="27" y1="4.5" x2="27" y2="16.5"/>
+  <line x1="17" y1="22.5" x2="44" y2="22.5"/><line x1="27" y1="16.5" x2="27" y2="28.5"/>
+  <line x1="20" y1="7" x2="34" y2="14"/><line x1="20" y1="26" x2="34" y2="19"/>
+</g>
+<ellipse cx="33" cy="16.5" rx="10.5" ry="4.4" fill="url(#dfb)"/>
+<g fill="#00a890">
+  <ellipse cx="20.5" cy="16.5" rx="6.2" ry="3.7" fill="#00c4a4"/>
+  <ellipse cx="12.5" cy="16.5" rx="4.8" ry="2.9" opacity="0.94"/>
+  <ellipse cx="6" cy="16.5" rx="3.4" ry="2.3" opacity="0.86"/>
+  <ellipse cx="1.8" cy="16.5" rx="2.2" ry="1.6" opacity="0.7"/>
+</g>
+<ellipse cx="33" cy="15" rx="6.5" ry="1.7" fill="white" opacity="0.18"/>
+<circle cx="43.5" cy="16.5" r="5.8" fill="#00d0a8"/>
+<ellipse cx="43.5" cy="15" rx="3.8" ry="2.2" fill="#00e4bc" opacity="0.45"/>
+<circle cx="46.2" cy="13.2" r="2.9" fill="#002c22"/>
+<circle cx="47.1" cy="12.3" r="0.95" fill="white" opacity="0.8"/>
+</svg>`
 };
-Object.values(layers).forEach(l => app.stage.addChild(l));
 
-// =============================================
-//  SKY GRADIENT
-// =============================================
-function buildSky() {
-  // Layered sky bands
-  const skyColors = [
-    [0, 0x010810],
-    [0.25, 0x030f1a],
-    [0.55, 0x061820],
-    [0.75, 0x0a2535],
-    [1.0, 0x0d3040],
-  ];
-  const g = new PIXI.Graphics();
-  const bandCount = skyColors.length - 1;
-  for (let i = 0; i < bandCount; i++) {
-    const y0 = skyColors[i][0] * WATER_Y;
-    const y1 = skyColors[i+1][0] * WATER_Y;
-    const h = y1 - y0;
-    g.beginFill(skyColors[i+1][1]);
-    g.drawRect(0, y0, W, h + 1);
-    g.endFill();
-  }
-  layers.sky.addChild(g);
-
-  // Moon
-  const moon = new PIXI.Graphics();
-  moon.beginFill(0xeef6ff, 0.9);
-  moon.drawCircle(0, 0, 18);
-  moon.endFill();
-  // Shadow crescent
-  moon.beginFill(0x041520, 0.85);
-  moon.drawCircle(6, -3, 16);
-  moon.endFill();
-  moon.x = W * 0.75; moon.y = 80;
-  // Glow
-  const moonGlow = new PIXI.Graphics();
-  moonGlow.beginFill(0x9ec8ff, 0.07);
-  moonGlow.drawCircle(0, 0, 55);
-  moonGlow.endFill();
-  moonGlow.x = moon.x; moonGlow.y = moon.y;
-  layers.sky.addChild(moonGlow, moon);
-
-  // Horizon golden glow
-  const glow = new PIXI.Graphics();
-  glow.beginFill(0xf4a857, 0.1);
-  glow.drawEllipse(W * 0.45, WATER_Y + 5, 200, 55);
-  glow.endFill();
-  layers.sky.addChild(glow);
+// ══════════════════════════════════════════
+//  SVG → PIXI Texture helper
+// ══════════════════════════════════════════
+async function toTex(svgStr, w, h) {
+  const cv = document.createElement('canvas');
+  const pr = 2; cv.width = w*pr; cv.height = h*pr;
+  const ctx = cv.getContext('2d');
+  const blob = new Blob([svgStr], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  await new Promise((res,rej)=>{
+    const img = new Image();
+    img.onload=()=>{ ctx.drawImage(img,0,0,w*pr,h*pr); URL.revokeObjectURL(url); res(); };
+    img.onerror=rej; img.src=url;
+  });
+  return PIXI.Texture.from(cv);
 }
 
-// =============================================
-//  STARS
-// =============================================
-const starObjs = [];
-function buildStars() {
-  for (let i = 0; i < 80; i++) {
-    const g = new PIXI.Graphics();
-    const size = 0.5 + Math.random() * 1.5;
-    g.beginFill(0xffffff, 0.7 + Math.random() * 0.3);
-    g.drawCircle(0, 0, size);
-    g.endFill();
-    g.x = Math.random() * W;
-    g.y = Math.random() * (WATER_Y - 30);
-    g._phase = Math.random() * Math.PI * 2;
-    g._speed = 0.4 + Math.random() * 1.2;
-    g._base = 0.4 + Math.random() * 0.5;
-    starObjs.push(g);
-    layers.stars.addChild(g);
-  }
-}
+// ══════════════════════════════════════════
+//  PIXI SETUP
+// ══════════════════════════════════════════
+const W=390, H=520;
+const app = new PIXI.Application({
+  view: document.getElementById('pixi-canvas'),
+  width:W, height:H, backgroundAlpha:0,
+  antialias:true,
+  resolution: Math.min(window.devicePixelRatio||1,2),
+  autoDensity:true,
+});
 
-// =============================================
-//  WATER BODY
-// =============================================
-const waterGraphics = new PIXI.Graphics();
-const waterSurface = new PIXI.Graphics();
-const waterShimmer = new PIXI.Graphics();
-function buildWater() {
-  // Water body
-  waterGraphics.beginFill(0x041620);
-  waterGraphics.drawRect(0, WATER_Y, W, H - WATER_Y);
-  waterGraphics.endFill();
-  // Deep center pool
-  waterGraphics.beginFill(0x020d16, 0.5);
-  waterGraphics.drawEllipse(W * 0.48, WATER_Y + 160, 180, 120);
-  waterGraphics.endFill();
-  layers.water.addChild(waterGraphics, waterSurface, waterShimmer);
-}
+const L = {
+  pads: new PIXI.Container(),
+  fish: new PIXI.Container(),
+  ripples: new PIXI.Container(),
+  lotuses: new PIXI.Container(),
+  ff: new PIXI.Container(),
+  df: new PIXI.Container(),
+};
+Object.values(L).forEach(l=>app.stage.addChild(l));
 
-function animateWater(t) {
-  // Animated surface wave
-  waterSurface.clear();
-  waterSurface.lineStyle(1.5, 0x00b4a6, 0.25);
-  waterSurface.moveTo(0, WATER_Y);
-  for (let x = 0; x <= W; x += 4) {
-    const y = WATER_Y
-      + Math.sin(x * 0.018 + t * 0.8) * 2.5
-      + Math.sin(x * 0.04 + t * 1.4) * 1.2;
-    if (x === 0) waterSurface.moveTo(x, y);
-    else waterSurface.lineTo(x, y);
-  }
-  // Secondary wave
-  waterSurface.lineStyle(1, 0x00b4a6, 0.1);
-  for (let x = 0; x <= W; x += 4) {
-    const y = WATER_Y + 10
-      + Math.sin(x * 0.025 + t * 0.6 + 1) * 1.8
-      + Math.sin(x * 0.06 + t * 1.1) * 0.8;
-    if (x === 0) waterSurface.moveTo(x, y);
-    else waterSurface.lineTo(x, y);
-  }
-
-  // Light shimmer streaks on water
-  waterShimmer.clear();
-  for (let i = 0; i < 3; i++) {
-    const alpha = (Math.sin(t * 0.5 + i * 2.1) * 0.5 + 0.5) * 0.07;
-    waterShimmer.beginFill(0xb0e8e0, alpha);
-    const sx = W * 0.2 + i * W * 0.25;
-    waterShimmer.drawEllipse(sx, WATER_Y + 80 + i * 30, 30 + i * 15, 8);
-    waterShimmer.endFill();
-  }
-}
-
-// =============================================
-//  MIST
-// =============================================
-function buildMist() {
-  // Background mist (near horizon)
-  const mistBg = new PIXI.Graphics();
-  mistBg.beginFill(0x8ecfcf, 0.04);
-  mistBg.drawEllipse(W * 0.5, WATER_Y + 20, W * 0.9, 50);
-  mistBg.endFill();
-  mistBg.beginFill(0x8ecfcf, 0.03);
-  mistBg.drawEllipse(W * 0.3, WATER_Y + 30, W * 0.5, 35);
-  mistBg.endFill();
-  layers.mistBg.addChild(mistBg);
-
-  // Foreground mist strips (animated)
-  for (let i = 0; i < 4; i++) {
-    const m = new PIXI.Graphics();
-    m.beginFill(0xaae0d8, 0.025 + i * 0.01);
-    m.drawEllipse(0, 0, 120 + i * 40, 18);
-    m.endFill();
-    m.x = 30 + i * 85;
-    m.y = WATER_Y + 15 + i * 12;
-    m._phase = i * 1.4;
-    layers.mistFg.addChild(m);
-  }
-}
-
-// =============================================
-//  LOTUS POSITIONS — 20 spots on the pond
-// =============================================
-const LOTUS_POSITIONS = [
-  { x: 195, y: WATER_Y + 60 },
-  { x: 120, y: WATER_Y + 85 },
-  { x: 270, y: WATER_Y + 75 },
-  { x: 80,  y: WATER_Y + 130 },
-  { x: 320, y: WATER_Y + 110 },
-  { x: 165, y: WATER_Y + 140 },
-  { x: 230, y: WATER_Y + 155 },
-  { x: 55,  y: WATER_Y + 185 },
-  { x: 340, y: WATER_Y + 170 },
-  { x: 145, y: WATER_Y + 210 },
-  { x: 285, y: WATER_Y + 220 },
-  { x: 100, y: WATER_Y + 250 },
-  { x: 210, y: WATER_Y + 260 },
-  { x: 360, y: WATER_Y + 230 },
-  { x: 60,  y: WATER_Y + 300 },
-  { x: 175, y: WATER_Y + 310 },
-  { x: 305, y: WATER_Y + 290 },
-  { x: 255, y: WATER_Y + 340 },
-  { x: 120, y: WATER_Y + 360 },
-  { x: 340, y: WATER_Y + 350 },
+// 20 lotus positions on the pond (pond center ≈ 195,392, rx≈180,ry≈104)
+const LPOS = [
+  {x:195,y:370},{x:148,y:380},{x:244,y:375},{x:112,y:398},{x:278,y:388},
+  {x:172,y:408},{x:226,y:412},{x:93, y:418},{x:302,y:403},{x:158,y:428},
+  {x:244,y:432},{x:123,y:448},{x:210,y:452},{x:298,y:440},{x:78, y:450},
+  {x:178,y:462},{x:278,y:462},{x:232,y:470},{x:132,y:468},{x:318,y:456},
 ];
 
-// =============================================
-//  DRAW LOTUS at (x,y) with stage 0..1
-// =============================================
-function drawLotus(g, x, y, stage, sway) {
-  if (stage <= 0) return;
+let TEX={}, pads=[], lotuses=[], fish=[], dfSpr, ffs=[];
+const ripGfx = new PIXI.Graphics();
+L.ripples.addChild(ripGfx);
+const RIPS=[];
 
-  const s = Math.max(0, Math.min(1, stage));
-  const stemH = 18 + s * 22;
-  const topX = x + sway * 8;
-  const topY = y - stemH;
+async function loadAll() {
+  TEX.pad   = await toTex(S.pad, 72, 44);
+  TEX.bud   = await toTex(S.bud, 32, 54);
+  TEX.hbud  = await toTex(S.halfbud, 48, 66);
+  TEX.hblm  = await toTex(S.halfbloom, 74, 74);
+  TEX.full  = await toTex(S.fullbloom, 102, 88);
+  TEX.koi   = await toTex(S.koi, 82, 33);
+  TEX.koi2  = await toTex(S.koi2, 82, 33);
+  TEX.df    = await toTex(S.df, 62, 33);
+  build();
+}
 
-  // STEM
-  g.lineStyle(2, 0x2a6b2a, 0.7 + s * 0.2);
-  g.moveTo(x, y);
-  g.bezierCurveTo(x + sway * 3, y - stemH * 0.5, topX - sway, topY + 5, topX, topY);
-
-  // LILY PAD (appears at stage > 0.15)
-  if (s > 0.15) {
-    const padAlpha = Math.min(1, (s - 0.15) / 0.3);
-    const padW = 10 + s * 20;
-    const padH = padW * 0.45;
-    const padX = x + sway * 2;
-    const padY = y - 4;
-
-    g.lineStyle(1, 0x1d5c1d, 0.5 * padAlpha);
-    g.beginFill(0x2d7a35, 0.7 * padAlpha);
-    g.drawEllipse(padX, padY, padW, padH);
-    g.endFill();
-    // Pad notch line
-    g.lineStyle(0.8, 0x1d5c1d, 0.4 * padAlpha);
-    g.moveTo(padX, padY);
-    g.lineTo(padX, padY - padH * 0.95);
-    // Pad vein
-    g.lineStyle(0.5, 0x1d5c1d, 0.2 * padAlpha);
-    g.moveTo(padX, padY);
-    g.lineTo(padX - padW * 0.7, padY - padH * 0.5);
-    g.moveTo(padX, padY);
-    g.lineTo(padX + padW * 0.7, padY - padH * 0.5);
+function build() {
+  // Pads
+  LPOS.forEach((p,i)=>{
+    const s=new PIXI.Sprite(TEX.pad);
+    s.anchor.set(0.5,0.88); s.x=p.x+(Math.random()-.5)*8; s.y=p.y+9;
+    s.scale.set(0.65+Math.random()*0.32); s.rotation=(Math.random()-.5)*0.65;
+    s.alpha=0; s._ph=Math.random()*Math.PI*2; s._sw=0.012+Math.random()*0.01; s._ss=0.28+Math.random()*0.28;
+    L.pads.addChild(s); pads.push(s);
+  });
+  // Lotuses
+  LPOS.forEach((p,i)=>{
+    const s=new PIXI.Sprite(TEX.bud);
+    s.anchor.set(0.5,0.95); s.x=p.x; s.y=p.y;
+    s.alpha=0; s.scale.set(0.78+Math.random()*0.26);
+    s._ph=Math.random()*Math.PI*2; s._sw=0.028+Math.random()*0.02; s._ss=0.22+Math.random()*0.28;
+    L.lotuses.addChild(s); lotuses.push(s);
+  });
+  // Fish
+  [
+    {tex:'koi', cx:195,cy:392,rx:118,ry:54,spd:0.18,off:0,    sc:0.7, al:0.72},
+    {tex:'koi2',cx:184,cy:406,rx:88, ry:40,spd:0.13,off:2.3,  sc:0.56,al:0.65},
+    {tex:'koi', cx:200,cy:376,rx:72, ry:33,spd:0.23,off:4.2,  sc:0.48,al:0.58},
+  ].forEach(fd=>{
+    const f=new PIXI.Sprite(TEX[fd.tex]);
+    f.anchor.set(0.88,0.5); f.alpha=0; f._fd=fd; f._t=fd.off;
+    L.fish.addChild(f); fish.push(f);
+  });
+  // Dragonfly
+  dfSpr=new PIXI.Sprite(TEX.df);
+  dfSpr.anchor.set(0.5,0.5); dfSpr.alpha=0; dfSpr.scale.set(0.92);
+  dfSpr.x=158; dfSpr.y=354; L.df.addChild(dfSpr);
+  // Fireflies
+  for(let i=0;i<24;i++){
+    const ff=new PIXI.Graphics();
+    ff._x=48+Math.random()*(W-96); ff._y=328+Math.random()*136;
+    ff._vx=(Math.random()-.5)*0.32; ff._vy=(Math.random()-.5)*0.24;
+    ff._ph=Math.random()*Math.PI*2; ff._sp=0.65+Math.random()*1.1;
+    ff.alpha=0; L.ff.addChild(ff); ffs.push(ff);
   }
+  document.getElementById('loading').classList.add('gone');
+  startLoop();
+}
 
-  // PETALS
-  const petalSize = 5 + s * 14;
-
-  if (s < 0.35) {
-    // STAGE 1: tight bud
-    const budH = 8 + s * 10;
-    g.lineStyle(0.5, 0xff9fb2, 0.5);
-    g.beginFill(0xd4e8b0, 0.9);
-    g.drawEllipse(topX, topY - budH * 0.4, 3.5, budH * 0.6);
-    g.endFill();
-    g.beginFill(0xffb3c6, 0.8);
-    g.drawEllipse(topX - 2, topY - budH * 0.35, 3, budH * 0.5);
-    g.endFill();
-    g.beginFill(0xffb3c6, 0.8);
-    g.drawEllipse(topX + 2, topY - budH * 0.35, 3, budH * 0.5);
-    g.endFill();
-
-  } else if (s < 0.65) {
-    // STAGE 2: half open
-    const openFactor = (s - 0.35) / 0.3;
-    const numPetals = 6;
-    for (let i = 0; i < numPetals; i++) {
-      const angle = (i / numPetals) * Math.PI * 2;
-      const spread = openFactor * 0.7;
-      const px = topX + Math.sin(angle) * petalSize * spread * 0.6;
-      const py = topY + Math.cos(angle) * petalSize * spread * 0.25 - petalSize * (1 - openFactor) * 0.4;
-      const pw = petalSize * 0.38;
-      const ph = petalSize * 0.75;
-      const alpha = 0.7 + openFactor * 0.25;
-      const col = i % 2 === 0 ? 0xffb3c6 : 0xffc8d4;
-      g.lineStyle(0.4, 0xff9fb2, 0.4);
-      g.beginFill(col, alpha);
-      g.drawEllipse(px, py, pw, ph);
-      g.endFill();
-    }
-    // Center
-    g.beginFill(0xfff0b0, 0.8);
-    g.drawCircle(topX, topY, petalSize * 0.18);
-    g.endFill();
-
-  } else {
-    // STAGE 3: full bloom
-    const numOuter = 9;
-    const numInner = 6;
-
-    // Outer petals
-    for (let i = 0; i < numOuter; i++) {
-      const angle = (i / numOuter) * Math.PI * 2;
-      const px = topX + Math.sin(angle) * petalSize * 0.62;
-      const py = topY + Math.cos(angle) * petalSize * 0.32;
-      const col = i % 3 === 0 ? 0xffd6e0 : i % 3 === 1 ? 0xffb3c6 : 0xffc0d0;
-      g.lineStyle(0.4, 0xff85a5, 0.35);
-      g.beginFill(col, 0.82);
-      g.drawEllipse(px, py, petalSize * 0.38, petalSize * 0.68);
-      g.endFill();
-    }
-    // Inner petals
-    for (let i = 0; i < numInner; i++) {
-      const angle = (i / numInner) * Math.PI * 2 + 0.35;
-      const px = topX + Math.sin(angle) * petalSize * 0.32;
-      const py = topY + Math.cos(angle) * petalSize * 0.18;
-      g.lineStyle(0.3, 0xffaac0, 0.3);
-      g.beginFill(0xffe8ef, 0.9);
-      g.drawEllipse(px, py, petalSize * 0.28, petalSize * 0.48);
-      g.endFill();
-    }
-    // Golden center
-    g.lineStyle(0);
-    g.beginFill(0xf5c842, 1);
-    g.drawCircle(topX, topY, petalSize * 0.22);
-    g.endFill();
-    g.beginFill(0xe8a820, 0.8);
-    g.drawCircle(topX, topY, petalSize * 0.13);
-    g.endFill();
-    // Stamens
-    for (let i = 0; i < 5; i++) {
-      const a = (i / 5) * Math.PI * 2;
-      g.beginFill(0xf5c842, 0.7);
-      g.drawCircle(topX + Math.sin(a) * petalSize * 0.17, topY + Math.cos(a) * petalSize * 0.1, 1.2);
-      g.endFill();
-    }
-    // Soft glow under full bloom
-    g.beginFill(0xffb3c6, 0.06);
-    g.drawCircle(topX, topY, petalSize * 1.1);
-    g.endFill();
+// ── RIPPLES ──
+let ripT=0;
+function spawnRip(x,y,big){
+  RIPS.push({x,y,r:2,maxR:big?50:26+Math.random()*18,a:0.55,life:0});
+  if(big) RIPS.push({x,y,r:5,maxR:74,a:0.32,life:0});
+}
+function animRips(dt){
+  ripT+=dt;
+  if(ripT>110){ripT=0;spawnRip(100+Math.random()*190,356+Math.random()*80,false);}
+  ripGfx.clear();
+  for(let i=RIPS.length-1;i>=0;i--){
+    const r=RIPS[i]; r.r+=0.44; r.a-=0.006;
+    if(r.a<=0||r.r>r.maxR){RIPS.splice(i,1);continue;}
+    ripGfx.lineStyle(1.2,0x78c0b0,r.a*0.52);
+    ripGfx.drawEllipse(r.x,r.y,r.r,r.r*0.42);
+    if(r.r>8){ripGfx.lineStyle(0.7,0x78c0b0,r.a*0.22);ripGfx.drawEllipse(r.x,r.y,r.r*0.56,r.r*0.56*0.42);}
   }
 }
 
-// =============================================
-//  LOTUS OBJECTS
-// =============================================
-const lotusGraphics = [];
-const lotusData = LOTUS_POSITIONS.map((pos, i) => ({
-  ...pos,
-  gfx: (() => {
-    const g = new PIXI.Graphics();
-    layers.lotuses.addChild(g);
-    lotusGraphics.push(g);
-    return g;
-  })(),
-  sway: 0,
-  swayTarget: 0,
-  phase: Math.random() * Math.PI * 2,
-  swaySpeed: 0.3 + Math.random() * 0.4,
-  active: false,
-  stage: 0,
-  targetStage: 0,
-}));
-
-function renderLotuses(currentDay, t) {
-  lotusData.forEach((l, i) => {
-    const isActive = i < currentDay;
-    if (!isActive) {
-      l.gfx.clear();
-      return;
-    }
-    // Stage based on how long ago this lotus was planted
-    const daysOld = currentDay - i;
-    const target = Math.min(1, daysOld / 5); // fully blooms after 5 days
-    l.targetStage = target;
-    l.stage += (l.targetStage - l.stage) * 0.05;
-
-    // Sway
-    l.sway = Math.sin(t * l.swaySpeed + l.phase) * 0.5;
-
-    l.gfx.clear();
-    drawLotus(l.gfx, l.x, l.y, l.stage, l.sway);
+// ── LOTUS SPRITES ──
+function getT(stage){
+  if(stage<0.24) return TEX.bud;
+  if(stage<0.5)  return TEX.hbud;
+  if(stage<0.77) return TEX.hblm;
+  return TEX.full;
+}
+function updLotuses(day,t){
+  lotuses.forEach((s,i)=>{
+    const active=i<day;
+    if(!active){s.alpha=0;pads[i].alpha=0;return;}
+    const dOld=day-i; const stage=Math.min(1,dOld/5);
+    s.alpha+=(1-s.alpha)*0.06; pads[i].alpha+=(0.88-pads[i].alpha)*0.05;
+    const nx=getT(stage);
+    if(s.texture!==nx){s.texture=nx;s.anchor.set(0.5,0.95);}
+    s.rotation=Math.sin(t*s._ss+s._ph)*s._sw;
+    pads[i].rotation=Math.sin(t*pads[i]._ss+pads[i]._ph)*pads[i]._sw*0.55;
   });
 }
 
-// =============================================
-//  FISH
-// =============================================
-const fishData = [
-  { color: 0xff6b35, accent: 0xffffff, size: 1.0, pathOffset: 0,    depth: 0.6, speed: 0.22 },
-  { color: 0xff4444, accent: 0xffcc88, size: 0.7, pathOffset: 2.1,  depth: 0.8, speed: 0.17 },
-  { color: 0xffffff, accent: 0xff8844, size: 0.85, pathOffset: 4.3, depth: 0.7, speed: 0.25 },
+// ── FISH ──
+function animFish(day,dt){
+  fish.forEach((f,i)=>{
+    const show=day>=3+i*2;
+    f.alpha+=(( show?f._fd.al:0)-f.alpha)*0.038;
+    if(!show)return;
+    f._t+=dt*0.016*f._fd.spd;
+    const t=f._t,fd=f._fd;
+    f.x=fd.cx+Math.cos(t)*fd.rx; f.y=fd.cy+Math.sin(t*2)*fd.ry*0.46;
+    const vx=-Math.sin(t)*fd.rx;
+    f.scale.x=fd.sc*(vx<0?-1:1); f.scale.y=fd.sc;
+    f.rotation=Math.atan2(Math.cos(t*2)*fd.ry*0.46*2,vx);
+  });
+}
+
+// ── DRAGONFLY ──
+let dfTX=158,dfTY=354,dfCX=158,dfCY=354,dfRT=0;
+function animDf(day,t,dt){
+  const show=day>=7;
+  dfSpr.alpha+=((show?0.9:0)-dfSpr.alpha)*0.04;
+  if(!show)return;
+  dfRT+=dt;
+  if(dfRT>210){dfRT=0;dfTX=82+Math.random()*226;dfTY=328+Math.random()*148;}
+  dfCX+=(dfTX-dfCX)*0.024; dfCY+=(dfTY-dfCY)*0.024+Math.sin(t*4.5)*0.38;
+  dfSpr.x=dfCX; dfSpr.y=dfCY;
+  dfSpr.scale.x=(dfTX-dfCX)<0?-0.92:0.92;
+  dfSpr.scale.y=(0.88+Math.sin(t*17)*0.1)*0.92;
+}
+
+// ── FIREFLIES ──
+function animFf(day,t){
+  const show=day>=5;
+  ffs.forEach(ff=>{
+    const ta=show?0.9:0;
+    ff.alpha+=(ta-ff.alpha)*0.028;
+    if(ff.alpha<0.02)return;
+    ff._x+=ff._vx+Math.sin(t*0.28+ff._ph)*0.26;
+    ff._y+=ff._vy+Math.cos(t*0.36+ff._ph*1.2)*0.2;
+    if(ff._x<42)ff._x=W-52; if(ff._x>W-42)ff._x=52;
+    if(ff._y<322)ff._y=462; if(ff._y>468)ff._y=328;
+    const g=Math.sin(t*ff._sp+ff._ph)*0.5+0.5;
+    const a2=ff.alpha*(0.32+g*0.68);
+    const r=1.45*(0.68+g*0.5);
+    ff.clear();
+    ff.beginFill(0xfaff80,a2*0.1); ff.drawCircle(ff._x,ff._y,r*5.5); ff.endFill();
+    ff.beginFill(0xf5ff55,a2*0.52); ff.drawCircle(ff._x,ff._y,r); ff.endFill();
+    ff.beginFill(0xffffff,a2*0.92); ff.drawCircle(ff._x,ff._y,r*0.38); ff.endFill();
+  });
+}
+
+// ── LOOP ──
+let today=1, T=0;
+function startLoop(){
+  app.ticker.add(dt=>{
+    T+=dt*0.016;
+    updLotuses(today,T); animFish(today,dt);
+    animRips(dt); animDf(today,T,dt); animFf(today,T);
+  });
+}
+
+// ── UI ──
+const MS=[
+  {d:0, b:'🌱',l:'First seed planted'},
+  {d:7, b:'🪷',l:'First Bloom unlocked'},
+  {d:14,b:'🐟',l:'The koi have arrived'},
+  {d:21,b:'✨',l:'Dragonfly Days'},
+  {d:30,b:'🌟',l:'Sacred Garden reached'},
 ];
-const fishGfx = [];
-fishData.forEach(f => {
-  const g = new PIXI.Graphics();
-  layers.fish.addChild(g);
-  fishGfx.push(g);
-});
-
-function drawFish(g, x, y, angle, scale, color, accent, alpha) {
-  g.clear();
-  g.alpha = alpha;
-
-  // Body
-  g.lineStyle(0);
-  g.beginFill(color, 0.9);
-  // Draw fish body as squashed ellipse
-  const bw = 16 * scale, bh = 7 * scale;
-  g.drawEllipse(x, y, bw, bh);
-  g.endFill();
-
-  // Tail
-  g.beginFill(color, 0.8);
-  const tx = x - Math.cos(angle) * bw;
-  const ty = y - Math.sin(angle) * bw;
-  g.drawPolygon([
-    tx, ty,
-    tx - Math.cos(angle - 0.9) * bh * 2,
-    ty - Math.sin(angle - 0.9) * bh * 2,
-    tx - Math.cos(angle + 0.9) * bh * 2,
-    ty - Math.sin(angle + 0.9) * bh * 2,
-  ]);
-  g.endFill();
-
-  // Accent patches
-  g.beginFill(accent, 0.7);
-  g.drawEllipse(x + Math.cos(angle) * bw * 0.3, y + Math.sin(angle) * bw * 0.3, bw * 0.35, bh * 0.6);
-  g.endFill();
-
-  // Eye
-  g.beginFill(0x111111);
-  const ex = x + Math.cos(angle) * bw * 0.55;
-  const ey = y + Math.sin(angle) * bw * 0.55 - bh * 0.2;
-  g.drawCircle(ex, ey, 1.5 * scale);
-  g.endFill();
-}
-
-function animateFish(t, currentDay) {
-  fishData.forEach((f, i) => {
-    const visible = currentDay >= 3 + i * 2;
-    if (!visible) { fishGfx[i].alpha = 0; return; }
-
-    // Swim path: figure-8-ish loop across pond
-    const cx = W * 0.48, cy = WATER_Y + 150;
-    const rx = 130, ry = 70;
-    const tOffset = t * f.speed + f.pathOffset;
-    const x = cx + Math.cos(tOffset) * rx;
-    const y = cy + Math.sin(tOffset * 2) * ry * 0.5;
-    const angle = Math.atan2(
-      Math.cos(tOffset * 2) * ry * 0.5 * 2 * f.speed,
-      -Math.sin(tOffset) * rx * f.speed
-    );
-    const alpha = 0.35 + f.depth * 0.4;
-    drawFish(fishGfx[i], x, y, angle, f.size, f.color, f.accent, alpha);
-  });
-}
-
-// =============================================
-//  RIPPLES
-// =============================================
-const ripples = [];
-const rippleContainer = new PIXI.Graphics();
-layers.ripples.addChild(rippleContainer);
-let rippleTimer = 0;
-
-function spawnRipple() {
-  const rx = 60 + Math.random() * 270;
-  const ry = WATER_Y + 40 + Math.random() * 270;
-  ripples.push({ x: rx, y: ry, r: 2, maxR: 30 + Math.random() * 25, alpha: 0.6, life: 0 });
-}
-
-function animateRipples(dt) {
-  rippleContainer.clear();
-  rippleTimer += dt;
-  if (rippleTimer > 90) {
-    spawnRipple();
-    rippleTimer = 0;
-  }
-  for (let i = ripples.length - 1; i >= 0; i--) {
-    const r = ripples[i];
-    r.r += 0.5;
-    r.alpha -= 0.008;
-    r.life++;
-    if (r.alpha <= 0 || r.r > r.maxR) { ripples.splice(i, 1); continue; }
-    rippleContainer.lineStyle(1, 0x00b4a6, r.alpha * 0.4);
-    rippleContainer.drawEllipse(r.x, r.y, r.r, r.r * 0.4);
-    // Second inner ring
-    if (r.r > 6) {
-      rippleContainer.lineStyle(0.5, 0x00b4a6, r.alpha * 0.2);
-      rippleContainer.drawEllipse(r.x, r.y, r.r * 0.6, r.r * 0.6 * 0.4);
-    }
-  }
-}
-
-// =============================================
-//  DRAGONFLY
-// =============================================
-const dfGfx = new PIXI.Graphics();
-layers.dragonfly.addChild(dfGfx);
-let dfX = 150, dfY = WATER_Y + 80;
-let dfTargetX = 200, dfTargetY = WATER_Y + 100;
-let dfRetargetTimer = 0;
-
-function drawDragonfly(x, y, t) {
-  dfGfx.clear();
-  const wingBeat = Math.sin(t * 18) * 0.3 + 0.7;
-
-  // Body
-  dfGfx.lineStyle(0);
-  dfGfx.beginFill(0x00e5cc, 0.9);
-  dfGfx.drawEllipse(x, y, 8, 3);
-  dfGfx.endFill();
-  // Tail segments
-  for (let i = 1; i <= 4; i++) {
-    dfGfx.beginFill(0x00c4a6, 0.8 - i * 0.1);
-    dfGfx.drawEllipse(x - 5 - i * 4, y + i * 0.5, 3 - i * 0.3, 1.5 - i * 0.2);
-    dfGfx.endFill();
-  }
-  // Head
-  dfGfx.beginFill(0x00e5cc);
-  dfGfx.drawCircle(x + 9, y, 3);
-  dfGfx.endFill();
-  dfGfx.beginFill(0x111);
-  dfGfx.drawCircle(x + 10.5, y - 0.5, 1);
-  dfGfx.endFill();
-
-  // Wings
-  const wy = y - 2;
-  dfGfx.lineStyle(0.8, 0xb0f0e8, 0.55 * wingBeat);
-  dfGfx.beginFill(0x80e8d8, 0.18 * wingBeat);
-  dfGfx.drawEllipse(x + 2, wy - 5, 14, 5);
-  dfGfx.endFill();
-  dfGfx.beginFill(0x80e8d8, 0.15 * wingBeat);
-  dfGfx.drawEllipse(x + 2, wy + 5, 14, 5);
-  dfGfx.endFill();
-  dfGfx.beginFill(0xa0f0e8, 0.15 * wingBeat);
-  dfGfx.drawEllipse(x - 4, wy - 4, 11, 4);
-  dfGfx.endFill();
-  dfGfx.beginFill(0xa0f0e8, 0.12 * wingBeat);
-  dfGfx.drawEllipse(x - 4, wy + 4, 11, 4);
-  dfGfx.endFill();
-}
-
-function animateDragonfly(t, dt, currentDay) {
-  if (currentDay < 7) { dfGfx.alpha = 0; return; }
-  dfGfx.alpha = Math.min(1, (currentDay - 7) / 3);
-
-  dfRetargetTimer += dt;
-  if (dfRetargetTimer > 180) {
-    dfTargetX = 60 + Math.random() * 260;
-    dfTargetY = WATER_Y + 30 + Math.random() * 180;
-    dfRetargetTimer = 0;
-  }
-  const ease = 0.03;
-  dfX += (dfTargetX - dfX) * ease;
-  dfY += (dfTargetY - dfY) * ease + Math.sin(t * 3.5) * 0.5;
-
-  drawDragonfly(dfX, dfY, t);
-}
-
-// =============================================
-//  FIREFLIES
-// =============================================
-const fireflies = [];
-const ffContainer = new PIXI.Graphics();
-layers.fireflies.addChild(ffContainer);
-
-function initFireflies() {
-  for (let i = 0; i < 18; i++) {
-    fireflies.push({
-      x: 20 + Math.random() * (W - 40),
-      y: WATER_Y + 20 + Math.random() * 250,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.3,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.6 + Math.random() * 0.9,
-      size: 1.5 + Math.random() * 1.5,
-    });
-  }
-}
-
-function animateFireflies(t, currentDay) {
-  if (currentDay < 5) { ffContainer.alpha = 0; return; }
-  ffContainer.alpha = Math.min(1, (currentDay - 5) / 5) * 0.85;
-  ffContainer.clear();
-
-  fireflies.forEach(f => {
-    f.x += f.vx + Math.sin(t * 0.3 + f.phase) * 0.3;
-    f.y += f.vy + Math.cos(t * 0.4 + f.phase * 1.3) * 0.25;
-    if (f.x < 10) f.x = W - 10;
-    if (f.x > W - 10) f.x = 10;
-    if (f.y < WATER_Y + 15) f.y = WATER_Y + 220;
-    if (f.y > WATER_Y + 280) f.y = WATER_Y + 20;
-
-    const glow = (Math.sin(t * f.speed + f.phase) * 0.5 + 0.5);
-    const alpha = 0.3 + glow * 0.7;
-    const r = f.size * (0.7 + glow * 0.5);
-
-    ffContainer.beginFill(0xf4ff80, alpha * 0.15);
-    ffContainer.drawCircle(f.x, f.y, r * 4);
-    ffContainer.endFill();
-    ffContainer.beginFill(0xf0ff60, alpha * 0.6);
-    ffContainer.drawCircle(f.x, f.y, r);
-    ffContainer.endFill();
-    ffContainer.beginFill(0xffffff, alpha * 0.9);
-    ffContainer.drawCircle(f.x, f.y, r * 0.4);
-    ffContainer.endFill();
-  });
-}
-
-// =============================================
-//  UI UPDATE
-// =============================================
-const milestones = [
-  { day: 1,  badge: '🌱', text: '<strong>Day 7 — First Bloom</strong><br>Keep going, your lotus is budding' },
-  { day: 7,  badge: '🪷', text: '<strong>Day 21 — The Pond Awakens</strong><br>More lotuses are on their way' },
-  { day: 14, badge: '✨', text: '<strong>Day 30 — Dragonfly Days</strong><br>Your garden is full of life' },
-  { day: 21, badge: '🌊', text: '<strong>Day 60 — Sacred Waters</strong><br>A breathtaking garden awaits' },
-  { day: 30, badge: '🌟', text: '<strong>Sacred Garden reached!</strong><br>You have transformed completely' },
+const MN=[
+  'Day 7 — First Bloom|Keep going, your lotus is budding',
+  'Day 14 — The Koi Arrive|Your pond stirs with life',
+  'Day 21 — Dragonfly Days|Watch the sky come alive',
+  'Day 30 — Sacred Garden|Almost there, you\'re doing amazing',
+  'Sacred Garden achieved!|You have truly transformed 🌸',
 ];
-
-function getMilestone(day) {
-  let current = milestones[0];
-  for (const m of milestones) {
-    if (day >= m.day) current = m;
-  }
-  return current;
+function updUI(d){
+  document.getElementById('day-num').textContent=d;
+  document.getElementById('s-days').textContent=d;
+  document.getElementById('s-weeks').textContent=Math.floor(d/7);
+  document.getElementById('s-hours').textContent=(d*24).toLocaleString();
+  const b=MS.filter(m=>d>=m.d&&m.d>0).length;
+  document.getElementById('s-badges').textContent=b;
+  const cur=[...MS].reverse().find(m=>d>=m.d);
+  document.getElementById('badge-pill').textContent=cur.b+' '+cur.l;
+  const ni=Math.min(b,MN.length-1);
+  const [st,sb]=MN[ni].split('|');
+  document.getElementById('ms-txt').innerHTML=`<strong>${st}</strong><br>${sb}`;
 }
 
-function updateUI(day) {
-  document.getElementById('day-number').textContent = day;
-  document.getElementById('stat-days').textContent = day;
-  document.getElementById('stat-weeks').textContent = Math.floor(day / 7);
-  document.getElementById('stat-hours').textContent = (day * 24).toLocaleString();
-  const badges = milestones.filter(m => day >= m.day).length;
-  document.getElementById('stat-badges').textContent = badges;
-
-  const m = getMilestone(day);
-  document.getElementById('milestone-badge').textContent = m.badge + ' ' + (
-    day < 7 ? 'First seed planted' :
-    day < 14 ? 'First Bloom unlocked' :
-    day < 21 ? 'Dragonfly Days coming' :
-    day < 30 ? 'Sacred Waters ahead' : 'Sacred Garden reached'
-  );
-  document.getElementById('milestone-text').innerHTML = m.text;
-}
-
-// =============================================
-//  BUILD EVERYTHING
-// =============================================
-buildSky();
-buildStars();
-buildWater();
-buildMist();
-initFireflies();
-
-// =============================================
-//  MAIN ANIMATION LOOP
-// =============================================
-let currentDay = 1;
-let tick = 0;
-
-app.ticker.add((delta) => {
-  tick += delta * 0.016; // approx seconds
-
-  // Stars twinkling
-  starObjs.forEach(s => {
-    s.alpha = s._base + Math.sin(tick * s._speed + s._phase) * 0.3;
-  });
-
-  // Mist drift
-  layers.mistFg.children.forEach((m, i) => {
-    m.x += Math.sin(tick * 0.2 + m._phase) * 0.3;
-  });
-
-  animateWater(tick);
-  animateFish(tick, currentDay);
-  animateRipples(delta);
-  animateDragonfly(tick, delta, currentDay);
-  animateFireflies(tick, currentDay);
-  renderLotuses(currentDay, tick);
+// Slider
+document.getElementById('day-slider').addEventListener('input',e=>{
+  today=parseInt(e.target.value);
+  document.getElementById('slider-v').textContent='Day '+today;
+  updUI(today);
 });
 
-// =============================================
-//  SLIDER CONTROL
-// =============================================
-const slider = document.getElementById('day-slider');
-const sliderVal = document.getElementById('slider-val');
-
-slider.addEventListener('input', () => {
-  currentDay = parseInt(slider.value);
-  sliderVal.textContent = 'Day ' + currentDay;
-  updateUI(currentDay);
+// Tap ripple
+document.getElementById('phone').addEventListener('click',e=>{
+  const r=document.getElementById('phone').getBoundingClientRect();
+  const px=(e.clientX-r.left)*(390/r.width);
+  const py=(e.clientY-r.top)*(844/r.height);
+  if(py>292&&py<515&&px>18&&px<372) spawnRip(px,py,true);
 });
 
-// Initial UI
-updateUI(1);
-
-// Tap pond to create ripple
-document.getElementById('app-wrap').addEventListener('click', (e) => {
-  const rect = document.getElementById('app-wrap').getBoundingClientRect();
-  const px = (e.clientX - rect.left) * (W / rect.width);
-  const py = (e.clientY - rect.top) * (H / rect.height);
-  if (py > WATER_Y) {
-    ripples.push({ x: px, y: py, r: 2, maxR: 45, alpha: 0.8, life: 0 });
-    ripples.push({ x: px, y: py, r: 2, maxR: 30, alpha: 0.5, life: 0 });
-  }
-});
-
-console.log('🪷 QuitMantra Lotus Pond loaded. Use the slider to grow your garden.');
+updUI(1);
+loadAll();
 </script>
 </body>
 </html>
