@@ -1413,11 +1413,14 @@ function goHome(updateUrl = true) {
 // ── INIT GRID ─────────────────────────────────────────────────────────────────
 
 function buildGrid() {
-  document.getElementById('substance-grid').innerHTML = SUBSTANCES.map(s => `
+  const grid = document.getElementById('substance-grid');
+  if (!grid) return;
+  
+  grid.innerHTML = SUBSTANCES.map(s => `
     <div class="s-card" onclick="onSubstanceClick('${s.slug}')">
       <div class="s-icon ${s.bg}">${icon(s.icon, s.ic)}</div>
-      <div class="s-name" data-i18n="substance.${s.slug}.name">${i18n.t(`substance.${s.slug}.name`)}</div>
-      <div class="s-desc" data-i18n="substance.${s.slug}.desc">${i18n.t(`substance.${s.slug}.desc`)}</div>
+      <div class="s-name" data-i18n="substance.${s.slug}.name">${i18n.t ? i18n.t(`substance.${s.slug}.name`) : s.name}</div>
+      <div class="s-desc" data-i18n="substance.${s.slug}.desc">${i18n.t ? i18n.t(`substance.${s.slug}.desc`) : s.desc}</div>
     </div>
   `).join('');
 }
@@ -1622,36 +1625,32 @@ window.addEventListener('languageChanged', (e) => {
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
-// ── BOOT ─────────────────────────────────────────────────────────────────────
-
 function tryBoot() {
     const i18nReady = window.i18n && window.i18n.ready;
     const authReady = window.Auth && window.Auth.ready;
     
-    console.log(`Boot Check - i18n:${i18nReady}, Auth:${authReady}`);
+    // Fallback: If i18n is at least loaded enough to have SUBSTANCES defined, render something
+    if (window._booted) return;
     
     if (i18nReady && authReady) {
-        if (window._booted) return;
         window._booted = true;
         console.log('Booting Application...');
         buildGrid();
         handleRoute();
-        // Clear interval if it exists
         if (window._bootInterval) clearInterval(window._bootInterval);
     }
 }
 
-// Polling fallback to ensure we boot even if events are missed
-window._bootInterval = setInterval(tryBoot, 200);
+// Render immediately with defaults so the screen isn't blank
+buildGrid();
+
+// Polling fallback to ensure we boot
+window._bootInterval = setInterval(tryBoot, 300);
 
 window.addEventListener('i18nReady', tryBoot);
 window.addEventListener('authReady', tryBoot);
-window.addEventListener('hashchange', () => {
-    console.log('Hash changed:', window.location.hash);
-    handleRoute();
-});
+window.addEventListener('hashchange', handleRoute);
 
-// Final check after all scripts loaded
 tryBoot();
 </script>
 </body>

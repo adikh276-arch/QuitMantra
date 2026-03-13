@@ -100,6 +100,7 @@ router.get('/assessments/:user_id', async (req, res) => {
 app.use('/quit_assessments/api', router);
 
 // Root redirect
+app.get('/quit_assessments', (req, res) => res.redirect('/quit_assessments/'));
 app.get('/', (req, res) => res.redirect('/quit_assessments/'));
 
 app.listen(PORT, () => {

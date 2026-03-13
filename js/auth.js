@@ -28,10 +28,8 @@ const Auth = {
     async handleHandshake(token) {
         console.log('Auth: handling handshake with token');
         try {
-            // Find base path for API
-            const script = document.querySelector('script[src*="js/auth.js"]');
-            const scriptSrc = script ? script.src : window.location.origin + '/quit_assessments/js/auth.js';
-            const apiPath = scriptSrc.substring(0, scriptSrc.indexOf('/quit_assessments/') + '/quit_assessments/'.length) + 'api/auth/handshake';
+            // Use explicit absolute path for the platform subpath
+            const apiPath = '/quit_assessments/api/auth/handshake';
 
             const response = await fetch(apiPath, {
                 method: 'POST',
@@ -48,7 +46,7 @@ const Auth = {
             // Phase 7 - Step 3: Remove token from URL
             const url = new URL(window.location);
             url.searchParams.delete('token');
-            // Ensure hash and other search params are preserved
+            // Reconstruct URL to prevent losing hash or getting double slashes
             window.history.replaceState({}, '', url.pathname + url.search + url.hash);
             
             this.hideLoader();

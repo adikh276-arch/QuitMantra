@@ -65,12 +65,9 @@ const i18n = {
     async loadTranslations(lang) {
         console.log(`i18n: loading ${lang}`);
         try {
-            // Find our own script path to get a base URL
-            const script = document.querySelector('script[src*="i18n/loader.js"]');
-            const scriptSrc = script ? script.src : window.location.origin + '/quit_assessments/i18n/loader.js';
-            const localesPath = scriptSrc.substring(0, scriptSrc.lastIndexOf('/') + 1) + 'locales/';
-            
-            const response = await fetch(`${localesPath}${lang}.json`);
+            // Use explicit absolute path for the platform subpath
+            const basePath = '/quit_assessments/i18n/locales/';
+            const response = await fetch(`${basePath}${lang}.json`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             this.translations = await response.json();
         } catch (error) {
