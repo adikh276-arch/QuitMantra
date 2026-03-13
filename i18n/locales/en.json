@@ -58,6 +58,7 @@
   "footer.disclaimer": "This DSM-5-based screening is for educational and self-reflection purposes only. It does not constitute a clinical diagnosis. A formal diagnosis can only be made by a licensed clinician. If you are concerned about substance use, contact SAMHSA's National Helpline at <a href=\"tel:18006624357\">1-800-662-4357</a> (free, confidential, 24/7).",
   "footer.cite1": "American Psychiatric Association. (2013). <em>Diagnostic and Statistical Manual of Mental Disorders</em> (5th ed.). Arlington, VA: American Psychiatric Publishing. <a href=\"https://psychiatry.org/dsm\" target=\"_blank\">psychiatry.org/dsm</a>",
   "footer.cite2": "American Psychiatric Association. (2022). <em>Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)</em>. Washington, DC: American Psychiatric Association Publishing.",
+  "auth.loading": "Authenticating...",
   "quiz.back": "Back",
   "quiz.continue": "Continue",
   "quiz.results_btn": "See Results",

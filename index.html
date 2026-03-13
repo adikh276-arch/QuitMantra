@@ -1481,17 +1481,28 @@ function handleRoute() {
   const s = SUBSTANCES.find(x => x.slug === slug);
   if (s) {
     if (view === 'quiz') {
-      // If we're already on this quiz, don't restart it (preserve state)
-      if (current && current.slug === slug && document.getElementById('screen-quiz').classList.contains('active')) {
-        console.log('Already on quiz screen');
-        return;
-      }
+      if (current && current.slug === slug && document.getElementById('screen-quiz').classList.contains('active')) return;
       startQuiz(s, false);
     } else if (view === 'results') {
+      // If we already have current state, just show it
       if (current && current.slug === slug) {
-        showScreen('screen-results');
+        showResults();
       } else {
-        goHome();
+        // Try to restore from localStorage
+        const saved = localStorage.getItem(`assessment_${slug}`);
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            current = s;
+            answers = data.answers;
+            showResults();
+          } catch (e) {
+            console.error('Failed to restore assessment:', e);
+            goHome();
+          }
+        } else {
+          goHome();
+        }
       }
     } else {
       showScreen('screen-landing');
@@ -1533,8 +1544,22 @@ function buildGrid() {
 function onSubstanceClick(slug) {
   const s = SUBSTANCES.find(x => x.slug === slug);
   if (!s) return;
-  setHash({ substance: slug, view: 'quiz' });
-  startQuiz(s, false);
+  
+  const saved = localStorage.getItem(`assessment_${slug}`);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      current = s;
+      answers = data.answers;
+      setHash({ substance: slug, view: 'results' });
+      showResults();
+    } catch (e) {
+      console.error('Failed to restore assessment:', e);
+      startQuiz(s);
+    }
+  } else {
+    startQuiz(s);
+  }
 }
 
 // ── QUIZ ──────────────────────────────────────────────────────────────────────
@@ -1647,13 +1672,18 @@ function goBack() {
 }
 
 function retake() {
-  if (current) startQuiz(current);
-  else goHome();
+  if (current) {
+    localStorage.removeItem(`assessment_${current.slug}`);
+    startQuiz(current);
+  } else {
+    goHome();
+  }
 }
 
 // ── RESULTS ───────────────────────────────────────────────────────────────────
 
 function showResults() {
+  if (!current) return;
   const met = answers.reduce((n, a) => n + (a !== null && OPTIONS[a].score > 0 ? 1 : 0), 0);
   
   let resKey = 'none';
@@ -1688,6 +1718,9 @@ function showResults() {
 
   showScreen('screen-results');
   document.title = `Your ${sName} Assessment Results — QuitMantra`;
+
+  // Persistence
+  localStorage.setItem(`assessment_${current.slug}`, JSON.stringify({ met, answers, timestamp: Date.now() }));
 
   // Save to DB
   saveToDb(met, resKey);
