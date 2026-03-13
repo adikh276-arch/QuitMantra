@@ -108,4 +108,8 @@ const i18n = {
 };
 
 window.i18n = i18n;
-document.addEventListener('DOMContentLoaded', () => i18n.init());
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => i18n.init());
+} else {
+    i18n.init();
+}

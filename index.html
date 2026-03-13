@@ -1380,14 +1380,23 @@ function updatePageMeta() {
 
 function handleRoute() {
   const { substance: slug, view } = getHash();
+  console.log('Routing:', { slug, view });
+  
   const s = SUBSTANCES.find(x => x.slug === slug);
-  if (s && view === 'quiz') {
-    // only restart if not already on this quiz
-    if (!current || current.slug !== slug) startQuiz(s, false);
-  } else if (s && view === 'results') {
-    // if we have quiz state, just show results screen; otherwise go home
-    if (current && current.slug === slug) {
-      showScreen('screen-results');
+  if (s) {
+    if (view === 'quiz') {
+      // If we're already on this quiz, don't restart it (preserve state)
+      if (current && current.slug === slug && document.getElementById('screen-quiz').classList.contains('active')) {
+        console.log('Already on quiz screen');
+        return;
+      }
+      startQuiz(s, false);
+    } else if (view === 'results') {
+      if (current && current.slug === slug) {
+        showScreen('screen-results');
+      } else {
+        goHome();
+      }
     } else {
       showScreen('screen-landing');
     }
@@ -1625,33 +1634,37 @@ window.addEventListener('languageChanged', (e) => {
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
-function tryBoot() {
+function tryBoot(isForced = false) {
     const i18nReady = window.i18n && window.i18n.ready;
     const authReady = window.Auth && window.Auth.ready;
     
-    // Fallback: If i18n is at least loaded enough to have SUBSTANCES defined, render something
     if (window._booted) return;
-    
-    if (i18nReady && authReady) {
+
+    if ((i18nReady && authReady) || isForced) {
         window._booted = true;
-        console.log('Booting Application...');
+        console.log(`Booting - Forced:${isForced}`);
         buildGrid();
         handleRoute();
         if (window._bootInterval) clearInterval(window._bootInterval);
     }
 }
 
-// Render immediately with defaults so the screen isn't blank
-buildGrid();
+// Ensure grid exists ASAP
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildGrid);
+} else {
+    buildGrid();
+}
 
-// Polling fallback to ensure we boot
+// Emergency boot after 5 seconds
+setTimeout(() => tryBoot(true), 5000);
+
+// Polling boot
 window._bootInterval = setInterval(tryBoot, 300);
 
-window.addEventListener('i18nReady', tryBoot);
-window.addEventListener('authReady', tryBoot);
+window.addEventListener('i18nReady', () => tryBoot());
+window.addEventListener('authReady', () => tryBoot());
 window.addEventListener('hashchange', handleRoute);
-
-tryBoot();
 </script>
 </body>
 </html>

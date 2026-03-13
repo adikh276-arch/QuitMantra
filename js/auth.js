@@ -87,4 +87,8 @@ const Auth = {
 };
 
 window.Auth = Auth;
-document.addEventListener('DOMContentLoaded', () => Auth.init());
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => Auth.init());
+} else {
+    Auth.init();
+}
