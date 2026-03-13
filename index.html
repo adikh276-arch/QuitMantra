@@ -1572,14 +1572,19 @@ window.addEventListener('languageChanged', (e) => {
     buildGrid();
     if (current) {
         if (getHash().view === 'quiz') renderQ();
-        if (getHash().view === 'results') showResults();
+        if (getHash().view === 'results') {
+            showResults();
+            document.title = `Your ${i18n.t(`substance.${current.slug}.name`)} Assessment Results — QuitMantra`;
+        }
     }
 });
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
-buildGrid();
-handleRoute();
+window.addEventListener('i18nReady', () => {
+    buildGrid();
+    handleRoute();
+});
 </script>
 </body>
 </html>

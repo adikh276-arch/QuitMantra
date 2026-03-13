@@ -12,7 +12,9 @@ const i18n = {
         // Sync dropdown value
         const langSelect = document.getElementById('lang-select');
         if (langSelect) langSelect.value = this.locale;
-        
+
+        // Notify that we are ready
+        window.dispatchEvent(new CustomEvent('i18nReady', { detail: { language: this.locale } }));
         console.log(`i18n initialized: ${this.locale}`);
     },
 
@@ -55,8 +57,11 @@ const i18n = {
 
     async loadTranslations(lang) {
         try {
-            // Use relative path to work in both local file and server environments
-            const response = await fetch(`i18n/locales/${lang}.json`);
+            // Use the directory of the current script to find locales
+            // This is more robust than simple relative paths
+            const scriptPath = document.querySelector('script[src*="i18n/loader.js"]').src;
+            const basePath = scriptPath.substring(0, scriptPath.lastIndexOf('/') + 1);
+            const response = await fetch(`${basePath}locales/${lang}.json`);
             this.translations = await response.json();
         } catch (error) {
             console.error('Failed to load translations:', error);
