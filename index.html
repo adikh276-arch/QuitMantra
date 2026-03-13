@@ -1354,9 +1354,15 @@ function handleRoute() {
   const { substance: slug, view } = getHash();
   const s = SUBSTANCES.find(x => x.slug === slug);
   if (s && view === 'quiz') {
-    startQuiz(s, false);
+    // only restart if not already on this quiz
+    if (!current || current.slug !== slug) startQuiz(s, false);
   } else if (s && view === 'results') {
-    goHome(false);
+    // if we have quiz state, just show results screen; otherwise go home
+    if (current && current.slug === slug) {
+      showScreen('screen-results');
+    } else {
+      showScreen('screen-landing');
+    }
   } else {
     showScreen('screen-landing');
   }
@@ -1473,7 +1479,6 @@ function retake() {
 // ── RESULTS ───────────────────────────────────────────────────────────────────
 
 function showResults() {
-  setHash({ substance: current.slug, view: 'results' });
   const met = answers.reduce((n, a) => n + (a !== null && OPTIONS[a].score > 0 ? 1 : 0), 0);
   const r = RESULTS.find(x => met >= x.min && met <= x.max) || RESULTS[0];
 
@@ -1486,26 +1491,29 @@ function showResults() {
   document.getElementById('res-sub').textContent = `${met} of 11 DSM-5 criteria met`;
   document.getElementById('res-msg').textContent = r.msg;
 
-  // ring
+  showScreen('screen-results');
+  document.title = `Your ${current.name} Assessment Results — QuitMantra`;
+
+  // set hash after screen is shown so hashchange doesn't interfere
+  setTimeout(() => setHash({ substance: current.slug, view: 'results' }), 0);
+
+  // animate ring
   setTimeout(() => {
     const circ = document.getElementById('res-circle');
     circ.style.stroke = r.color;
     circ.style.strokeDashoffset = 276.5 - (met / 11) * 276.5;
-  }, 100);
+  }, 150);
 
-  // severity bar
+  // animate severity bar
   setTimeout(() => {
     document.getElementById('res-sev-fill').style.width = r.pct + '%';
     document.getElementById('res-sev-fill').style.background = r.color;
-  }, 300);
+  }, 350);
 
   // highlight active severity label
   ['sev-l0','sev-l1','sev-l2','sev-l3'].forEach((id, i) => {
     document.getElementById(id).classList.toggle('active', i === RESULTS.indexOf(r));
   });
-
-  showScreen('screen-results');
-  document.title = `Your ${current.name} Assessment Results — QuitMantra`;
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────────────
