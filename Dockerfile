@@ -3,7 +3,7 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 
 # Create the subdirectory and copy files
-COPY . /usr/share/nginx/html/Quit_Assessments
+COPY . /usr/share/nginx/html/quit_assessments
 
 # Remove default config and copy our custom config
 RUN rm /etc/nginx/conf.d/default.conf

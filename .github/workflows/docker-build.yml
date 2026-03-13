@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +30,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: bunker.mantracare.com/lovable/Quit_Assessments:1.0
+          tags: bunker.mantracare.com/lovable/quit_assessments:1.0
           # Ensure env and node_modules are not pushed if present 
           # (Dockerfile COPY . already respects .dockerignore if we had one, 
           # but for GitHub Actions we just need the source)
