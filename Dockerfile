@@ -1,14 +1,14 @@
-FROM nginx:alpine
+FROM node:24-alpine
 
-WORKDIR /usr/share/nginx/html
+WORKDIR /app
 
-# Create the subdirectory and copy files
-COPY . /usr/share/nginx/html/quit_assessments
+# Copy all files
+COPY . .
 
-# Remove default config and copy our custom config
-RUN rm /etc/nginx/conf.d/default.conf
-COPY vite-nginx.conf /etc/nginx/conf.d/nginx.conf
+# Install dependencies
+RUN npm install
 
-EXPOSE 80
+# Expose port and start the server
+EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server/index.js"]

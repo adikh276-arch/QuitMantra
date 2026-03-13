@@ -910,6 +910,7 @@ nav {
 }
 </style>
 <script src="i18n/loader.js"></script>
+<script src="js/auth.js"></script>
 </head>
 <body>
 
@@ -1531,6 +1532,9 @@ function showResults() {
   showScreen('screen-results');
   document.title = `Your ${current.name} Assessment Results — QuitMantra`;
 
+  // Save to DB
+  saveToDb(met, resKey);
+
   // set hash after screen is shown so hashchange doesn't interfere
   setTimeout(() => setHash({ substance: current.slug, view: 'results' }), 0);
 
@@ -1552,6 +1556,39 @@ function showResults() {
     const activeIdx = ['none', 'mild', 'moderate', 'severe'].indexOf(resKey);
     document.getElementById(id).classList.toggle('active', i === activeIdx);
   });
+}
+
+async function saveToDb(score, resultKey) {
+    if (!window.Auth || !window.Auth.userId) return;
+
+    const responses = answers.map((ansIdx, i) => {
+        const key = ['never', 'once_twice', 'sometimes', 'often', 'very_often'][ansIdx];
+        return {
+            question_id: i + 1,
+            answer_index: ansIdx,
+            answer_text: i18n.t('option.' + key),
+            score_contribution: (ansIdx > 0 ? 1 : 0)
+        };
+    });
+
+    try {
+        const response = await fetch('/quit_assessments/api/save-assessment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: window.Auth.userId,
+                substance_slug: current.slug,
+                substance_name: i18n.t(`substance.${current.slug}.name`),
+                score: score,
+                result_level: i18n.t(`result.${resultKey}.level`),
+                responses: responses
+            })
+        });
+        const result = await response.json();
+        console.log('Result saved:', result);
+    } catch (err) {
+        console.error('Failed to save to DB:', err);
+    }
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────────────
@@ -1582,9 +1619,18 @@ window.addEventListener('languageChanged', (e) => {
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
 window.addEventListener('i18nReady', () => {
+    // Wait for BOTH i18n and Auth to be ready
+    if (window.Auth && window.Auth.userId) {
+        boot();
+    } else {
+        window.addEventListener('authReady', boot, { once: true });
+    }
+});
+
+function boot() {
     buildGrid();
     handleRoute();
-});
+}
 </script>
 </body>
 </html>
