@@ -130,12 +130,12 @@
   "option.often_sub": "Freqüente",
   "option.very_often": "Muito frequentemente",
   "option.very_often_sub": "Regular",
-  "result.none.level": "Sem indicação de distúrbio",
+  "result.none.level": "Sem desordem",
   "result.none.msg": "Suas respostas não atendem aos critérios do DSM-5 para um diagnóstico de transtorno por uso de substâncias. Se você ainda tiver dúvidas sobre o seu uso, conversar com um profissional de saúde é sempre uma boa ideia.",
-  "result.mild.level": "Transtorno Leve por Uso de Substâncias",
+  "result.mild.level": "Leve",
   "result.mild.msg": "Suas respostas sugerem um transtorno leve por uso de substâncias, de acordo com os critérios do DSM-5. Essa fase inicial costuma ser o melhor momento para buscar ajuda. Considere conversar com um profissional de saúde ou um terapeuta sobre seus padrões de uso.",
-  "result.moderate.level": "Transtorno moderado por uso de substâncias",
+  "result.moderate.level": "Moderado",
   "result.moderate.msg": "Suas respostas indicam um transtorno por uso de substâncias de gravidade moderada. Esse nível de gravidade geralmente se beneficia significativamente de apoio estruturado. Recomendamos que você entre em contato com um terapeuta, conselheiro ou especialista em dependência química licenciado.",
-  "result.severe.level": "Transtorno Grave por Uso de Substâncias",
+  "result.severe.level": "Forte",
   "result.severe.msg": "Suas respostas refletem um transtorno grave por uso de substâncias, de acordo com os critérios do DSM-5. Por favor, considere entrar em contato com um profissional de saúde, um centro de tratamento para dependência química ou uma linha de apoio em crise o mais breve possível. Você não precisa enfrentar isso sozinho(a)."
 }

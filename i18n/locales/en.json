@@ -74,7 +74,6 @@
   "results.evaluate_another": "Evaluate Another Substance",
   "results.retake": "Retake This Quiz",
   "results.disclaimer": "This is a screening tool only and does not constitute a clinical diagnosis. For professional support contact SAMHSA at <strong>1-800-662-4357</strong>.",
-  
   "substance.alcohol.name": "Alcohol",
   "substance.alcohol.desc": "Beer, wine, spirits",
   "substance.weed.name": "Weed",
@@ -115,7 +114,6 @@
   "substance.social-media.desc": "Instagram, TikTok, scrolling",
   "substance.video-games.name": "Video Games",
   "substance.video-games.desc": "Gaming, online play, streams",
-
   "question.1": "Have you used [S] more often or in larger amounts than you originally intended?",
   "question.2": "Have you wanted to cut down or stop using [S] but found that you couldn't?",
   "question.3": "Have you spent a significant amount of time obtaining, using, or recovering from [S]?",
@@ -127,7 +125,6 @@
   "question.9": "Have you continued to use [S] despite knowing it was causing or worsening a physical or psychological problem?",
   "question.10": "Have you experienced tolerance — needing more [S] than before to get the same effect?",
   "question.11": "Have you experienced withdrawal symptoms when you stopped or reduced your use of [S]?",
-  
   "option.never": "Never",
   "option.never_sub": "Not at all",
   "option.once_twice": "Once or twice",
@@ -138,13 +135,12 @@
   "option.often_sub": "Frequent",
   "option.very_often": "Very often",
   "option.very_often_sub": "Regular",
-
-  "result.none.level": "No Indication of Disorder",
+  "result.none.level": "No disorder",
   "result.none.msg": "Your responses do not currently meet the DSM-5 threshold for a substance use disorder diagnosis. If you still have concerns about your use, speaking with a healthcare provider is always a worthwhile step.",
-  "result.mild.level": "Mild Substance Use Disorder",
+  "result.mild.level": "Mild",
   "result.mild.msg": "Your responses suggest a mild substance use disorder based on DSM-5 criteria. This early stage is often the best time to seek guidance. Consider speaking with a healthcare professional or counselor about your patterns of use.",
-  "result.moderate.level": "Moderate Substance Use Disorder",
+  "result.moderate.level": "Moderate",
   "result.moderate.msg": "Your responses indicate a moderate substance use disorder. This level of severity often benefits significantly from structured support. We encourage you to reach out to a licensed therapist, counselor, or addiction specialist.",
-  "result.severe.level": "Severe Substance Use Disorder",
+  "result.severe.level": "Severe",
   "result.severe.msg": "Your responses reflect a severe substance use disorder based on DSM-5 criteria. Please consider reaching out to a healthcare provider, addiction treatment center, or crisis line as soon as possible. You do not have to navigate this alone."
 }

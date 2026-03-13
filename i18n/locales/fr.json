@@ -130,12 +130,12 @@
   "option.often_sub": "Fréquent",
   "option.very_often": "Très souvent",
   "option.very_often_sub": "Régulier",
-  "result.none.level": "Aucun signe de trouble",
+  "result.none.level": "Aucun trouble",
   "result.none.msg": "Vos réponses ne correspondent pas actuellement aux critères du DSM-5 pour un diagnostic de trouble lié à l&#39;usage de substances. Si vous avez encore des inquiétudes concernant votre consommation, il est toujours judicieux de consulter un professionnel de la santé.",
-  "result.mild.level": "Trouble lié à l&#39;usage de substances léger",
+  "result.mild.level": "Bénin",
   "result.mild.msg": "Vos réponses suggèrent un trouble lié à l&#39;usage de substances léger selon les critères du DSM-5. Ce stade précoce est souvent le moment idéal pour demander de l&#39;aide. Envisagez de parler de vos habitudes de consommation avec un professionnel de la santé ou un conseiller.",
-  "result.moderate.level": "Trouble lié à l&#39;usage de substances modéré",
+  "result.moderate.level": "Modéré",
   "result.moderate.msg": "Vos réponses indiquent un trouble lié à l&#39;usage de substances modéré. À ce niveau de gravité, un soutien structuré est souvent bénéfique. Nous vous encourageons à contacter un thérapeute, un conseiller ou un spécialiste en toxicomanie agréé.",
-  "result.severe.level": "Trouble grave lié à l&#39;usage de substances",
+  "result.severe.level": "Grave",
   "result.severe.msg": "Vos réponses indiquent un trouble sévère lié à l&#39;usage de substances selon les critères du DSM-5. Veuillez contacter un professionnel de la santé, un centre de traitement des dépendances ou une ligne d&#39;écoute dès que possible. Vous n&#39;êtes pas seul(e)."
 }

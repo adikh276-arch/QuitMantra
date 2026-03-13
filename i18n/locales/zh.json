@@ -130,12 +130,12 @@
   "option.often_sub": "频繁",
   "option.very_often": "经常",
   "option.very_often_sub": "常规的",
-  "result.none.level": "未发现紊乱迹象",
+  "result.none.level": "无紊乱",
   "result.none.msg": "根据您的回答，您目前的状况尚不符合DSM-5中关于物质使用障碍的诊断标准。如果您仍然对自己的用药情况感到担忧，咨询医疗保健专业人员始终是值得的。",
-  "result.mild.level": "轻度物质使用障碍",
+  "result.mild.level": "温和的",
   "result.mild.msg": "根据DSM-5标准，您的回答表明您可能存在轻度物质使用障碍。在这个早期阶段，寻求专业指导往往是最佳时机。建议您与医疗保健专业人员或咨询师谈谈您的物质使用习惯。",
-  "result.moderate.level": "中度物质使用障碍",
+  "result.moderate.level": "缓和",
   "result.moderate.msg": "您的回答表明您存在中度物质使用障碍。这种程度的障碍通常能从结构化的支持服务中获益匪浅。我们建议您联系有执照的治疗师、咨询师或成瘾专家。",
-  "result.severe.level": "严重物质使用障碍",
+  "result.severe.level": "严重",
   "result.severe.msg": "根据DSM-5诊断标准，您的回答表明您存在严重的物质使用障碍。请尽快联系医疗保健机构、戒瘾治疗中心或危机干预热线。您不必独自面对这一切。"
 }

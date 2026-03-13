@@ -130,12 +130,12 @@
   "option.often_sub": "Sık",
   "option.very_often": "Çok sık",
   "option.very_often_sub": "Düzenli",
-  "result.none.level": "Herhangi bir rahatsızlık belirtisi yok.",
+  "result.none.level": "Hiçbir bozukluk yok.",
   "result.none.msg": "Yanıtlarınız şu anda DSM-5&#39;in madde kullanım bozukluğu tanısı için belirlediği eşiği karşılamamaktadır. Kullanımınızla ilgili endişeleriniz devam ediyorsa, bir sağlık uzmanıyla görüşmek her zaman faydalı bir adımdır.",
-  "result.mild.level": "Hafif Madde Kullanım Bozukluğu",
+  "result.mild.level": "Hafif",
   "result.mild.msg": "Yanıtlarınız, DSM-5 kriterlerine göre hafif bir madde kullanım bozukluğuna işaret ediyor. Bu erken evre, genellikle rehberlik aramak için en uygun zamandır. Kullanım alışkanlıklarınız hakkında bir sağlık uzmanı veya danışmanla görüşmeyi düşünün.",
-  "result.moderate.level": "Orta Düzey Madde Kullanım Bozukluğu",
+  "result.moderate.level": "Ilıman",
   "result.moderate.msg": "Yanıtlarınız orta düzeyde bir madde kullanım bozukluğuna işaret ediyor. Bu şiddet seviyesindeki durumlar genellikle yapılandırılmış destekten önemli ölçüde fayda görür. Lisanslı bir terapist, danışman veya bağımlılık uzmanına başvurmanızı öneririz.",
-  "result.severe.level": "Şiddetli Madde Kullanım Bozukluğu",
+  "result.severe.level": "Haşin",
   "result.severe.msg": "Yanıtlarınız, DSM-5 kriterlerine göre ciddi bir madde kullanım bozukluğunu yansıtıyor. Lütfen en kısa sürede bir sağlık kuruluşuna, bağımlılık tedavi merkezine veya kriz hattına başvurmayı düşünün. Bu süreçte yalnız değilsiniz."
 }

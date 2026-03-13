@@ -130,12 +130,12 @@
   "option.often_sub": "Madalas",
   "option.very_often": "Madalas",
   "option.very_often_sub": "Regular",
-  "result.none.level": "Walang Indikasyon ng Karamdaman",
+  "result.none.level": "Walang karamdaman",
   "result.none.msg": "Ang iyong mga tugon ay kasalukuyang hindi nakakatugon sa pamantayan ng DSM-5 para sa diagnosis ng isang sakit sa paggamit ng droga. Kung mayroon ka pa ring mga alalahanin tungkol sa iyong paggamit, ang pakikipag-usap sa isang tagapagbigay ng pangangalagang pangkalusugan ay palaging isang kapaki-pakinabang na hakbang.",
-  "result.mild.level": "Banayad na Karamdaman sa Paggamit ng Sustansya",
+  "result.mild.level": "Hindi gaanong matindi",
   "result.mild.msg": "Ang iyong mga tugon ay nagmumungkahi ng isang banayad na sakit sa paggamit ng droga batay sa pamantayan ng DSM-5. Ang maagang yugtong ito ay kadalasang ang pinakamagandang oras upang humingi ng gabay. Isaalang-alang ang pakikipag-usap sa isang propesyonal sa pangangalagang pangkalusugan o tagapayo tungkol sa iyong mga gawi sa paggamit.",
-  "result.moderate.level": "Katamtamang Sakit sa Paggamit ng Sustansya",
+  "result.moderate.level": "Katamtaman",
   "result.moderate.msg": "Ang iyong mga tugon ay nagpapahiwatig ng katamtamang antas ng karamdaman sa paggamit ng droga. Ang antas ng kalubhaan na ito ay kadalasang nakikinabang nang malaki mula sa nakabalangkas na suporta. Hinihikayat ka naming makipag-ugnayan sa isang lisensyadong therapist, tagapayo, o espesyalista sa adiksyon.",
-  "result.severe.level": "Malubhang Sakit sa Paggamit ng Sustansya",
+  "result.severe.level": "Malala",
   "result.severe.msg": "Ang iyong mga tugon ay sumasalamin sa isang malalang sakit sa paggamit ng droga batay sa pamantayan ng DSM-5. Mangyaring isaalang-alang ang pakikipag-ugnayan sa isang tagapagbigay ng pangangalagang pangkalusugan, sentro ng paggamot sa adiksyon, o linya para sa krisis sa lalong madaling panahon. Hindi mo kailangang harapin ito nang mag-isa."
 }

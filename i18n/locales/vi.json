@@ -130,12 +130,12 @@
   "option.often_sub": "Thường xuyên",
   "option.very_often": "Rất thường xuyên",
   "option.very_often_sub": "Thường xuyên",
-  "result.none.level": "Không có dấu hiệu rối loạn.",
+  "result.none.level": "Không có rối loạn",
   "result.none.msg": "Các câu trả lời của bạn hiện chưa đáp ứng ngưỡng chẩn đoán rối loạn sử dụng chất gây nghiện theo DSM-5. Nếu bạn vẫn còn lo ngại về việc sử dụng chất gây nghiện của mình, việc nói chuyện với nhà cung cấp dịch vụ chăm sóc sức khỏe luôn là một bước nên làm.",
-  "result.mild.level": "Rối loạn sử dụng chất gây nghiện nhẹ",
+  "result.mild.level": "Nhẹ",
   "result.mild.msg": "Câu trả lời của bạn cho thấy bạn có thể mắc chứng rối loạn sử dụng chất gây nghiện ở mức độ nhẹ dựa trên tiêu chí DSM-5. Giai đoạn đầu này thường là thời điểm tốt nhất để tìm kiếm sự hướng dẫn. Hãy cân nhắc việc nói chuyện với chuyên gia chăm sóc sức khỏe hoặc nhà tư vấn về thói quen sử dụng chất gây nghiện của bạn.",
-  "result.moderate.level": "Rối loạn sử dụng chất gây nghiện mức độ vừa",
+  "result.moderate.level": "Vừa phải",
   "result.moderate.msg": "Câu trả lời của bạn cho thấy bạn đang gặp vấn đề về rối loạn sử dụng chất gây nghiện ở mức độ vừa phải. Mức độ nghiêm trọng này thường được cải thiện đáng kể nhờ sự hỗ trợ có hệ thống. Chúng tôi khuyến khích bạn liên hệ với nhà trị liệu, tư vấn viên hoặc chuyên gia về nghiện chất có giấy phép hành nghề.",
-  "result.severe.level": "Rối loạn sử dụng chất gây nghiện nghiêm trọng",
+  "result.severe.level": "Nghiêm trọng",
   "result.severe.msg": "Các câu trả lời của bạn phản ánh chứng rối loạn sử dụng chất gây nghiện nghiêm trọng dựa trên tiêu chí DSM-5. Vui lòng liên hệ với nhà cung cấp dịch vụ chăm sóc sức khỏe, trung tâm điều trị nghiện hoặc đường dây nóng hỗ trợ khủng hoảng càng sớm càng tốt. Bạn không cần phải đối mặt với điều này một mình."
 }

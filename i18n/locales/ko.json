@@ -130,12 +130,12 @@
   "option.often_sub": "잦은",
   "option.very_often": "매우 자주",
   "option.very_often_sub": "정기적인",
-  "result.none.level": "이상 징후 없음",
+  "result.none.level": "장애 없음",
   "result.none.msg": "귀하의 답변은 현재 DSM-5의 물질 사용 장애 진단 기준을 충족하지 않습니다. 물질 사용에 대해 여전히 우려되는 점이 있다면 의료 전문가와 상담하는 것이 좋습니다.",
-  "result.mild.level": "경미한 물질 사용 장애",
+  "result.mild.level": "경증",
   "result.mild.msg": "귀하의 답변은 DSM-5 기준에 따라 경미한 물질 사용 장애를 시사합니다. 이러한 초기 단계는 전문가의 도움을 받는 것이 가장 좋은 시기입니다. 의료 전문가나 상담사와 물질 사용 패턴에 대해 상담해 보시기 바랍니다.",
-  "result.moderate.level": "중등도 물질 사용 장애",
+  "result.moderate.level": "보통의",
   "result.moderate.msg": "귀하의 답변은 중등도의 물질 사용 장애를 나타냅니다. 이 정도의 심각도는 체계적인 지원을 통해 상당한 효과를 볼 수 있습니다. 면허를 소지한 치료사, 상담사 또는 중독 전문가에게 연락하시기를 권장합니다.",
-  "result.severe.level": "심각한 물질 사용 장애",
+  "result.severe.level": "극심한",
   "result.severe.msg": "귀하의 답변은 DSM-5 기준에 따른 심각한 물질 사용 장애를 시사합니다. 가능한 한 빨리 의료 전문가, 중독 치료 센터 또는 위기 상담 전화에 연락하시기 바랍니다. 혼자서 이 문제를 해결하려고 애쓰지 마세요."
 }

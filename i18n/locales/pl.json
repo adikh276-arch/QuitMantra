@@ -130,12 +130,12 @@
   "option.often_sub": "Częsty",
   "option.very_often": "Bardzo często",
   "option.very_often_sub": "Regularny",
-  "result.none.level": "Brak oznak zaburzeń",
+  "result.none.level": "Brak zaburzeń",
   "result.none.msg": "Twoje odpowiedzi nie spełniają obecnie progu DSM-5 dla diagnozy zaburzeń związanych z używaniem substancji psychoaktywnych. Jeśli nadal masz wątpliwości dotyczące swojego używania substancji psychoaktywnych, warto porozmawiać z lekarzem.",
-  "result.mild.level": "Łagodne zaburzenie związane z używaniem substancji psychoaktywnych",
+  "result.mild.level": "Łagodny",
   "result.mild.msg": "Twoje odpowiedzi wskazują na łagodne zaburzenie związane z używaniem substancji psychoaktywnych, zgodnie z kryteriami DSM-5. Ten wczesny etap to często najlepszy moment na zasięgnięcie porady. Rozważ rozmowę z lekarzem lub doradcą na temat swoich wzorców używania substancji psychoaktywnych.",
-  "result.moderate.level": "Umiarkowane zaburzenie związane z używaniem substancji",
+  "result.moderate.level": "Umiarkowany",
   "result.moderate.msg": "Twoje odpowiedzi wskazują na umiarkowane zaburzenie związane z używaniem substancji psychoaktywnych. Ten poziom nasilenia często w znacznym stopniu zależy od zorganizowanego wsparcia. Zachęcamy do kontaktu z licencjonowanym terapeutą, doradcą lub specjalistą od uzależnień.",
-  "result.severe.level": "Ciężkie zaburzenie związane z używaniem substancji psychoaktywnych",
+  "result.severe.level": "Ciężki : silny",
   "result.severe.msg": "Twoje odpowiedzi wskazują na poważne zaburzenie związane z używaniem substancji psychoaktywnych, zgodnie z kryteriami DSM-5. Prosimy o jak najszybszy kontakt z lekarzem, ośrodkiem leczenia uzależnień lub infolinią kryzysową. Nie musisz radzić sobie z tym sam."
 }

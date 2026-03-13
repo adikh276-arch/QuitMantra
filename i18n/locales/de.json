@@ -130,12 +130,12 @@
   "option.often_sub": "Häufig",
   "option.very_often": "Sehr oft",
   "option.very_often_sub": "Regulär",
-  "result.none.level": "Keine Anzeichen einer Störung",
+  "result.none.level": "Keine Störung",
   "result.none.msg": "Ihre Antworten erfüllen derzeit nicht die Kriterien des DSM-5 für die Diagnose einer Substanzgebrauchsstörung. Sollten Sie weiterhin Bedenken bezüglich Ihres Konsums haben, ist ein Gespräch mit einem Arzt oder einer Ärztin stets ratsam.",
-  "result.mild.level": "Leichte Substanzgebrauchsstörung",
+  "result.mild.level": "Leicht",
   "result.mild.msg": "Ihre Antworten deuten gemäß den DSM-5-Kriterien auf eine leichte Substanzgebrauchsstörung hin. Dieses frühe Stadium ist oft der beste Zeitpunkt, um sich Hilfe zu suchen. Sprechen Sie mit einem Arzt oder Therapeuten über Ihr Konsumverhalten.",
-  "result.moderate.level": "Mäßige Substanzgebrauchsstörung",
+  "result.moderate.level": "Mäßig",
   "result.moderate.msg": "Ihre Antworten deuten auf eine mittelschwere Substanzgebrauchsstörung hin. Bei diesem Schweregrad ist eine strukturierte Unterstützung oft sehr hilfreich. Wir empfehlen Ihnen, sich an einen approbierten Therapeuten, Berater oder Suchtspezialisten zu wenden.",
-  "result.severe.level": "Schwere Substanzgebrauchsstörung",
+  "result.severe.level": "Schwer",
   "result.severe.msg": "Ihre Antworten deuten auf eine schwere Substanzgebrauchsstörung gemäß den DSM-5-Kriterien hin. Bitte wenden Sie sich so bald wie möglich an einen Arzt, eine Suchtklinik oder eine Krisenhotline. Sie müssen diese Situation nicht allein bewältigen."
 }

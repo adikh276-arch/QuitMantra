@@ -130,12 +130,12 @@
   "option.often_sub": "Frequente",
   "option.very_often": "Molto spesso",
   "option.very_often_sub": "Regolare",
-  "result.none.level": "Nessun segno di disturbo",
+  "result.none.level": "Nessun disturbo",
   "result.none.msg": "Le tue risposte al momento non soddisfano i criteri del DSM-5 per una diagnosi di disturbo da uso di sostanze. Se hai ancora dubbi sul tuo consumo, parlare con un operatore sanitario è sempre un passo consigliabile.",
-  "result.mild.level": "Disturbo da uso di sostanze lieve",
+  "result.mild.level": "Blando",
   "result.mild.msg": "Le tue risposte suggeriscono un disturbo da uso di sostanze lieve, secondo i criteri del DSM-5. Questa fase iniziale è spesso il momento migliore per chiedere aiuto. Valuta la possibilità di parlare con un professionista sanitario o un consulente in merito alle tue abitudini di consumo.",
-  "result.moderate.level": "Disturbo da uso di sostanze di grado moderato",
+  "result.moderate.level": "Moderare",
   "result.moderate.msg": "Le tue risposte indicano un disturbo da uso di sostanze di gravità moderata. Questo livello di gravità spesso trae notevole beneficio da un supporto strutturato. Ti incoraggiamo a contattare un terapeuta, un consulente o uno specialista in dipendenze qualificato.",
-  "result.severe.level": "Grave disturbo da uso di sostanze",
+  "result.severe.level": "Acuto",
   "result.severe.msg": "Le tue risposte riflettono un grave disturbo da uso di sostanze secondo i criteri del DSM-5. Ti consigliamo di contattare al più presto un medico, un centro di trattamento per le dipendenze o una linea di assistenza per le emergenze. Non devi affrontare tutto questo da solo."
 }

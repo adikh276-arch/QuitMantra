@@ -130,12 +130,12 @@
   "option.often_sub": "Frecuente",
   "option.very_often": "Muy a menudo",
   "option.very_often_sub": "Regular",
-  "result.none.level": "No hay indicios de trastorno.",
+  "result.none.level": "Ningún trastorno",
   "result.none.msg": "Sus respuestas no cumplen actualmente con los criterios del DSM-5 para un diagnóstico de trastorno por consumo de sustancias. Si aún le preocupa su consumo, hablar con un profesional de la salud siempre es una buena idea.",
-  "result.mild.level": "Trastorno leve por consumo de sustancias",
+  "result.mild.level": "Leve",
   "result.mild.msg": "Sus respuestas sugieren un trastorno leve por consumo de sustancias según los criterios del DSM-5. Esta etapa temprana suele ser el mejor momento para buscar orientación. Considere hablar con un profesional de la salud o un consejero sobre sus patrones de consumo.",
-  "result.moderate.level": "Trastorno moderado por consumo de sustancias",
+  "result.moderate.level": "Moderado",
   "result.moderate.msg": "Sus respuestas indican un trastorno moderado por consumo de sustancias. Este nivel de gravedad suele beneficiarse significativamente del apoyo estructurado. Le recomendamos que se ponga en contacto con un terapeuta, consejero o especialista en adicciones con licencia.",
-  "result.severe.level": "Trastorno grave por consumo de sustancias",
+  "result.severe.level": "Severo",
   "result.severe.msg": "Sus respuestas reflejan un trastorno grave por consumo de sustancias según los criterios del DSM-5. Considere contactar con un profesional de la salud, un centro de tratamiento de adicciones o una línea de crisis lo antes posible. No tiene que afrontar esta situación solo."
 }

@@ -130,12 +130,12 @@
   "option.often_sub": "Sering",
   "option.very_often": "Sangat sering",
   "option.very_often_sub": "Biasa",
-  "result.none.level": "Tidak Ada Indikasi Gangguan",
+  "result.none.level": "Tidak ada gangguan",
   "result.none.msg": "Jawaban Anda saat ini belum memenuhi ambang batas DSM-5 untuk diagnosis gangguan penggunaan zat. Jika Anda masih memiliki kekhawatiran tentang penggunaan Anda, berbicara dengan penyedia layanan kesehatan selalu merupakan langkah yang bermanfaat.",
-  "result.mild.level": "Gangguan Penggunaan Zat Ringan",
+  "result.mild.level": "Lembut",
   "result.mild.msg": "Jawaban Anda menunjukkan gangguan penggunaan zat ringan berdasarkan kriteria DSM-5. Tahap awal ini seringkali merupakan waktu terbaik untuk mencari bimbingan. Pertimbangkan untuk berbicara dengan profesional kesehatan atau konselor tentang pola penggunaan Anda.",
-  "result.moderate.level": "Gangguan Penggunaan Zat Sedang",
+  "result.moderate.level": "Sedang",
   "result.moderate.msg": "Jawaban Anda menunjukkan gangguan penggunaan zat yang sedang. Tingkat keparahan ini seringkali sangat terbantu dengan dukungan terstruktur. Kami mendorong Anda untuk menghubungi terapis, konselor, atau spesialis kecanduan berlisensi.",
-  "result.severe.level": "Gangguan Penggunaan Zat Berat",
+  "result.severe.level": "Berat",
   "result.severe.msg": "Respons Anda mencerminkan gangguan penggunaan zat yang parah berdasarkan kriteria DSM-5. Mohon pertimbangkan untuk menghubungi penyedia layanan kesehatan, pusat pengobatan kecanduan, atau layanan krisis sesegera mungkin. Anda tidak harus menghadapi ini sendirian."
 }
