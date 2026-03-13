@@ -1339,8 +1339,10 @@ let answers = new Array(11).fill(null);
 // ── HASH ROUTING ─────────────────────────────────────────────────────────────
 
 function getHash() {
-  const raw = window.location.hash.replace('#', '');
+  const hash = window.location.hash || '';
+  const raw = hash.replace(/^#/, '');
   const params = {};
+  if (!raw) return params;
   raw.split('&').forEach(pair => {
     const [k, v] = pair.split('=');
     if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
@@ -1358,7 +1360,9 @@ function setHash(obj) {
 }
 
 function clearHash() {
-  history.replaceState(null, '', window.location.pathname + window.location.search);
+  const url = new URL(window.location);
+  url.hash = '';
+  history.replaceState(null, '', url.pathname + url.search);
   updatePageMeta();
 }
 
@@ -1618,21 +1622,36 @@ window.addEventListener('languageChanged', (e) => {
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
+// ── BOOT ─────────────────────────────────────────────────────────────────────
+
 function tryBoot() {
-    console.log('Checking readiness - i18n:', window.i18n?.ready, 'Auth:', window.Auth?.ready);
-    if (window.i18n?.ready && window.Auth?.ready) {
+    const i18nReady = window.i18n && window.i18n.ready;
+    const authReady = window.Auth && window.Auth.ready;
+    
+    console.log(`Boot Check - i18n:${i18nReady}, Auth:${authReady}`);
+    
+    if (i18nReady && authReady) {
         if (window._booted) return;
         window._booted = true;
-        console.log('Booting app...');
+        console.log('Booting Application...');
         buildGrid();
         handleRoute();
+        // Clear interval if it exists
+        if (window._bootInterval) clearInterval(window._bootInterval);
     }
 }
 
+// Polling fallback to ensure we boot even if events are missed
+window._bootInterval = setInterval(tryBoot, 200);
+
 window.addEventListener('i18nReady', tryBoot);
 window.addEventListener('authReady', tryBoot);
+window.addEventListener('hashchange', () => {
+    console.log('Hash changed:', window.location.hash);
+    handleRoute();
+});
 
-// Also try boot immediately in case they are already ready (cached)
+// Final check after all scripts loaded
 tryBoot();
 </script>
 </body>

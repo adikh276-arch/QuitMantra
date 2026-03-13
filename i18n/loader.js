@@ -5,8 +5,13 @@ const i18n = {
     supportedLocales: ['en', 'es', 'fr', 'pt', 'de', 'ar', 'hi', 'bn', 'zh', 'ja', 'id', 'tr', 'vi', 'ko', 'ru', 'it', 'pl', 'th', 'tl'],
 
     async init() {
+        console.log('i18n: starting init');
         this.detectLanguage();
-        await this.loadTranslations(this.locale);
+        try {
+            await this.loadTranslations(this.locale);
+        } catch (e) {
+            console.error('i18n: load failed during init', e);
+        }
         this.translatePage();
         this.updateHtmlLang();
         this.ready = true;
@@ -17,7 +22,7 @@ const i18n = {
 
         // Notify that we are ready
         window.dispatchEvent(new CustomEvent('i18nReady', { detail: { language: this.locale } }));
-        console.log(`i18n initialized: ${this.locale}`);
+        console.log(`i18n ready: ${this.locale}`);
     },
 
     detectLanguage() {
@@ -58,12 +63,15 @@ const i18n = {
     },
 
     async loadTranslations(lang) {
+        console.log(`i18n: loading ${lang}`);
         try {
-            // Use relative path from the current page to the locales directory
-            // In Docker it's /quit_assessments/i18n/locales/
-            // Locally it's i18n/locales/
-            const basePath = 'i18n/locales/';
-            const response = await fetch(`${basePath}${lang}.json`);
+            // Find our own script path to get a base URL
+            const script = document.querySelector('script[src*="i18n/loader.js"]');
+            const scriptSrc = script ? script.src : window.location.origin + '/quit_assessments/i18n/loader.js';
+            const localesPath = scriptSrc.substring(0, scriptSrc.lastIndexOf('/') + 1) + 'locales/';
+            
+            const response = await fetch(`${localesPath}${lang}.json`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             this.translations = await response.json();
         } catch (error) {
             console.error('Failed to load translations:', error);

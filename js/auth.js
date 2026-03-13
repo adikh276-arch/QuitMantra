@@ -3,6 +3,7 @@ const Auth = {
     ready: false,
     
     async init() {
+        console.log('Auth: starting init');
         this.showLoader();
         
         const params = new URLSearchParams(window.location.search);
@@ -13,9 +14,11 @@ const Auth = {
         } else {
             const storedId = sessionStorage.getItem('user_id');
             if (storedId) {
+                console.log('Auth: existing user session found', storedId);
                 this.userId = storedId;
                 this.hideLoader();
             } else {
+                console.log('Auth: no token or session, redirecting');
                 // Phase 7 - Step 4: Failure Handling
                 window.location.href = 'https://api.mantracare.com/token'; // Redirect to get token
             }
@@ -23,15 +26,20 @@ const Auth = {
     },
 
     async handleHandshake(token) {
+        console.log('Auth: handling handshake with token');
         try {
-            // My backend URL
-            const response = await fetch('/quit_assessments/api/auth/handshake', {
+            // Find base path for API
+            const script = document.querySelector('script[src*="js/auth.js"]');
+            const scriptSrc = script ? script.src : window.location.origin + '/quit_assessments/js/auth.js';
+            const apiPath = scriptSrc.substring(0, scriptSrc.indexOf('/quit_assessments/') + '/quit_assessments/'.length) + 'api/auth/handshake';
+
+            const response = await fetch(apiPath, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token })
             });
             
-            if (!response.ok) throw new Error('Auth failed');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             
             const data = await response.json();
             this.userId = data.user_id;
@@ -40,12 +48,15 @@ const Auth = {
             // Phase 7 - Step 3: Remove token from URL
             const url = new URL(window.location);
             url.searchParams.delete('token');
+            // Ensure hash and other search params are preserved
             window.history.replaceState({}, '', url.pathname + url.search + url.hash);
             
             this.hideLoader();
         } catch (err) {
-            console.error('Handshake failed:', err);
-            window.location.href = 'https://api.mantracare.com/token';
+            console.error('Auth: handshake failed:', err);
+            // Even if it fails, we set ready so the page shows something (maybe with a restricted view or another go at login)
+            this.hideLoader();
+            // window.location.href = 'https://api.mantracare.com/token';
         }
     },
 
