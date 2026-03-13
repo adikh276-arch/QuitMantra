@@ -104,7 +104,7 @@
   /* ── LANDING ── */
   #screen-landing {
     align-items: center;
-    padding: 60px 24px 80px;
+    padding: 60px 24px 0;
   }
 
   .landing-hero {
@@ -717,6 +717,228 @@
     padding: 20px 0;
   }
 
+  /* ── CONTENT SECTIONS (below substance picker) ── */
+  .landing-content {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 56px 0;
+  }
+
+  /* DSM-5 Info block */
+  .info-section { margin-bottom: 0; }
+
+  .info-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .info-section p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-mid);
+    margin-bottom: 16px;
+  }
+
+  .info-section p:last-child { margin-bottom: 0; }
+
+  .info-section strong { color: var(--text-dark); font-weight: 600; }
+
+  /* Criteria section */
+  .criteria-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+
+  .criteria-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 32px;
+  }
+
+  .criteria-group { margin-bottom: 28px; }
+
+  .criteria-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .criteria-list { list-style: none; }
+
+  .criteria-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 0;
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(221,216,204,0.5);
+  }
+
+  .criteria-list li:last-child { border-bottom: none; }
+
+  .criteria-num {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+
+  /* Severity scale (landing) */
+  .severity-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3.5vw, 30px);
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 20px;
+  }
+
+  .sev-track-wrap {
+    margin-bottom: 16px;
+  }
+
+  .sev-gradient-bar {
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #4A7C59 0%, #C8873A 40%, #C87A3A 65%, #C45B3A 100%);
+    margin-bottom: 10px;
+  }
+
+  .sev-scale-labels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sev-scale-item { }
+
+  .sev-range {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .sev-label {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* FAQ */
+  .faq-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 24px;
+  }
+
+  .faq-list { border-top: 1px solid var(--border); }
+
+  .faq-item { border-bottom: 1px solid var(--border); }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: color 0.2s;
+  }
+
+  .faq-question:hover { color: var(--forest); }
+
+  .faq-chevron {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: var(--text-light);
+  }
+
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+  .faq-answer {
+    display: none;
+    padding: 0 0 20px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-mid);
+  }
+
+  .faq-item.open .faq-answer { display: block; }
+
+  /* Footer */
+  .landing-footer {
+    background: var(--forest);
+    color: rgba(255,255,255,0.7);
+    padding: 48px 24px;
+    margin-top: 80px;
+  }
+
+  .footer-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .footer-warning {
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .footer-warning a {
+    color: var(--amber-light);
+    text-decoration: none;
+  }
+
+  .footer-warning a:hover { text-decoration: underline; }
+
+  .footer-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 20px 0;
+  }
+
+  .footer-citation {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+  }
+
+  .footer-citation a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+
+  .footer-citation em { font-style: italic; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
     nav { padding: 0 20px; }
@@ -724,6 +946,7 @@
     .substance-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .substance-card { padding: 16px 8px; }
     .result-msg-card, .severity-bar-wrap { padding: 22px 20px; }
+    .sev-scale-labels { gap: 4px; }
   }
 </style>
 </head>
@@ -745,63 +968,37 @@
 <!-- ═══════════════════════════════════ LANDING ═══════════════════════════════════ -->
 <div id="screen-landing" class="screen active">
 
+  <!-- ── HERO ── -->
   <div class="landing-hero">
 
-    <!-- Illustration -->
     <div class="hero-illustration illustration-wrap">
       <svg viewBox="0 0 520 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background blobs -->
         <ellipse cx="260" cy="130" rx="220" ry="110" fill="rgba(74,124,89,0.06)"/>
         <ellipse cx="380" cy="90" rx="100" ry="60" fill="rgba(200,135,58,0.07)"/>
-
-        <!-- Central plant / growth motif -->
         <line x1="260" y1="220" x2="260" y2="80" stroke="#1C3A2A" stroke-width="2" stroke-linecap="round"/>
-        <!-- Branches -->
         <path d="M260 160 Q230 140 210 120" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/>
         <path d="M260 145 Q290 125 310 108" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/>
         <path d="M260 185 Q235 170 220 155" stroke="#7BA68A" stroke-width="1.2" stroke-linecap="round"/>
         <path d="M260 175 Q282 162 295 148" stroke="#7BA68A" stroke-width="1.2" stroke-linecap="round"/>
-
-        <!-- Leaves left -->
         <ellipse cx="205" cy="115" rx="16" ry="9" fill="#4A7C59" transform="rotate(-30 205 115)"/>
         <ellipse cx="216" cy="150" rx="12" ry="7" fill="#7BA68A" transform="rotate(-45 216 150)"/>
-
-        <!-- Leaves right -->
         <ellipse cx="315" cy="103" rx="16" ry="9" fill="#4A7C59" transform="rotate(20 315 103)"/>
         <ellipse cx="298" cy="144" rx="12" ry="7" fill="#7BA68A" transform="rotate(35 298 144)"/>
-
-        <!-- Top flower/bloom -->
         <circle cx="260" cy="78" r="10" fill="#C8873A" opacity="0.9"/>
         <circle cx="260" cy="78" r="5" fill="#F5F0E8"/>
-
-        <!-- Ground line -->
         <path d="M180 220 Q260 215 340 220" stroke="#DDD8CC" stroke-width="2" stroke-linecap="round"/>
-
-        <!-- Roots (subtle) -->
         <path d="M260 220 Q250 235 240 240" stroke="#DDD8CC" stroke-width="1.2" stroke-linecap="round"/>
         <path d="M260 220 Q270 232 282 238" stroke="#DDD8CC" stroke-width="1.2" stroke-linecap="round"/>
-
-        <!-- Stars/sparkles -->
         <g fill="#C8873A" opacity="0.6">
-          <circle cx="170" cy="100" r="2"/>
-          <circle cx="350" cy="75" r="2.5"/>
-          <circle cx="155" cy="170" r="1.5"/>
-          <circle cx="365" cy="160" r="1.5"/>
-          <circle cx="395" cy="100" r="1"/>
-          <circle cx="130" cy="140" r="1"/>
+          <circle cx="170" cy="100" r="2"/><circle cx="350" cy="75" r="2.5"/>
+          <circle cx="155" cy="170" r="1.5"/><circle cx="365" cy="160" r="1.5"/>
+          <circle cx="395" cy="100" r="1"/><circle cx="130" cy="140" r="1"/>
         </g>
-
-        <!-- Concentric arc around bloom (hope ring) -->
         <path d="M235 78 A25 25 0 0 1 285 78" stroke="#C8873A" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.4"/>
         <path d="M222 78 A38 38 0 0 1 298 78" stroke="#C8873A" stroke-width="0.8" stroke-linecap="round" fill="none" opacity="0.25"/>
-
-        <!-- Side decorative elements -->
-        <!-- Left circle cluster -->
         <circle cx="130" cy="100" r="22" stroke="#DDD8CC" stroke-width="1" fill="none"/>
         <circle cx="130" cy="100" r="14" stroke="#DDD8CC" stroke-width="0.8" fill="rgba(74,124,89,0.04)"/>
         <text x="130" y="104" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#4A7C59" font-weight="500">Free</text>
-
-        <!-- Right circle cluster -->
         <circle cx="390" cy="100" r="22" stroke="#DDD8CC" stroke-width="1" fill="none"/>
         <circle cx="390" cy="100" r="14" stroke="#DDD8CC" stroke-width="0.8" fill="rgba(200,135,58,0.04)"/>
         <text x="390" y="97" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#C8873A" font-weight="500">2 min</text>
@@ -809,9 +1006,10 @@
       </svg>
     </div>
 
-    <div class="hero-eyebrow"><span></span> Clinical Self-Assessment <span></span></div>
-    <h1 class="hero-title">Are you struggling with <em>substance use?</em></h1>
-    <p class="hero-desc">A free, confidential screening based on the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition — reviewed by licensed clinicians.</p>
+    <div class="hero-eyebrow"><span></span> DSM-5 Clinical Assessment <span></span></div>
+    <h1 class="hero-title">Are you struggling with <em>substance use or dependence?</em></h1>
+    <p class="hero-desc">A free, confidential screening based on the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition. 11 questions. About 2 minutes.</p>
+
     <div class="hero-meta">
       <div class="meta-item">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3.5L10 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
@@ -822,21 +1020,174 @@
         11 Questions
       </div>
       <div class="meta-item">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L10 6h4.5l-3.6 2.6 1.4 4.4L8 10.5l-4.3 2.5 1.4-4.4L1.5 6H6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         Clinically Reviewed
+      </div>
+      <div class="meta-item">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Free &amp; Confidential
       </div>
     </div>
   </div>
 
-  <!-- Substance Picker -->
+  <!-- ── SUBSTANCE PICKER ── -->
   <div class="substance-section">
     <p class="section-label">Choose a substance to evaluate</p>
-    <div class="substance-grid" id="substance-grid">
-
-      <!-- Substances injected via JS -->
-
-    </div>
+    <div class="substance-grid" id="substance-grid"></div>
   </div>
+
+  <!-- ── BELOW-FOLD CONTENT ── -->
+  <div class="landing-content">
+
+    <hr class="section-divider">
+
+    <!-- What is the DSM-5 -->
+    <div class="info-section">
+      <h2>What is the DSM-5?</h2>
+      <p>The <strong>DSM-5</strong> (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the authoritative guide published by the American Psychiatric Association for diagnosing mental disorders. First released in 2013, it was updated as the <strong>DSM-5-TR</strong> in 2022.</p>
+      <p>For substance-related conditions, the DSM-5 replaced the older distinction between "substance abuse" and "substance dependence" with a single diagnosis: <strong>Substance Use Disorder</strong>. Severity is measured on a continuum, making it more clinically useful than earlier editions.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- The 11 Criteria -->
+    <div class="criteria-section">
+      <h2>The 11 DSM-5 criteria</h2>
+      <p class="criteria-subtitle">Each question in this quiz maps to one of these diagnostic criteria.</p>
+
+      <div class="criteria-group">
+        <div class="criteria-group-label">Impaired Control</div>
+        <ul class="criteria-list">
+          <li><span class="criteria-num">1</span> Using in larger amounts or longer than intended</li>
+          <li><span class="criteria-num">2</span> Wanting to cut down but being unable to</li>
+          <li><span class="criteria-num">3</span> Excessive time spent obtaining, using, or recovering</li>
+          <li><span class="criteria-num">4</span> Cravings or strong urges to use</li>
+        </ul>
+      </div>
+
+      <div class="criteria-group">
+        <div class="criteria-group-label">Social Impairment</div>
+        <ul class="criteria-list">
+          <li><span class="criteria-num">5</span> Failure to fulfill obligations at work, school, or home</li>
+          <li><span class="criteria-num">6</span> Continued use despite relationship problems</li>
+          <li><span class="criteria-num">7</span> Giving up or reducing important activities</li>
+        </ul>
+      </div>
+
+      <div class="criteria-group">
+        <div class="criteria-group-label">Risky Use</div>
+        <ul class="criteria-list">
+          <li><span class="criteria-num">8</span> Recurrent use in physically hazardous situations</li>
+          <li><span class="criteria-num">9</span> Continued use despite physical or psychological harm</li>
+        </ul>
+      </div>
+
+      <div class="criteria-group">
+        <div class="criteria-group-label">Pharmacological Indicators</div>
+        <ul class="criteria-list">
+          <li><span class="criteria-num">10</span> Tolerance: needing more for the same effect</li>
+          <li><span class="criteria-num">11</span> Withdrawal symptoms when stopping or reducing use</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Severity Scale -->
+    <div class="severity-section">
+      <h2>DSM-5 severity scale</h2>
+      <div class="sev-track-wrap">
+        <div class="sev-gradient-bar"></div>
+        <div class="sev-scale-labels">
+          <div class="sev-scale-item">
+            <div class="sev-range">0 to 1</div>
+            <div class="sev-label">No disorder</div>
+          </div>
+          <div class="sev-scale-item">
+            <div class="sev-range">2 to 3</div>
+            <div class="sev-label">Mild</div>
+          </div>
+          <div class="sev-scale-item">
+            <div class="sev-range">4 to 5</div>
+            <div class="sev-label">Moderate</div>
+          </div>
+          <div class="sev-scale-item">
+            <div class="sev-range">6 or more</div>
+            <div class="sev-label">Severe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What is the DSM-5?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">The DSM-5 (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the standard classification of mental disorders published by the American Psychiatric Association. It is used by clinicians, researchers, and insurance companies worldwide to diagnose and classify mental health conditions, including Substance Use Disorders.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What is a Substance Use Disorder according to the DSM-5?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">The DSM-5 defines Substance Use Disorder (SUD) as a cluster of cognitive, behavioral, and physiological symptoms indicating that an individual continues using a substance despite significant substance-related problems. The DSM-5 identifies 11 criteria grouped into four categories: impaired control, social impairment, risky use, and pharmacological indicators (tolerance and withdrawal).</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            How does the DSM-5 measure addiction severity?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">The DSM-5 uses a severity spectrum based on how many of the 11 criteria are met within a 12-month period. Meeting 2 to 3 criteria indicates a mild Substance Use Disorder, 4 to 5 criteria indicates moderate severity, and 6 or more criteria indicates a severe Substance Use Disorder.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Is this DSM-5 quiz a clinical diagnosis?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">No. This quiz is a self-screening tool adapted from DSM-5 diagnostic criteria for educational purposes. A formal Substance Use Disorder diagnosis can only be made by a licensed clinician through a comprehensive clinical evaluation. If you are concerned about your substance use, please consult a qualified healthcare professional.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What are the 11 DSM-5 criteria for Substance Use Disorder?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">The 11 DSM-5 criteria are: (1) using more than intended, (2) inability to cut down, (3) excessive time spent on substance-related activities, (4) cravings, (5) failure to fulfill major obligations, (6) continued use despite social problems, (7) giving up important activities, (8) use in physically hazardous situations, (9) continued use despite physical or psychological problems, (10) tolerance, and (11) withdrawal.</div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            How long does the DSM-5 assessment take?
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="faq-answer">This DSM-5-based assessment consists of 11 questions and typically takes 2 to 3 minutes to complete. Each question corresponds to one of the 11 diagnostic criteria defined in the DSM-5 for Substance Use Disorder.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /landing-content -->
+
+  <!-- ── FOOTER ── -->
+  <footer class="landing-footer">
+    <div class="footer-inner">
+      <p class="footer-warning">This DSM-5-based screening is for educational and self-reflection purposes only. It does not constitute a clinical diagnosis. A formal diagnosis can only be made by a licensed clinician. If you are concerned about substance use, contact SAMHSA's National Helpline at <a href="tel:18006624357">1-800-662-4357</a> (free, confidential, 24/7).</p>
+      <hr class="footer-divider">
+      <p class="footer-citation">American Psychiatric Association. (2013). <em>Diagnostic and Statistical Manual of Mental Disorders</em> (5th ed.). Arlington, VA: American Psychiatric Publishing. <a href="https://psychiatry.org/dsm" target="_blank">psychiatry.org/dsm</a></p>
+      <p class="footer-citation" style="margin-top:6px;">American Psychiatric Association. (2022). <em>Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)</em>. Washington, DC: American Psychiatric Association Publishing.</p>
+    </div>
+  </footer>
 
 </div><!-- /screen-landing -->
 
@@ -1218,6 +1569,17 @@ function showResults() {
   setTimeout(() => {
     fill.style.width = `${result.severityPct}%`;
   }, 300);
+}
+
+// ── FAQ ───────────────────────────────────────────────────────────────────────
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  // Toggle clicked
+  if (!isOpen) item.classList.add('open');
 }
 
 // ── START ─────────────────────────────────────────────────────────────────────
