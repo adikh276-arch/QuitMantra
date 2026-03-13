@@ -909,23 +909,46 @@ nav {
   .substance-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
 </style>
+<script src="i18n/loader.js"></script>
 </head>
 <body>
 
 <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
 <nav>
-  <div class="nav-wordmark">Quit<span>Mantra</span></div>
+  <div class="nav-wordmark"><span data-i18n="nav.brand">QuitMantra</span></div>
 
   <!-- shown during quiz/results -->
   <div class="nav-crumb" id="nav-crumb">
-    <a onclick="goHome()">Home</a>
+    <a onclick="goHome()" data-i18n="nav.home">Home</a>
     <span class="crumb-sep">›</span>
-    <a onclick="goHome()">Quiz</a>
+    <a onclick="goHome()" data-i18n="nav.quiz">Quiz</a>
     <span class="crumb-sep">›</span>
     <span id="crumb-substance">—</span>
   </div>
 
-  <div class="nav-pill">DSM-5 Assessment</div>
+  <div class="nav-pill" data-i18n="nav.assessment">DSM-5 Assessment</div>
+
+  <select id="lang-select" onchange="i18n.setLanguage(this.value)" style="margin-left: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); font-size: 12px; cursor: pointer;">
+    <option value="en">English</option>
+    <option value="es">Español</option>
+    <option value="fr">Français</option>
+    <option value="pt">Português</option>
+    <option value="de">Deutsch</option>
+    <option value="ar">العربية</option>
+    <option value="hi">हिन्दी</option>
+    <option value="bn">বাংলা</option>
+    <option value="zh">中文</option>
+    <option value="ja">日本語</option>
+    <option value="id">Bahasa Indonesia</option>
+    <option value="tr">Türkçe</option>
+    <option value="vi">Tiếng Việt</option>
+    <option value="ko">한국어</option>
+    <option value="ru">Русский</option>
+    <option value="it">Italiano</option>
+    <option value="pl">Polski</option>
+    <option value="th">ไทย</option>
+    <option value="tl">Tagalog</option>
+  </select>
 </nav>
 
 <!-- ══════════════════════════════ LANDING ══════════════════════════════ -->
@@ -933,34 +956,34 @@ nav {
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-badge">
+    <div class="hero-badge" data-i18n="hero.badge">
       <span class="hero-badge-dot"></span>
       DSM-5 Clinical Self-Assessment
     </div>
 
-    <h1 class="hero-title">Are you struggling with<br><em>substance use or dependence?</em></h1>
-    <p class="hero-sub">A free, confidential screening based on the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition. 11 questions. About 2 minutes.</p>
+    <h1 class="hero-title" data-i18n="hero.title">Are you struggling with<br><em>substance use or dependence?</em></h1>
+    <p class="hero-sub" data-i18n="hero.sub">A free, confidential screening based on the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition. 11 questions. About 2 minutes.</p>
 
     <div class="hero-chips">
       <div class="hero-chip">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v3L8.5 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        About 2 minutes
+        <span data-i18n="hero.chip.time">About 2 minutes</span>
       </div>
       <div class="hero-chip">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M4 6h6M4 9h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        11 Questions
+        <span data-i18n="hero.chip.questions">11 Questions</span>
       </div>
       <div class="hero-chip">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 11.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        Clinically Reviewed
+        <span data-i18n="hero.chip.clinically">Clinically Reviewed</span>
       </div>
       <div class="hero-chip">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Free &amp; Confidential
+        <span data-i18n="hero.chip.free">Free &amp; Confidential</span>
       </div>
       <div class="hero-chip">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2L9 5.5H12.5L9.8 7.6 10.9 11 7 8.8 3.1 11 4.2 7.6 1.5 5.5H5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-        DSM-5-TR Updated 2022
+        <span data-i18n="hero.chip.updated">DSM-5-TR Updated 2022</span>
       </div>
     </div>
 
@@ -968,8 +991,8 @@ nav {
 
   <!-- Substance Picker -->
   <div class="picker-wrap">
-    <div class="picker-label">Choose a substance</div>
-    <p class="picker-sublabel">Select what you want to evaluate.</p>
+    <div class="picker-label" data-i18n="picker.title">Choose a substance</div>
+    <p class="picker-sublabel" data-i18n="picker.sub">Select what you want to evaluate.</p>
     <div class="substance-grid" id="substance-grid"></div>
   </div>
 
@@ -979,50 +1002,50 @@ nav {
 
       <!-- DSM-5 explainer -->
       <div class="land-section">
-        <h2 class="land-h2">What is the DSM-5?</h2>
-        <p class="land-p">The <strong>DSM-5</strong> (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the authoritative guide published by the American Psychiatric Association for diagnosing mental disorders. First released in 2013, it was updated as the <strong>DSM-5-TR</strong> in 2022.</p>
-        <p class="land-p">For substance-related conditions, the DSM-5 replaced the older distinction between "substance abuse" and "substance dependence" with a single diagnosis: <strong>Substance Use Disorder</strong>. Severity is measured on a continuum, making it more clinically useful than earlier editions.</p>
+        <h2 class="land-h2" data-i18n="info.dsm5.title">What is the DSM-5?</h2>
+        <p class="land-p" data-i18n="info.dsm5.p1">The <strong>DSM-5</strong> (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the authoritative guide published by the American Psychiatric Association for diagnosing mental disorders. First released in 2013, it was updated as the <strong>DSM-5-TR</strong> in 2022.</p>
+        <p class="land-p" data-i18n="info.dsm5.p2">For substance-related conditions, the DSM-5 replaced the older distinction between "substance abuse" and "substance dependence" with a single diagnosis: <strong>Substance Use Disorder</strong>. Severity is measured on a continuum, making it more clinically useful than earlier editions.</p>
       </div>
 
       <hr class="land-divider">
 
       <!-- 11 criteria -->
       <div class="land-section">
-        <h2 class="land-h2">The 11 DSM-5 criteria</h2>
-        <p class="land-p" style="margin-bottom:28px">Each question in this quiz maps to one of these diagnostic criteria.</p>
+        <h2 class="land-h2" data-i18n="info.criteria.title">The 11 DSM-5 criteria</h2>
+        <p class="land-p" style="margin-bottom:28px" data-i18n="info.criteria.sub">Each question in this quiz maps to one of these diagnostic criteria.</p>
 
         <div class="crit-group">
-          <div class="crit-group-tag">Impaired Control</div>
+          <div class="crit-group-tag" data-i18n="info.criteria.group1">Impaired Control</div>
           <ul class="crit-list">
-            <li><span class="crit-n">1</span> Using in larger amounts or longer than intended</li>
-            <li><span class="crit-n">2</span> Wanting to cut down but being unable to</li>
-            <li><span class="crit-n">3</span> Excessive time spent obtaining, using, or recovering</li>
-            <li><span class="crit-n">4</span> Cravings or strong urges to use</li>
+            <li><span class="crit-n">1</span> <span data-i18n="info.criteria.1">Using in larger amounts or longer than intended</span></li>
+            <li><span class="crit-n">2</span> <span data-i18n="info.criteria.2">Wanting to cut down but being unable to</span></li>
+            <li><span class="crit-n">3</span> <span data-i18n="info.criteria.3">Excessive time spent obtaining, using, or recovering</span></li>
+            <li><span class="crit-n">4</span> <span data-i18n="info.criteria.4">Cravings or strong urges to use</span></li>
           </ul>
         </div>
 
         <div class="crit-group">
-          <div class="crit-group-tag">Social Impairment</div>
+          <div class="crit-group-tag" data-i18n="info.criteria.group2">Social Impairment</div>
           <ul class="crit-list">
-            <li><span class="crit-n">5</span> Failure to fulfill obligations at work, school, or home</li>
-            <li><span class="crit-n">6</span> Continued use despite relationship problems</li>
-            <li><span class="crit-n">7</span> Giving up or reducing important activities</li>
+            <li><span class="crit-n">5</span> <span data-i18n="info.criteria.5">Failure to fulfill obligations at work, school, or home</span></li>
+            <li><span class="crit-n">6</span> <span data-i18n="info.criteria.6">Continued use despite relationship problems</span></li>
+            <li><span class="crit-n">7</span> <span data-i18n="info.criteria.7">Giving up or reducing important activities</span></li>
           </ul>
         </div>
 
         <div class="crit-group">
-          <div class="crit-group-tag">Risky Use</div>
+          <div class="crit-group-tag" data-i18n="info.criteria.group3">Risky Use</div>
           <ul class="crit-list">
-            <li><span class="crit-n">8</span> Recurrent use in physically hazardous situations</li>
-            <li><span class="crit-n">9</span> Continued use despite physical or psychological harm</li>
+            <li><span class="crit-n">8</span> <span data-i18n="info.criteria.8">Recurrent use in physically hazardous situations</span></li>
+            <li><span class="crit-n">9</span> <span data-i18n="info.criteria.9">Continued use despite physical or psychological harm</span></li>
           </ul>
         </div>
 
         <div class="crit-group">
-          <div class="crit-group-tag">Pharmacological Indicators</div>
+          <div class="crit-group-tag" data-i18n="info.criteria.group4">Pharmacological Indicators</div>
           <ul class="crit-list">
-            <li><span class="crit-n">10</span> Tolerance: needing more for the same effect</li>
-            <li><span class="crit-n">11</span> Withdrawal symptoms when stopping or reducing use</li>
+            <li><span class="crit-n">10</span> <span data-i18n="info.criteria.10">Tolerance: needing more for the same effect</span></li>
+            <li><span class="crit-n">11</span> <span data-i18n="info.criteria.11">Withdrawal symptoms when stopping or reducing use</span></li>
           </ul>
         </div>
       </div>
@@ -1031,13 +1054,13 @@ nav {
 
       <!-- Severity scale -->
       <div class="land-section">
-        <h2 class="land-h2">DSM-5 severity scale</h2>
+        <h2 class="land-h2" data-i18n="info.severity.title">DSM-5 severity scale</h2>
         <div class="sev-bar"></div>
         <div class="sev-ticks">
-          <div class="sev-tick"><div class="range">0 to 1</div><div class="name">No disorder</div></div>
-          <div class="sev-tick"><div class="range">2 to 3</div><div class="name">Mild</div></div>
-          <div class="sev-tick"><div class="range">4 to 5</div><div class="name">Moderate</div></div>
-          <div class="sev-tick"><div class="range">6 or more</div><div class="name">Severe</div></div>
+          <div class="sev-tick"><div class="range" data-i18n="info.severity.0_1">0 to 1</div><div class="name" data-i18n="info.severity.none">No disorder</div></div>
+          <div class="sev-tick"><div class="range" data-i18n="info.severity.2_3">2 to 3</div><div class="name" data-i18n="info.severity.mild">Mild</div></div>
+          <div class="sev-tick"><div class="range" data-i18n="info.severity.4_5">4 to 5</div><div class="name" data-i18n="info.severity.moderate">Moderate</div></div>
+          <div class="sev-tick"><div class="range" data-i18n="info.severity.6_plus">6 or more</div><div class="name" data-i18n="info.severity.severe">Severe</div></div>
         </div>
       </div>
 
@@ -1045,67 +1068,67 @@ nav {
 
       <!-- FAQ -->
       <div class="land-section">
-        <h2 class="land-h2">Frequently asked questions</h2>
+        <h2 class="land-h2" data-i18n="info.faq.title">Frequently asked questions</h2>
         <div class="faq-border">
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              What is the DSM-5?
+              <span data-i18n="info.faq.q1">What is the DSM-5?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">The DSM-5 (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the standard classification of mental disorders published by the American Psychiatric Association. It is used by clinicians, researchers, and insurance companies worldwide to diagnose and classify mental health conditions, including Substance Use Disorders.</div>
+            <div class="faq-body" data-i18n="info.faq.a1">The DSM-5 (Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition) is the standard classification of mental disorders published by the American Psychiatric Association. It is used by clinicians, researchers, and insurance companies worldwide to diagnose and classify mental health conditions, including Substance Use Disorders.</div>
           </div>
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              What is a Substance Use Disorder according to the DSM-5?
+              <span data-i18n="info.faq.q2">What is a Substance Use Disorder according to the DSM-5?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">The DSM-5 defines Substance Use Disorder (SUD) as a cluster of cognitive, behavioral, and physiological symptoms indicating that an individual continues using a substance despite significant substance-related problems. The DSM-5 identifies 11 criteria grouped into four categories: impaired control, social impairment, risky use, and pharmacological indicators (tolerance and withdrawal).</div>
+            <div class="faq-body" data-i18n="info.faq.a2">The DSM-5 defines Substance Use Disorder (SUD) as a cluster of cognitive, behavioral, and physiological symptoms indicating that an individual continues using a substance despite significant substance-related problems. The DSM-5 identifies 11 criteria grouped into four categories: impaired control, social impairment, risky use, and pharmacological indicators (tolerance and withdrawal).</div>
           </div>
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              How does the DSM-5 measure addiction severity?
+              <span data-i18n="info.faq.q3">How does the DSM-5 measure addiction severity?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">The DSM-5 uses a severity spectrum based on how many of the 11 criteria are met within a 12-month period. Meeting 2 to 3 criteria indicates a mild Substance Use Disorder, 4 to 5 criteria indicates moderate severity, and 6 or more criteria indicates a severe Substance Use Disorder.</div>
+            <div class="faq-body" data-i18n="info.faq.a3">The DSM-5 uses a severity spectrum based on how many of the 11 criteria are met within a 12-month period. Meeting 2 to 3 criteria indicates a mild Substance Use Disorder, 4 to 5 criteria indicates moderate severity, and 6 or more criteria indicates a severe Substance Use Disorder.</div>
           </div>
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              Is this DSM-5 quiz a clinical diagnosis?
+              <span data-i18n="info.faq.q4">Is this DSM-5 quiz a clinical diagnosis?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">No. This quiz is a self-screening tool adapted from DSM-5 diagnostic criteria for educational purposes. A formal Substance Use Disorder diagnosis can only be made by a licensed clinician through a comprehensive clinical evaluation. If you are concerned about your substance use, please consult a qualified healthcare professional.</div>
+            <div class="faq-body" data-i18n="info.faq.a4">No. This quiz is a self-screening tool adapted from DSM-5 diagnostic criteria for educational purposes. A formal Substance Use Disorder diagnosis can only be made by a licensed clinician through a comprehensive clinical evaluation. If you are concerned about your substance use, please consult a qualified healthcare professional.</div>
           </div>
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              What are the 11 DSM-5 criteria for Substance Use Disorder?
+              <span data-i18n="info.faq.q5">What are the 11 DSM-5 criteria for Substance Use Disorder?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">The 11 DSM-5 criteria are: (1) using more than intended, (2) inability to cut down, (3) excessive time spent on substance-related activities, (4) cravings, (5) failure to fulfill major obligations, (6) continued use despite social problems, (7) giving up important activities, (8) use in physically hazardous situations, (9) continued use despite physical or psychological problems, (10) tolerance, and (11) withdrawal.</div>
+            <div class="faq-body" data-i18n="info.faq.a5">The 11 DSM-5 criteria are: (1) using more than intended, (2) inability to cut down, (3) excessive time spent on substance-related activities, (4) cravings, (5) failure to fulfill major obligations, (6) continued use despite social problems, (7) giving up important activities, (8) use in physically hazardous situations, (9) continued use despite physical or psychological problems, (10) tolerance, and (11) withdrawal.</div>
           </div>
 
           <div class="faq-item">
             <button class="faq-btn" onclick="faqToggle(this)">
-              How long does the DSM-5 assessment take?
+              <span data-i18n="info.faq.q6">How long does the DSM-5 assessment take?</span>
               <div class="faq-icon">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </div>
             </button>
-            <div class="faq-body">This DSM-5-based assessment consists of 11 questions and typically takes 2 to 3 minutes to complete. Each question corresponds to one of the 11 diagnostic criteria defined in the DSM-5 for Substance Use Disorder.</div>
+            <div class="faq-body" data-i18n="info.faq.a6">This DSM-5-based assessment consists of 11 questions and typically takes 2 to 3 minutes to complete. Each question corresponds to one of the 11 diagnostic criteria defined in the DSM-5 for Substance Use Disorder.</div>
           </div>
 
         </div>
@@ -1117,10 +1140,10 @@ nav {
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <p class="footer-samhsa">This DSM-5-based screening is for educational and self-reflection purposes only. It does not constitute a clinical diagnosis. A formal diagnosis can only be made by a licensed clinician. If you are concerned about substance use, contact SAMHSA's National Helpline at <a href="tel:18006624357">1-800-662-4357</a> (free, confidential, 24/7).</p>
+      <p class="footer-samhsa" data-i18n="footer.disclaimer">This DSM-5-based screening is for educational and self-reflection purposes only. It does not constitute a clinical diagnosis. A formal diagnosis can only be made by a licensed clinician. If you are concerned about substance use, contact SAMHSA's National Helpline at <a href="tel:18006624357">1-800-662-4357</a> (free, confidential, 24/7).</p>
       <hr class="footer-sep">
-      <p class="footer-cite">American Psychiatric Association. (2013). <em>Diagnostic and Statistical Manual of Mental Disorders</em> (5th ed.). Arlington, VA: American Psychiatric Publishing. <a href="https://psychiatry.org/dsm" target="_blank">psychiatry.org/dsm</a></p>
-      <p class="footer-cite">American Psychiatric Association. (2022). <em>Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)</em>. Washington, DC: American Psychiatric Association Publishing.</p>
+      <p class="footer-cite" data-i18n="footer.cite1">American Psychiatric Association. (2013). <em>Diagnostic and Statistical Manual of Mental Disorders</em> (5th ed.). Arlington, VA: American Psychiatric Publishing. <a href="https://psychiatry.org/dsm" target="_blank">psychiatry.org/dsm</a></p>
+      <p class="footer-cite" data-i18n="footer.cite2">American Psychiatric Association. (2022). <em>Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR)</em>. Washington, DC: American Psychiatric Association Publishing.</p>
     </div>
   </footer>
 
@@ -1183,7 +1206,7 @@ nav {
         </svg>
         <div class="res-ring-label">
           <div class="res-score-num" id="res-num">0</div>
-          <div class="res-score-denom">of 11</div>
+          <div class="res-score-denom" data-i18n="results.of_11">of 11</div>
         </div>
       </div>
       <div class="res-level-info">
@@ -1194,10 +1217,10 @@ nav {
 
     <div class="res-sev-card">
       <div class="res-sev-labels">
-        <span class="res-sev-label" id="sev-l0">No disorder</span>
-        <span class="res-sev-label" id="sev-l1">Mild</span>
-        <span class="res-sev-label" id="sev-l2">Moderate</span>
-        <span class="res-sev-label" id="sev-l3">Severe</span>
+        <span class="res-sev-label" id="sev-l0" data-i18n="info.severity.none">No disorder</span>
+        <span class="res-sev-label" id="sev-l1" data-i18n="info.severity.mild">Mild</span>
+        <span class="res-sev-label" id="sev-l2" data-i18n="info.severity.moderate">Moderate</span>
+        <span class="res-sev-label" id="sev-l3" data-i18n="info.severity.severe">Severe</span>
       </div>
       <div class="res-sev-track">
         <div class="res-sev-fill" id="res-sev-fill"></div>
@@ -1209,15 +1232,15 @@ nav {
     <div class="res-actions">
       <button class="btn-cta" onclick="goHome()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M8 2l6 6-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Evaluate Another Substance
+        <span data-i18n="results.evaluate_another">Evaluate Another Substance</span>
       </button>
       <button class="btn-outline" onclick="retake()">
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5a5.5 5.5 0 105.5-5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 3.5v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Retake This Quiz
+        <span data-i18n="results.retake">Retake This Quiz</span>
       </button>
     </div>
 
-    <p class="res-disclaimer">This is a screening tool only and does not constitute a clinical diagnosis. For professional support contact SAMHSA at <strong>1-800-662-4357</strong>.</p>
+    <p class="res-disclaimer" data-i18n="results.disclaimer">This is a screening tool only and does not constitute a clinical diagnosis. For professional support contact SAMHSA at <strong>1-800-662-4357</strong>.</p>
 
   </div>
 </div>
@@ -1388,8 +1411,8 @@ function buildGrid() {
   document.getElementById('substance-grid').innerHTML = SUBSTANCES.map(s => `
     <div class="s-card" onclick="onSubstanceClick('${s.slug}')">
       <div class="s-icon ${s.bg}">${icon(s.icon, s.ic)}</div>
-      <div class="s-name">${s.name}</div>
-      <div class="s-desc">${s.desc}</div>
+      <div class="s-name" data-i18n="substance.${s.slug}.name">${i18n.t(`substance.${s.slug}.name`)}</div>
+      <div class="s-desc" data-i18n="substance.${s.slug}.desc">${i18n.t(`substance.${s.slug}.desc`)}</div>
     </div>
   `).join('');
 }
@@ -1408,8 +1431,8 @@ function startQuiz(s, updateUrl = true) {
   answers = new Array(11).fill(null);
   if (updateUrl) setHash({ substance: s.slug, view: 'quiz' });
 
-  document.getElementById('quiz-substance-label').textContent = s.name;
-  document.getElementById('crumb-substance').textContent = s.name;
+  document.getElementById('quiz-substance-label').textContent = i18n.t(`substance.${s.slug}.name`);
+  document.getElementById('crumb-substance').textContent = i18n.t(`substance.${s.slug}.name`);
   renderQ();
   showScreen('screen-quiz');
 }
@@ -1417,12 +1440,21 @@ function startQuiz(s, updateUrl = true) {
 function renderQ() {
   const q = QUESTIONS[qIdx];
   const total = QUESTIONS.length;
-  const name = current.name;
+  const sName = i18n.t(`substance.${current.slug}.name`);
 
-  document.getElementById('q-count').textContent = `${qIdx + 1} of ${total}`;
+  document.getElementById('q-count').textContent = i18n.t('quiz.step_of', { n: qIdx + 1, total });
   document.getElementById('q-bar').style.width = `${(qIdx / total) * 100}%`;
-  document.getElementById('q-eyebrow').textContent = q.group;
-  document.getElementById('q-text').innerHTML = q.text.replace(/\[S\]/g, `<span class="subhl">${name}</span>`);
+  document.getElementById('q-eyebrow').textContent = i18n.t(`info.criteria.group${Math.ceil((qIdx+1)/3)}`); // Approximate group mapping
+  
+  // Real mapping for groups based on index
+  let groupKey = 'info.criteria.group1';
+  if (qIdx >= 4 && qIdx <= 6) groupKey = 'info.criteria.group2';
+  if (qIdx >= 7 && qIdx <= 8) groupKey = 'info.criteria.group3';
+  if (qIdx >= 9) groupKey = 'info.criteria.group4';
+  document.getElementById('q-eyebrow').textContent = i18n.t(groupKey);
+
+  const qText = i18n.t(`question.${qIdx + 1}`);
+  document.getElementById('q-text').innerHTML = qText.replace(/\[S\]/g, `<span class="subhl">${sName}</span>`);
 
   // dot indicators
   document.getElementById('q-dots').innerHTML = QUESTIONS.map((_, i) => {
@@ -1432,21 +1464,20 @@ function renderQ() {
     return `<div class="${cls}"></div>`;
   }).join('');
 
-  document.getElementById('q-options').innerHTML = OPTIONS.map((o, i) => `
+  const optKeys = ['never', 'once_twice', 'sometimes', 'often', 'very_often'];
+  document.getElementById('q-options').innerHTML = optKeys.map((key, i) => `
     <button class="opt ${answers[qIdx] === i ? 'sel' : ''}" onclick="selectOpt(${i})">
       <div class="opt-radio"></div>
-      <span class="opt-text">${o.label}</span>
-      <span class="opt-badge">${o.sub}</span>
+      <span class="opt-text">${i18n.t('option.' + key)}</span>
+      <span class="opt-badge">${i18n.t('option.' + key + '_sub')}</span>
     </button>
   `).join('');
 
   const isLast = qIdx === total - 1;
-  const btn = document.getElementById('btn-next');
-  btn.innerHTML = isLast
-    ? `See Results <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    : `Continue <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  btn.classList.toggle('on', answers[qIdx] !== null);
-
+  const btnText = document.getElementById('btn-next-text');
+  btnText.textContent = isLast ? i18n.t('quiz.results_btn') : i18n.t('quiz.continue');
+  
+  document.getElementById('btn-next').classList.toggle('on', answers[qIdx] !== null);
   document.getElementById('btn-back').style.visibility = qIdx === 0 ? 'hidden' : 'visible';
 }
 
@@ -1480,16 +1511,22 @@ function retake() {
 
 function showResults() {
   const met = answers.reduce((n, a) => n + (a !== null && OPTIONS[a].score > 0 ? 1 : 0), 0);
+  
+  let resKey = 'none';
+  if (met >= 2 && met <= 3) resKey = 'mild';
+  else if (met >= 4 && met <= 5) resKey = 'moderate';
+  else if (met >= 6) resKey = 'severe';
+
   const r = RESULTS.find(x => met >= x.min && met <= x.max) || RESULTS[0];
 
   document.getElementById('res-tag').innerHTML = `
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.5 3h3L8 6l1 3-3-2-3 2 1-3-2.5-2h3z" fill="#2563EB"/></svg>
-    ${current.name} Assessment Complete`;
+    ${i18n.t('results.complete', { s: i18n.t(`substance.${current.slug}.name`) })}`;
 
   document.getElementById('res-num').textContent = met;
-  document.getElementById('res-level').textContent = r.level;
-  document.getElementById('res-sub').textContent = `${met} of 11 DSM-5 criteria met`;
-  document.getElementById('res-msg').textContent = r.msg;
+  document.getElementById('res-level').textContent = i18n.t(`result.${resKey}.level`);
+  document.getElementById('res-sub').textContent = i18n.t('results.criteria_met', { n: met });
+  document.getElementById('res-msg').textContent = i18n.t(`result.${resKey}.msg`);
 
   showScreen('screen-results');
   document.title = `Your ${current.name} Assessment Results — QuitMantra`;
@@ -1512,7 +1549,8 @@ function showResults() {
 
   // highlight active severity label
   ['sev-l0','sev-l1','sev-l2','sev-l3'].forEach((id, i) => {
-    document.getElementById(id).classList.toggle('active', i === RESULTS.indexOf(r));
+    const activeIdx = ['none', 'mild', 'moderate', 'severe'].indexOf(resKey);
+    document.getElementById(id).classList.toggle('active', i === activeIdx);
   });
 }
 
@@ -1528,6 +1566,15 @@ function faqToggle(btn) {
 // ── BROWSER BACK/FORWARD ──────────────────────────────────────────────────────
 
 window.addEventListener('hashchange', handleRoute);
+window.addEventListener('languageChanged', (e) => {
+    const langSelect = document.getElementById('lang-select');
+    if (langSelect) langSelect.value = e.detail.language;
+    buildGrid();
+    if (current) {
+        if (getHash().view === 'quiz') renderQ();
+        if (getHash().view === 'results') showResults();
+    }
+});
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
