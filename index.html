@@ -467,135 +467,60 @@ nav {
 .faq-item.open .faq-body { display: block; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   QUIZ SCREEN
+   QUIZ SCREEN — centered strip
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #screen-quiz {
   min-height: calc(100vh - 58px);
   display: none;
-  padding: 0;
+  background: var(--bg);
+  padding: 48px clamp(16px, 5vw, 24px) 80px;
 }
-#screen-quiz.active { display: flex; flex-direction: column; }
+#screen-quiz.active { display: block; }
 
-.quiz-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  flex: 1;
-  min-height: calc(100vh - 58px);
-}
-
-/* sidebar */
-.quiz-sidebar {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: sticky;
-  top: 58px;
-  height: calc(100vh - 58px);
-  overflow-y: auto;
+/* the single centered column */
+.quiz-strip {
+  max-width: 560px;
+  margin: 0 auto;
 }
 
-.sidebar-substance {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--ink-4);
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.sidebar-substance-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-.sidebar-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.15s;
-  font-size: 13px;
-  color: var(--ink-3);
-}
-
-.sidebar-step:hover { background: var(--surface-2); color: var(--ink-2); }
-.sidebar-step.current { background: var(--primary-xl); color: var(--primary); font-weight: 500; }
-.sidebar-step.answered { color: var(--ink-2); }
-
-.step-num {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border-2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
-  transition: all 0.2s;
-  color: var(--ink-4);
-}
-
-.sidebar-step.current .step-num {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: white;
-}
-
-.sidebar-step.answered .step-num {
-  background: #DCFCE7;
-  border-color: #86EFAC;
-  color: #16A34A;
-}
-
-.sidebar-step.answered .step-num::after {
-  content: '';
-  width: 8px; height: 5px;
-  border-left: 1.5px solid #16A34A;
-  border-bottom: 1.5px solid #16A34A;
-  transform: rotate(-45deg) translateY(-1px);
-  display: block;
-}
-.sidebar-step.answered .step-num { font-size: 0; }
-
-.step-label { font-size: 12px; line-height: 1.3; }
-
-/* quiz main */
-.quiz-main {
-  padding: 48px clamp(20px, 5vw, 64px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 700px;
-}
-
-.q-progress-row {
+/* substance + step tag row */
+.quiz-meta-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 }
 
-.q-progress-label { font-size: 13px; color: var(--ink-4); font-weight: 400; }
+.quiz-substance-tag {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
 
+.quiz-substance-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.quiz-step-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-4);
+}
+
+/* progress bar */
 .q-progress-track {
   height: 3px;
   background: var(--border);
   border-radius: 2px;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
   overflow: hidden;
 }
 
@@ -606,37 +531,54 @@ nav {
   transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
+/* step dots */
+.q-dots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.q-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border-2);
+  transition: background 0.2s;
+}
+.q-dot.done    { background: #86EFAC; }
+.q-dot.current { background: var(--primary); width: 18px; border-radius: 3px; }
+
 .q-eyebrow {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--primary);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .q-text {
   font-family: 'Instrument Serif', serif;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: clamp(22px, 4vw, 28px);
   font-weight: 400;
   line-height: 1.35;
   color: var(--ink);
-  margin-bottom: 36px;
+  margin-bottom: 32px;
   letter-spacing: -0.2px;
 }
 
 .q-text .subhl { color: var(--primary); font-style: italic; }
 
-.options { display: flex; flex-direction: column; gap: 9px; width: 100%; }
+.options { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 
 .opt {
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 15px 18px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   cursor: pointer;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   width: 100%;
@@ -647,7 +589,6 @@ nav {
 .opt:hover {
   border-color: var(--primary);
   background: var(--primary-xl);
-  box-shadow: 0 0 0 3px var(--primary-l);
 }
 
 .opt.sel {
@@ -657,9 +598,9 @@ nav {
 }
 
 .opt-radio {
-  width: 20px; height: 20px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  border: 2px solid var(--border-2);
+  border: 1.5px solid var(--border-2);
   flex-shrink: 0;
   transition: all 0.15s;
   display: flex; align-items: center; justify-content: center;
@@ -672,14 +613,15 @@ nav {
 
 .opt.sel .opt-radio::after {
   content: '';
-  width: 7px; height: 7px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: white;
   display: block;
 }
 
-.opt-text { font-size: 15px; color: var(--ink); flex: 1; }
+.opt-text { font-size: 14.5px; color: var(--ink); flex: 1; }
 .opt.sel .opt-text { color: var(--primary-d); font-weight: 500; }
+
 .opt-badge {
   font-size: 11px;
   font-weight: 500;
@@ -697,8 +639,8 @@ nav {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-top: 28px;
-  gap: 12px;
+  margin-top: 24px;
+  gap: 10px;
 }
 
 .btn-ghost {
@@ -707,7 +649,7 @@ nav {
   border-radius: var(--radius-sm);
   padding: 11px 20px;
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--ink-2);
   cursor: pointer;
@@ -720,7 +662,7 @@ nav {
   background: var(--primary);
   border: none;
   border-radius: var(--radius-sm);
-  padding: 13px 28px;
+  padding: 12px 28px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -728,7 +670,7 @@ nav {
   cursor: pointer;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
   display: flex; align-items: center; gap: 8px;
-  opacity: 0.35;
+  opacity: 0.3;
   pointer-events: none;
 }
 .btn-primary.on { opacity: 1; pointer-events: all; }
@@ -740,6 +682,7 @@ nav {
   margin-top: 20px;
   text-align: center;
   width: 100%;
+  line-height: 1.6;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1185,42 +1128,38 @@ nav {
 
 <!-- ══════════════════════════════ QUIZ ══════════════════════════════ -->
 <div id="screen-quiz" class="screen">
-  <div class="quiz-layout">
+  <div class="quiz-strip">
 
-    <!-- Sidebar -->
-    <aside class="quiz-sidebar">
-      <div class="sidebar-substance">
-        <span>Evaluating</span>
-        <span class="sidebar-substance-name" id="sidebar-name"></span>
+    <div class="quiz-meta-row">
+      <div class="quiz-substance-tag">
+        <div class="quiz-substance-dot"></div>
+        <span id="quiz-substance-label"></span>
       </div>
-      <div id="sidebar-steps"></div>
-    </aside>
-
-    <!-- Main -->
-    <div class="quiz-main">
-      <div class="q-progress-row">
-        <span class="q-progress-label" id="q-count"></span>
-      </div>
-      <div class="q-progress-track">
-        <div class="q-progress-fill" id="q-bar"></div>
-      </div>
-
-      <div class="q-eyebrow" id="q-eyebrow"></div>
-      <div class="q-text" id="q-text"></div>
-      <div class="options" id="q-options"></div>
-
-      <div class="q-nav">
-        <button class="btn-ghost" id="btn-back" onclick="goBack()">
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M9.5 11.5L5.5 7.5l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back
-        </button>
-        <button class="btn-primary" id="btn-next" onclick="nextQ()">
-          Continue
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-      <p class="q-hint">Answer based on your experience over the <strong>past 12 months.</strong> Responses are not stored.</p>
+      <span class="quiz-step-badge" id="q-count"></span>
     </div>
+
+    <div class="q-progress-track">
+      <div class="q-progress-fill" id="q-bar"></div>
+    </div>
+
+    <div class="q-dots" id="q-dots"></div>
+
+    <div class="q-eyebrow" id="q-eyebrow"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+
+    <div class="q-nav">
+      <button class="btn-ghost" id="btn-back" onclick="goBack()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M9.5 11.5L5.5 7.5l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn-primary" id="btn-next" onclick="nextQ()">
+        Continue
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <p class="q-hint">Answer based on your experience over the <strong>past 12 months.</strong> Responses are not stored.</p>
 
   </div>
 </div>
@@ -1373,25 +1312,35 @@ let current = null;  // substance object
 let qIdx = 0;
 let answers = new Array(11).fill(null);
 
-// ── URL PARAM ROUTING ─────────────────────────────────────────────────────────
+// ── HASH ROUTING ─────────────────────────────────────────────────────────────
 
-function getParam(key) {
-  return new URLSearchParams(window.location.search).get(key);
+function getHash() {
+  const raw = window.location.hash.replace('#', '');
+  const params = {};
+  raw.split('&').forEach(pair => {
+    const [k, v] = pair.split('=');
+    if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
+  });
+  return params;
 }
 
-function setParam(key, val) {
-  const u = new URL(window.location);
-  if (val === null) { u.searchParams.delete(key); }
-  else { u.searchParams.set(key, val); }
-  history.pushState({}, '', u);
+function setHash(obj) {
+  const str = Object.entries(obj)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+  window.location.hash = str;
+  updatePageMeta();
+}
+
+function clearHash() {
+  history.replaceState(null, '', window.location.pathname + window.location.search);
   updatePageMeta();
 }
 
 function updatePageMeta() {
-  const slug = getParam('substance');
-  const view = getParam('view');
+  const { substance: slug, view } = getHash();
   const s = SUBSTANCES.find(x => x.slug === slug);
-
   if (s && view === 'quiz') {
     document.title = `Am I Addicted to ${s.name}? DSM-5 Quiz — QuitMantra`;
   } else if (s) {
@@ -1402,21 +1351,16 @@ function updatePageMeta() {
 }
 
 function handleRoute() {
-  const slug = getParam('substance');
-  const view = getParam('view');
+  const { substance: slug, view } = getHash();
   const s = SUBSTANCES.find(x => x.slug === slug);
-
   if (s && view === 'quiz') {
     startQuiz(s, false);
   } else if (s && view === 'results') {
-    // Show landing if someone lands on results without taking quiz
     goHome(false);
   } else {
     showScreen('screen-landing');
   }
 }
-
-// ── SCREEN CONTROL ────────────────────────────────────────────────────────────
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1425,8 +1369,8 @@ function showScreen(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function goHome(pushState = true) {
-  if (pushState) setParam('substance', null);
+function goHome(updateUrl = true) {
+  if (updateUrl) clearHash();
   current = null; qIdx = 0; answers = new Array(11).fill(null);
   showScreen('screen-landing');
   updatePageMeta();
@@ -1446,52 +1390,22 @@ function buildGrid() {
 
 function onSubstanceClick(slug) {
   const s = SUBSTANCES.find(x => x.slug === slug);
-  setParam('substance', slug);
-  setParam('view', 'quiz');
+  setHash({ substance: slug, view: 'quiz' });
   startQuiz(s, false);
 }
 
 // ── QUIZ ──────────────────────────────────────────────────────────────────────
 
-function startQuiz(s, pushState = true) {
+function startQuiz(s, updateUrl = true) {
   current = s;
   qIdx = 0;
   answers = new Array(11).fill(null);
-  if (pushState) { setParam('substance', s.slug); setParam('view', 'quiz'); }
+  if (updateUrl) setHash({ substance: s.slug, view: 'quiz' });
 
-  document.getElementById('sidebar-name').textContent = s.name;
+  document.getElementById('quiz-substance-label').textContent = s.name;
   document.getElementById('crumb-substance').textContent = s.name;
-  buildSidebar();
   renderQ();
   showScreen('screen-quiz');
-}
-
-function buildSidebar() {
-  document.getElementById('sidebar-steps').innerHTML = QUESTIONS.map((q, i) => `
-    <div class="sidebar-step ${i === qIdx ? 'current' : ''}" id="step-${i}" onclick="jumpTo(${i})">
-      <div class="step-num">${i+1}</div>
-      <div class="step-label">${q.group}</div>
-    </div>
-  `).join('');
-}
-
-function updateSidebar() {
-  QUESTIONS.forEach((_, i) => {
-    const el = document.getElementById(`step-${i}`);
-    if (!el) return;
-    el.className = 'sidebar-step' +
-      (i === qIdx ? ' current' : '') +
-      (answers[i] !== null && i !== qIdx ? ' answered' : '');
-  });
-}
-
-function jumpTo(i) {
-  // only allow jumping to answered questions or current
-  if (answers[i] !== null || i <= qIdx) {
-    qIdx = i;
-    renderQ();
-    updateSidebar();
-  }
 }
 
 function renderQ() {
@@ -1499,10 +1413,18 @@ function renderQ() {
   const total = QUESTIONS.length;
   const name = current.name;
 
-  document.getElementById('q-count').textContent = `Question ${qIdx + 1} of ${total}`;
+  document.getElementById('q-count').textContent = `${qIdx + 1} of ${total}`;
   document.getElementById('q-bar').style.width = `${(qIdx / total) * 100}%`;
   document.getElementById('q-eyebrow').textContent = q.group;
   document.getElementById('q-text').innerHTML = q.text.replace(/\[S\]/g, `<span class="subhl">${name}</span>`);
+
+  // dot indicators
+  document.getElementById('q-dots').innerHTML = QUESTIONS.map((_, i) => {
+    let cls = 'q-dot';
+    if (i === qIdx) cls += ' current';
+    else if (answers[i] !== null) cls += ' done';
+    return `<div class="${cls}"></div>`;
+  }).join('');
 
   document.getElementById('q-options').innerHTML = OPTIONS.map((o, i) => `
     <button class="opt ${answers[qIdx] === i ? 'sel' : ''}" onclick="selectOpt(${i})">
@@ -1520,7 +1442,6 @@ function renderQ() {
   btn.classList.toggle('on', answers[qIdx] !== null);
 
   document.getElementById('btn-back').style.visibility = qIdx === 0 ? 'hidden' : 'visible';
-  updateSidebar();
 }
 
 function selectOpt(i) {
@@ -1552,7 +1473,7 @@ function retake() {
 // ── RESULTS ───────────────────────────────────────────────────────────────────
 
 function showResults() {
-  setParam('view', 'results');
+  setHash({ substance: current.slug, view: 'results' });
   const met = answers.reduce((n, a) => n + (a !== null && OPTIONS[a].score > 0 ? 1 : 0), 0);
   const r = RESULTS.find(x => met >= x.min && met <= x.max) || RESULTS[0];
 
@@ -1598,7 +1519,7 @@ function faqToggle(btn) {
 
 // ── BROWSER BACK/FORWARD ──────────────────────────────────────────────────────
 
-window.addEventListener('popstate', handleRoute);
+window.addEventListener('hashchange', handleRoute);
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
