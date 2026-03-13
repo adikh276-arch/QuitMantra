@@ -8,6 +8,11 @@ const i18n = {
         await this.loadTranslations(this.locale);
         this.translatePage();
         this.updateHtmlLang();
+        
+        // Sync dropdown value
+        const langSelect = document.getElementById('lang-select');
+        if (langSelect) langSelect.value = this.locale;
+        
         console.log(`i18n initialized: ${this.locale}`);
     },
 
@@ -34,6 +39,12 @@ const i18n = {
         if (!this.supportedLocales.includes(lang)) return;
         this.locale = lang;
         localStorage.setItem('language', lang);
+        
+        // Update URL parameter without full reload
+        const url = new URL(window.location);
+        url.searchParams.set('lang', lang);
+        window.history.pushState({}, '', url);
+
         await this.loadTranslations(lang);
         this.translatePage();
         this.updateHtmlLang();
@@ -44,9 +55,8 @@ const i18n = {
 
     async loadTranslations(lang) {
         try {
-            // Get the base path from the URL to handle subpaths correctly
-            const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-            const response = await fetch(`${path}i18n/locales/${lang}.json`);
+            // Use relative path to work in both local file and server environments
+            const response = await fetch(`i18n/locales/${lang}.json`);
             this.translations = await response.json();
         } catch (error) {
             console.error('Failed to load translations:', error);
