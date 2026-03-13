@@ -412,7 +412,7 @@ nav {
   gap: 4px;
 }
 
-.sev-tick {}
+
 .sev-tick .range { font-size: 14px; font-weight: 600; color: var(--ink); }
 .sev-tick .name  { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
 
@@ -744,7 +744,7 @@ nav {
 
 .res-score-denom { font-size: 12px; color: var(--ink-4); }
 
-.res-level-info {}
+
 
 .res-level {
   font-family: 'Instrument Serif', serif;
@@ -1178,7 +1178,7 @@ nav {
         Back
       </button>
       <button class="btn-primary" id="btn-next" onclick="nextQ()">
-        Continue
+        <span id="btn-next-text">Continue</span>
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M5.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -1436,6 +1436,7 @@ function buildGrid() {
 
 function onSubstanceClick(slug) {
   const s = SUBSTANCES.find(x => x.slug === slug);
+  if (!s) return;
   setHash({ substance: slug, view: 'quiz' });
   startQuiz(s, false);
 }
@@ -1443,59 +1444,89 @@ function onSubstanceClick(slug) {
 // ── QUIZ ──────────────────────────────────────────────────────────────────────
 
 function startQuiz(s, updateUrl = true) {
+  if (!s) return;
   current = s;
   qIdx = 0;
   answers = new Array(11).fill(null);
   if (updateUrl) setHash({ substance: s.slug, view: 'quiz' });
 
-  document.getElementById('quiz-substance-label').textContent = i18n.t(`substance.${s.slug}.name`);
-  document.getElementById('crumb-substance').textContent = i18n.t(`substance.${s.slug}.name`);
+  const sName = i18n.t ? i18n.t(`substance.${s.slug}.name`) : s.name;
+  const label = document.getElementById('quiz-substance-label');
+  if (label) label.textContent = sName;
+  
+  const crumb = document.getElementById('crumb-substance');
+  if (crumb) crumb.textContent = sName;
+  
   renderQ();
   showScreen('screen-quiz');
 }
 
 function renderQ() {
+  if (!current) return;
   const q = QUESTIONS[qIdx];
   const total = QUESTIONS.length;
-  const sName = i18n.t(`substance.${current.slug}.name`);
+  const t = i18n.t ? i18n.t.bind(i18n) : (k) => k; // Fallback translator
+  const sName = t(`substance.${current.slug}.name`);
 
-  document.getElementById('q-count').textContent = i18n.t('quiz.step_of', { n: qIdx + 1, total });
-  document.getElementById('q-bar').style.width = `${(qIdx / total) * 100}%`;
-  document.getElementById('q-eyebrow').textContent = i18n.t(`info.criteria.group${Math.ceil((qIdx+1)/3)}`); // Approximate group mapping
+  const elCount = document.getElementById('q-count');
+  if (elCount) elCount.textContent = t('quiz.step_of', { n: qIdx + 1, total });
+
+  const elBar = document.getElementById('q-bar');
+  if (elBar) elBar.style.width = `${(qIdx / total) * 100}%`;
   
   // Real mapping for groups based on index
   let groupKey = 'info.criteria.group1';
   if (qIdx >= 4 && qIdx <= 6) groupKey = 'info.criteria.group2';
   if (qIdx >= 7 && qIdx <= 8) groupKey = 'info.criteria.group3';
   if (qIdx >= 9) groupKey = 'info.criteria.group4';
-  document.getElementById('q-eyebrow').textContent = i18n.t(groupKey);
+  
+  const elEyebrow = document.getElementById('q-eyebrow');
+  if (elEyebrow) elEyebrow.textContent = t(groupKey);
 
-  const qText = i18n.t(`question.${qIdx + 1}`);
-  document.getElementById('q-text').innerHTML = qText.replace(/\[S\]/g, `<span class="subhl">${sName}</span>`);
+  const elText = document.getElementById('q-text');
+  if (elText) {
+    const qText = t(`question.${qIdx + 1}`);
+    elText.innerHTML = qText.replace(/\[S\]/g, `<span class="subhl">${sName}</span>`);
+  }
 
-  // dot indicators
-  document.getElementById('q-dots').innerHTML = QUESTIONS.map((_, i) => {
-    let cls = 'q-dot';
-    if (i === qIdx) cls += ' current';
-    else if (answers[i] !== null) cls += ' done';
-    return `<div class="${cls}"></div>`;
-  }).join('');
+  const elDots = document.getElementById('q-dots');
+  if (elDots) {
+    elDots.innerHTML = QUESTIONS.map((_, i) => {
+      let cls = 'q-dot';
+      if (i === qIdx) cls += ' current';
+      else if (answers[i] !== null) cls += ' done';
+      return `<div class="${cls}"></div>`;
+    }).join('');
+  }
 
-  const optKeys = ['never', 'once_twice', 'sometimes', 'often', 'very_often'];
-  document.getElementById('q-options').innerHTML = optKeys.map((key, i) => `
-    <button class="opt ${answers[qIdx] === i ? 'sel' : ''}" onclick="selectOpt(${i})">
-      <div class="opt-radio"></div>
-      <span class="opt-text">${i18n.t('option.' + key)}</span>
-      <span class="opt-badge">${i18n.t('option.' + key + '_sub')}</span>
-    </button>
-  `).join('');
+  const elOptions = document.getElementById('q-options');
+  if (elOptions) {
+    const optKeys = ['never', 'once_twice', 'sometimes', 'often', 'very_often'];
+    elOptions.innerHTML = optKeys.map((key, i) => `
+      <button class="opt ${answers[qIdx] === i ? 'sel' : ''}" onclick="selectOpt(${i})">
+        <div class="opt-radio"></div>
+        <span class="opt-text">${t('option.' + key)}</span>
+        <span class="opt-badge">${t('option.' + key + '_sub')}</span>
+      </button>
+    `).join('');
+  }
 
   const isLast = qIdx === total - 1;
-  const btnText = document.getElementById('btn-next-text');
-  btnText.textContent = isLast ? i18n.t('quiz.results_btn') : i18n.t('quiz.continue');
+  const btnNext = document.getElementById('btn-next');
+  const btnNextText = document.getElementById('btn-next-text');
   
-  document.getElementById('btn-next').classList.toggle('on', answers[qIdx] !== null);
-  document.getElementById('btn-back').style.visibility = qIdx === 0 ? 'hidden' : 'visible';
+  if (btnNextText) {
+    btnNextText.textContent = isLast ? t('quiz.results_btn') : t('quiz.continue');
+  }
+  
+  if (btnNext) {
+    btnNext.classList.toggle('on', answers[qIdx] !== null);
+  }
+
+  const btnBack = document.getElementById('btn-back');
+  if (btnBack) {
+    btnBack.style.visibility = qIdx === 0 ? 'hidden' : 'visible';
+  }
 }
 
 function selectOpt(i) {
@@ -1536,17 +1567,28 @@ function showResults() {
 
   const r = RESULTS.find(x => met >= x.min && met <= x.max) || RESULTS[0];
 
-  document.getElementById('res-tag').innerHTML = `
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.5 3h3L8 6l1 3-3-2-3 2 1-3-2.5-2h3z" fill="#2563EB"/></svg>
-    ${i18n.t('results.complete', { s: i18n.t(`substance.${current.slug}.name`) })}`;
+  const rt = document.getElementById('res-tag');
+  if (rt) {
+    rt.innerHTML = `
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.5 3h3L8 6l1 3-3-2-3 2 1-3-2.5-2h3z" fill="#2563EB"/></svg>
+      ${i18n.t('results.complete', { s: i18n.t(`substance.${current.slug}.name`) })}`;
+  }
 
-  document.getElementById('res-num').textContent = met;
-  document.getElementById('res-level').textContent = i18n.t(`result.${resKey}.level`);
-  document.getElementById('res-sub').textContent = i18n.t('results.criteria_met', { n: met });
-  document.getElementById('res-msg').textContent = i18n.t(`result.${resKey}.msg`);
+  const rn = document.getElementById('res-num');
+  if (rn) rn.textContent = met;
+
+  const rl = document.getElementById('res-level');
+  if (rl) rl.textContent = i18n.t(`result.${resKey}.level`);
+
+  const rs = document.getElementById('res-sub');
+  if (rs) rs.textContent = i18n.t('results.criteria_met', { n: met });
+
+  const rm = document.getElementById('res-msg');
+  if (rm) rm.textContent = i18n.t(`result.${resKey}.msg`);
 
   showScreen('screen-results');
-  document.title = `Your ${current.name} Assessment Results — QuitMantra`;
+  const sName = i18n.t(`substance.${current.slug}.name`);
+  document.title = `Your ${sName} Assessment Results — QuitMantra`;
 
   // Save to DB
   saveToDb(met, resKey);
@@ -1557,20 +1599,26 @@ function showResults() {
   // animate ring
   setTimeout(() => {
     const circ = document.getElementById('res-circle');
-    circ.style.stroke = r.color;
-    circ.style.strokeDashoffset = 276.5 - (met / 11) * 276.5;
+    if (circ) {
+      circ.style.stroke = r.color;
+      circ.style.strokeDashoffset = 276.5 - (met / 11) * 276.5;
+    }
   }, 150);
 
   // animate severity bar
   setTimeout(() => {
-    document.getElementById('res-sev-fill').style.width = r.pct + '%';
-    document.getElementById('res-sev-fill').style.background = r.color;
+    const fill = document.getElementById('res-sev-fill');
+    if (fill) {
+      fill.style.width = r.pct + '%';
+      fill.style.background = r.color;
+    }
   }, 350);
 
   // highlight active severity label
   ['sev-l0','sev-l1','sev-l2','sev-l3'].forEach((id, i) => {
     const activeIdx = ['none', 'mild', 'moderate', 'severe'].indexOf(resKey);
-    document.getElementById(id).classList.toggle('active', i === activeIdx);
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', i === activeIdx);
   });
 }
 
