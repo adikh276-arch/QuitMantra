@@ -1,5 +1,6 @@
 const Auth = {
     userId: null,
+    ready: false,
     
     async init() {
         this.showLoader();
@@ -39,7 +40,7 @@ const Auth = {
             // Phase 7 - Step 3: Remove token from URL
             const url = new URL(window.location);
             url.searchParams.delete('token');
-            window.history.replaceState({}, '', url.pathname + url.search);
+            window.history.replaceState({}, '', url.pathname + url.search + url.hash);
             
             this.hideLoader();
         } catch (err) {
@@ -71,7 +72,8 @@ const Auth = {
         const loader = document.getElementById('auth-loader');
         if (loader) loader.remove();
         document.body.style.overflow = '';
-        window.dispatchEvent(new CustomEvent('authReady'));
+        this.ready = true;
+        window.dispatchEvent(new CustomEvent('authReady', { detail: { userId: this.userId } }));
     }
 };
 

@@ -1,5 +1,6 @@
 const i18n = {
     locale: 'en',
+    ready: false,
     translations: {},
     supportedLocales: ['en', 'es', 'fr', 'pt', 'de', 'ar', 'hi', 'bn', 'zh', 'ja', 'id', 'tr', 'vi', 'ko', 'ru', 'it', 'pl', 'th', 'tl'],
 
@@ -8,6 +9,7 @@ const i18n = {
         await this.loadTranslations(this.locale);
         this.translatePage();
         this.updateHtmlLang();
+        this.ready = true;
         
         // Sync dropdown value
         const langSelect = document.getElementById('lang-select');
@@ -45,7 +47,7 @@ const i18n = {
         // Update URL parameter without full reload
         const url = new URL(window.location);
         url.searchParams.set('lang', lang);
-        window.history.pushState({}, '', url);
+        window.history.pushState({}, '', url.pathname + url.search + url.hash);
 
         await this.loadTranslations(lang);
         this.translatePage();
@@ -57,11 +59,11 @@ const i18n = {
 
     async loadTranslations(lang) {
         try {
-            // Use the directory of the current script to find locales
-            // This is more robust than simple relative paths
-            const scriptPath = document.querySelector('script[src*="i18n/loader.js"]').src;
-            const basePath = scriptPath.substring(0, scriptPath.lastIndexOf('/') + 1);
-            const response = await fetch(`${basePath}locales/${lang}.json`);
+            // Use relative path from the current page to the locales directory
+            // In Docker it's /quit_assessments/i18n/locales/
+            // Locally it's i18n/locales/
+            const basePath = 'i18n/locales/';
+            const response = await fetch(`${basePath}${lang}.json`);
             this.translations = await response.json();
         } catch (error) {
             console.error('Failed to load translations:', error);

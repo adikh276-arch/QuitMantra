@@ -1618,19 +1618,22 @@ window.addEventListener('languageChanged', (e) => {
 
 // ── BOOT ─────────────────────────────────────────────────────────────────────
 
-window.addEventListener('i18nReady', () => {
-    // Wait for BOTH i18n and Auth to be ready
-    if (window.Auth && window.Auth.userId) {
-        boot();
-    } else {
-        window.addEventListener('authReady', boot, { once: true });
+function tryBoot() {
+    console.log('Checking readiness - i18n:', window.i18n?.ready, 'Auth:', window.Auth?.ready);
+    if (window.i18n?.ready && window.Auth?.ready) {
+        if (window._booted) return;
+        window._booted = true;
+        console.log('Booting app...');
+        buildGrid();
+        handleRoute();
     }
-});
-
-function boot() {
-    buildGrid();
-    handleRoute();
 }
+
+window.addEventListener('i18nReady', tryBoot);
+window.addEventListener('authReady', tryBoot);
+
+// Also try boot immediately in case they are already ready (cached)
+tryBoot();
 </script>
 </body>
 </html>
