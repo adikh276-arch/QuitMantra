@@ -712,105 +712,191 @@ nav {
   margin-bottom: 24px;
 }
 
-.res-ring-row {
+#screen-results {
+  min-height: calc(100vh - 58px);
+  background: #FFFFFF;
+  padding: 0 0 80px;
+}
+
+.res-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 32px);
+}
+
+.res-back {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748B;
+  cursor: pointer;
+  padding: 20px 0 0;
+  border: none;
+  background: none;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.15s;
+}
+.res-back:hover { color: #0F172A; }
+
+.res-header {
+  padding: 24px 0 28px;
+  border-bottom: 1px solid #E2E8F0;
   margin-bottom: 36px;
-  flex-wrap: wrap;
+}
+
+.res-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #2563EB;
+  margin-bottom: 10px;
+}
+
+.res-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 400;
+  color: #0F172A;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.res-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #64748B;
+}
+
+.res-your-result-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #94A3B8;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.res-ring-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .res-ring {
-  width: 110px; height: 110px;
+  width: 140px;
+  height: 140px;
   position: relative;
-  flex-shrink: 0;
+  margin-bottom: 16px;
 }
 
 .res-ring svg { transform: rotate(-90deg); }
 
-.res-ring-label {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+.res-ring-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.res-score-num {
+.res-ring-bg {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+}
+
+.res-num {
   font-family: 'Instrument Serif', serif;
-  font-size: 32px;
+  font-size: 44px;
   font-weight: 400;
-  color: var(--ink);
   line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
-.res-score-denom { font-size: 12px; color: var(--ink-4); }
+.res-denom {
+  font-size: 12px;
+  color: #94A3B8;
+  position: relative;
+  z-index: 1;
+}
 
-
-
-.res-level {
+.res-level-name {
   font-family: 'Instrument Serif', serif;
-  font-size: clamp(24px, 4vw, 38px);
+  font-size: 28px;
   font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 6px;
-  letter-spacing: -0.3px;
+  margin-bottom: 4px;
 }
 
-.res-criteria-met {
+.res-criteria-label {
   font-size: 13px;
-  color: var(--ink-3);
+  color: #64748B;
 }
 
-/* result severity track */
-.res-sev-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
+.res-sev-wrap { margin: 28px 0 24px; }
+
+.res-sev-bar-outer {
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #22C55E 0%, #EAB308 33%, #F97316 66%, #EF4444 100%);
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
-.res-sev-labels {
+.res-sev-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+  transition: left 0.9s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.res-sev-dot-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.res-sev-ticks {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
 }
 
-.res-sev-label { font-size: 11.5px; font-weight: 500; color: var(--ink-4); }
-.res-sev-label.active { color: var(--primary); font-weight: 600; }
-
-.res-sev-track {
-  height: 8px;
-  background: var(--border);
-  border-radius: 4px;
-  overflow: hidden;
+.res-sev-tick {
+  font-size: 11.5px;
+  color: #94A3B8;
 }
 
-.res-sev-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
-  background: var(--primary);
-}
-
-/* result message */
-.res-msg-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-sm);
-  font-size: 15px;
+.res-msg {
+  background: #F7F9FF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  font-size: 14.5px;
   line-height: 1.8;
-  color: var(--ink-2);
+  color: #334155;
+  margin-bottom: 24px;
 }
 
 .res-actions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: 28px;
-  flex-wrap: wrap;
 }
 
 .btn-outline {
@@ -1190,58 +1276,68 @@ nav {
 
 <!-- ══════════════════════════════ RESULTS ══════════════════════════════ -->
 <div id="screen-results" class="screen">
-  <div class="results-wrap">
+  <div class="res-wrap">
 
-    <div class="res-substance-tag" id="res-tag"></div>
+    <button class="res-back" onclick="goHome()" data-i18n="results.back_all">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      All assessments
+    </button>
 
-    <div class="res-ring-row">
+    <div class="res-header">
+      <div class="res-eyebrow" data-i18n="nav.assessment">DSM-5 Assessment</div>
+      <h1 class="res-title" id="res-title" data-i18n="results.title">Am I Addicted?</h1>
+      <p class="res-desc" id="res-desc" data-i18n="results.description"></p>
+    </div>
+
+    <div class="res-your-result-label" data-i18n="results.your_result">Your Result</div>
+
+    <div class="res-ring-wrap">
       <div class="res-ring">
-        <svg width="110" height="110" viewBox="0 0 110 110">
-          <circle cx="55" cy="55" r="44" fill="none" stroke="#E2E8F0" stroke-width="8"/>
-          <circle cx="55" cy="55" r="44" fill="none" stroke="#2563EB" stroke-width="8"
-            stroke-linecap="round"
-            stroke-dasharray="276.5"
-            id="res-circle"
-            stroke-dashoffset="276.5"
-            style="transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1); transition-delay: 0.2s"/>
+        <div class="res-ring-bg" id="res-ring-bg"></div>
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="56" fill="none" stroke="#F1F5F9" stroke-width="10"/>
+          <circle cx="70" cy="70" r="56" fill="none" stroke="#EF4444" stroke-width="10"
+            stroke-linecap="round" stroke-dasharray="351.9"
+            id="res-circle" stroke-dashoffset="351.9"
+            style="transition: stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1); transition-delay: 0.15s"/>
         </svg>
-        <div class="res-ring-label">
-          <div class="res-score-num" id="res-num">0</div>
-          <div class="res-score-denom" data-i18n="results.of_11">of 11</div>
+        <div class="res-ring-inner">
+          <div class="res-num" id="res-num">0</div>
+          <div class="res-denom" data-i18n="results.of_11">of 11</div>
         </div>
       </div>
-      <div class="res-level-info">
-        <h2 class="res-level" id="res-level"></h2>
-        <p class="res-criteria-met" id="res-sub"></p>
+      <div class="res-level-name" id="res-level"></div>
+      <div class="res-criteria-label" id="res-sub"></div>
+    </div>
+
+    <div class="res-sev-wrap">
+      <div class="res-sev-bar-outer">
+        <div class="res-sev-dot" id="res-dot" style="left:5%">
+          <div class="res-sev-dot-inner" id="res-dot-inner"></div>
+        </div>
+      </div>
+      <div class="res-sev-ticks">
+        <span class="res-sev-tick" data-i18n="info.severity.none">No disorder</span>
+        <span class="res-sev-tick" data-i18n="info.severity.mild">Mild</span>
+        <span class="res-sev-tick" data-i18n="info.severity.moderate">Moderate</span>
+        <span class="res-sev-tick" data-i18n="info.severity.severe">Severe</span>
       </div>
     </div>
 
-    <div class="res-sev-card">
-      <div class="res-sev-labels">
-        <span class="res-sev-label" id="sev-l0" data-i18n="info.severity.none">No disorder</span>
-        <span class="res-sev-label" id="sev-l1" data-i18n="info.severity.mild">Mild</span>
-        <span class="res-sev-label" id="sev-l2" data-i18n="info.severity.moderate">Moderate</span>
-        <span class="res-sev-label" id="sev-l3" data-i18n="info.severity.severe">Severe</span>
-      </div>
-      <div class="res-sev-track">
-        <div class="res-sev-fill" id="res-sev-fill"></div>
-      </div>
-    </div>
-
-    <div class="res-msg-card" id="res-msg"></div>
+    <div class="res-msg" id="res-msg"></div>
 
     <div class="res-actions">
-      <button class="btn-cta" onclick="goHome()">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M8 2l6 6-6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span data-i18n="results.evaluate_another">Evaluate Another Substance</span>
+      <button class="btn-cta" onclick="goHome()" style="width:100%;justify-content:center" data-i18n="results.evaluate_another">
+        Evaluate Another Substance
       </button>
-      <button class="btn-outline" onclick="retake()">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5a5.5 5.5 0 105.5-5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 3.5v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span data-i18n="results.retake">Retake This Quiz</span>
+      <button class="btn-outline" onclick="retake()" style="width:100%;justify-content:center" data-i18n="results.retake">
+        Retake This Quiz
       </button>
     </div>
 
-    <p class="res-disclaimer" data-i18n="results.disclaimer">This is a screening tool only and does not constitute a clinical diagnosis. For professional support contact SAMHSA at <strong>1-800-662-4357</strong>.</p>
+    <p class="res-disclaimer" data-i18n="results.disclaimer" style="text-align:center;margin-top:32px;">This is a screening tool only and does not constitute a clinical diagnosis. For professional support contact SAMHSA at <strong>1-800-662-4357</strong>.</p>
 
   </div>
 </div>
@@ -1296,13 +1392,13 @@ const OPTIONS = [
 ];
 
 const RESULTS = [
-  { min:0,  max:1,  level:'No Indication of Disorder',   pct:5,  color:'#22C55E',
+  { min:0,  max:1,  level:'No Indication of Disorder',   pct:8,   color:'#22C55E',
     msg:'Your responses do not currently meet the DSM-5 threshold for a substance use disorder diagnosis. If you still have concerns about your use, speaking with a healthcare provider is always a worthwhile step.' },
-  { min:2,  max:3,  level:'Mild Substance Use Disorder',  pct:30, color:'#3B82F6',
+  { min:2,  max:3,  level:'Mild Substance Use Disorder',  pct:38,  color:'#EAB308',
     msg:'Your responses suggest a mild substance use disorder based on DSM-5 criteria. This early stage is often the best time to seek guidance. Consider speaking with a healthcare professional or counselor about your patterns of use.' },
-  { min:4,  max:5,  level:'Moderate Substance Use Disorder', pct:60, color:'#F59E0B',
+  { min:4,  max:5,  level:'Moderate Substance Use Disorder', pct:68, color:'#F97316',
     msg:'Your responses indicate a moderate substance use disorder. This level of severity often benefits significantly from structured support. We encourage you to reach out to a licensed therapist, counselor, or addiction specialist.' },
-  { min:6,  max:11, level:'Severe Substance Use Disorder',   pct:90, color:'#EF4444',
+  { min:6,  max:11, level:'Severe Substance Use Disorder',   pct:95,  color:'#EF4444',
     msg:'Your responses reflect a severe substance use disorder based on DSM-5 criteria. Please consider reaching out to a healthcare provider, addiction treatment center, or crisis line as soon as possible. You do not have to navigate this alone.' },
 ];
 
@@ -1566,28 +1662,31 @@ function showResults() {
   else if (met >= 6) resKey = 'severe';
 
   const r = RESULTS.find(x => met >= x.min && met <= x.max) || RESULTS[0];
+  const t = i18n.t ? i18n.t.bind(i18n) : (k) => k;
+  const sName = t(`substance.${current.slug}.name`);
 
-  const rt = document.getElementById('res-tag');
-  if (rt) {
-    rt.innerHTML = `
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.5 3h3L8 6l1 3-3-2-3 2 1-3-2.5-2h3z" fill="#2563EB"/></svg>
-      ${i18n.t('results.complete', { s: i18n.t(`substance.${current.slug}.name`) })}`;
+  const elTitle = document.getElementById('res-title');
+  if (elTitle) elTitle.textContent = t('results.title', { s: sName });
+
+  const elDesc = document.getElementById('res-desc');
+  if (elDesc) elDesc.textContent = t('results.description', { s: sName });
+
+  const elNum = document.getElementById('res-num');
+  if (elNum) elNum.textContent = met;
+
+  const elLevel = document.getElementById('res-level');
+  if (elLevel) {
+    elLevel.textContent = t(`result.${resKey}.level`);
+    elLevel.style.color = r.color;
   }
 
-  const rn = document.getElementById('res-num');
-  if (rn) rn.textContent = met;
+  const elSub = document.getElementById('res-sub');
+  if (elSub) elSub.textContent = t('results.criteria_met', { n: met });
 
-  const rl = document.getElementById('res-level');
-  if (rl) rl.textContent = i18n.t(`result.${resKey}.level`);
-
-  const rs = document.getElementById('res-sub');
-  if (rs) rs.textContent = i18n.t('results.criteria_met', { n: met });
-
-  const rm = document.getElementById('res-msg');
-  if (rm) rm.textContent = i18n.t(`result.${resKey}.msg`);
+  const elMsg = document.getElementById('res-msg');
+  if (elMsg) elMsg.textContent = t(`result.${resKey}.msg`);
 
   showScreen('screen-results');
-  const sName = i18n.t(`substance.${current.slug}.name`);
   document.title = `Your ${sName} Assessment Results — QuitMantra`;
 
   // Save to DB
@@ -1601,25 +1700,23 @@ function showResults() {
     const circ = document.getElementById('res-circle');
     if (circ) {
       circ.style.stroke = r.color;
-      circ.style.strokeDashoffset = 276.5 - (met / 11) * 276.5;
+      circ.style.strokeDashoffset = 351.9 - (met / 11) * 351.9;
     }
+    const ringBg = document.getElementById('res-ring-bg');
+    if (ringBg) ringBg.style.background = r.color + '15'; // ~8% opacity
   }, 150);
 
-  // animate severity bar
+  // animate severity dot
   setTimeout(() => {
-    const fill = document.getElementById('res-sev-fill');
-    if (fill) {
-      fill.style.width = r.pct + '%';
-      fill.style.background = r.color;
+    const dot = document.getElementById('res-dot');
+    const dotInner = document.getElementById('res-dot-inner');
+    if (dot) {
+      dot.style.left = r.pct + '%';
+    }
+    if (dotInner) {
+      dotInner.style.background = r.color;
     }
   }, 350);
-
-  // highlight active severity label
-  ['sev-l0','sev-l1','sev-l2','sev-l3'].forEach((id, i) => {
-    const activeIdx = ['none', 'mild', 'moderate', 'severe'].indexOf(resKey);
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('active', i === activeIdx);
-  });
 }
 
 async function saveToDb(score, resultKey) {
