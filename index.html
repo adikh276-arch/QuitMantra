@@ -1436,29 +1436,61 @@ let answers = new Array(11).fill(null);
 
 function getParams() {
   const params = {};
+  const segments = window.location.pathname.split('/').filter(Boolean);
+  const baseIdx = segments.indexOf('quit_assessments');
+
+  if (baseIdx !== -1 && segments.length > baseIdx + 1) {
+    params.substance = segments[baseIdx + 1];
+    if (segments.length > baseIdx + 2) {
+      params.view = segments[baseIdx + 2];
+    } else {
+      params.view = 'quiz';
+    }
+  }
+
   const searchParams = new URL(window.location).searchParams;
   for (const [k, v] of searchParams.entries()) {
-    if (v) params[k] = v;
+    if (v && !params[k]) params[k] = v;
   }
   return params;
 }
 
 function setParams(obj) {
   const url = new URL(window.location);
-  // Remove existing routing params
+  const segments = url.pathname.split('/').filter(Boolean);
+  const baseIdx = segments.indexOf('quit_assessments');
+
+  if (baseIdx !== -1) {
+    const newSegments = segments.slice(0, baseIdx + 1);
+    if (obj.substance) {
+      newSegments.push(obj.substance);
+      if (obj.view && obj.view !== 'quiz') {
+        newSegments.push(obj.view);
+      }
+    }
+    url.pathname = '/' + newSegments.join('/') + (newSegments.length === baseIdx + 1 ? '/' : '');
+  }
+
   ['substance', 'view', 'token'].forEach(p => url.searchParams.delete(p));
   
-  // Set new params
+  // Set any extra non-routing params
   for (const [k, v] of Object.entries(obj)) {
-    if (v) url.searchParams.set(k, v);
+    if (v && k !== 'substance' && k !== 'view') url.searchParams.set(k, v);
   }
-  
+
   window.history.pushState({}, '', url.pathname + url.search);
   updatePageMeta();
 }
 
 function clearParams() {
   const url = new URL(window.location);
+  const segments = url.pathname.split('/').filter(Boolean);
+  const baseIdx = segments.indexOf('quit_assessments');
+  
+  if (baseIdx !== -1) {
+    url.pathname = '/' + segments.slice(0, baseIdx + 1).join('/') + '/';
+  }
+  
   ['substance', 'view', 'token'].forEach(p => url.searchParams.delete(p));
   window.history.replaceState({}, '', url.pathname + url.search);
   updatePageMeta();

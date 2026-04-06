@@ -31,21 +31,22 @@ const Auth = {
             } else {
                 console.log('Auth: no token or session, redirecting');
                 // Phase 7 - Step 4: Failure Handling
-                let paramsToSave = window.location.search;
-                if (!paramsToSave && window.location.hash) {
-                    paramsToSave = '?' + window.location.hash.substring(1);
-                }
-                if (paramsToSave) {
-                    const tempParams = new URLSearchParams(paramsToSave);
-                    tempParams.delete('token');
-                    if (tempParams.toString()) {
-                        sessionStorage.setItem('saved_params', '?' + tempParams.toString());
-                    }
-                }
+                let pathToSave = window.location.pathname + window.location.search;
+                const tempParams = new URLSearchParams(window.location.search);
+                tempParams.delete('token');
+                
+                // Reconstruct to avoid saving the token
+                let cleanSearch = tempParams.toString() ? '?' + tempParams.toString() : '';
+                sessionStorage.setItem('saved_path', window.location.pathname + cleanSearch);
+                
+                const segments = window.location.pathname.split('/').filter(Boolean);
+                const baseIdx = segments.indexOf('quit_assessments');
                 
                 let targetUrl = 'https://web.mantracare.com/app/quit_assessments';
-                if (window.location.search) targetUrl += window.location.search;
-                else if (window.location.hash) targetUrl += '?' + window.location.hash.substring(1);
+                if (baseIdx !== -1 && segments.length > baseIdx + 1) {
+                    targetUrl += '/' + segments.slice(baseIdx + 1).join('/');
+                }
+                targetUrl += cleanSearch;
                 
                 window.location.href = targetUrl;
             }
@@ -81,11 +82,12 @@ const Auth = {
                 url.hash = '';
             }
             
-            const savedParams = sessionStorage.getItem('saved_params');
-            if (savedParams) {
-                const sp = new URLSearchParams(savedParams);
-                for (const [k, v] of sp) url.searchParams.set(k, v);
-                sessionStorage.removeItem('saved_params');
+            const savedPath = sessionStorage.getItem('saved_path');
+            if (savedPath) {
+                const tempUrl = new URL(savedPath, window.location.origin);
+                url.pathname = tempUrl.pathname;
+                for (const [k, v] of tempUrl.searchParams) url.searchParams.set(k, v);
+                sessionStorage.removeItem('saved_path');
             }
 
             // Reconstruct URL with search params
