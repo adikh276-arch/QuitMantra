@@ -995,8 +995,15 @@ nav {
   .substance-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
 </style>
-<script src="i18n/loader.js"></script>
-<script src="js/auth.js"></script>
+<script>
+  (function() {
+    var p = window.location.pathname;
+    var m = p.match(/^(\/.*quit_assessment[s]?)\//) || p.match(/^(\/.*quit_assessment[s]?)$/);
+    var base = m ? m[1] + '/' : '/quit_assessments/';
+    document.write('<script src="' + base + 'i18n/loader.js"><\/script>');
+    document.write('<script src="' + base + 'js/auth.js"><\/script>');
+  })();
+</script>
 </head>
 <body>
 
@@ -1437,7 +1444,7 @@ let answers = new Array(11).fill(null);
 function getParams() {
   const params = {};
   const segments = window.location.pathname.split('/').filter(Boolean);
-  const baseIdx = segments.indexOf('quit_assessments');
+  const baseIdx = segments.findIndex(s => s === 'quit_assessments' || s === 'quit_assessment');
 
   if (baseIdx !== -1 && segments.length > baseIdx + 1) {
     params.substance = segments[baseIdx + 1];
@@ -1458,7 +1465,7 @@ function getParams() {
 function setParams(obj) {
   const url = new URL(window.location);
   const segments = url.pathname.split('/').filter(Boolean);
-  const baseIdx = segments.indexOf('quit_assessments');
+  const baseIdx = segments.findIndex(s => s === 'quit_assessments' || s === 'quit_assessment');
 
   if (baseIdx !== -1) {
     const newSegments = segments.slice(0, baseIdx + 1);
@@ -1485,7 +1492,7 @@ function setParams(obj) {
 function clearParams() {
   const url = new URL(window.location);
   const segments = url.pathname.split('/').filter(Boolean);
-  const baseIdx = segments.indexOf('quit_assessments');
+  const baseIdx = segments.findIndex(s => s === 'quit_assessments' || s === 'quit_assessment');
   
   if (baseIdx !== -1) {
     url.pathname = '/' + segments.slice(0, baseIdx + 1).join('/') + '/';

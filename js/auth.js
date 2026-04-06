@@ -40,11 +40,16 @@ const Auth = {
                 sessionStorage.setItem('saved_path', window.location.pathname + cleanSearch);
                 
                 const segments = window.location.pathname.split('/').filter(Boolean);
-                const baseIdx = segments.indexOf('quit_assessments');
+                const baseIdx = segments.findIndex(s => s === 'quit_assessments' || s === 'quit_assessment');
                 
-                let targetUrl = 'https://web.mantracare.com/app/quit_assessments';
-                if (baseIdx !== -1 && segments.length > baseIdx + 1) {
-                    targetUrl += '/' + segments.slice(baseIdx + 1).join('/');
+                let targetUrl = 'https://web.mantracare.com';
+                if (baseIdx !== -1) {
+                    targetUrl += '/' + segments.slice(0, baseIdx + 1).join('/');
+                    if (segments.length > baseIdx + 1) {
+                        targetUrl += '/' + segments.slice(baseIdx + 1).join('/');
+                    }
+                } else {
+                    targetUrl += '/app/quit_assessments'; // fallback
                 }
                 targetUrl += cleanSearch;
                 
