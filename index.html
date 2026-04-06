@@ -1432,38 +1432,40 @@ let current = null;  // substance object
 let qIdx = 0;
 let answers = new Array(11).fill(null);
 
-// ── HASH ROUTING ─────────────────────────────────────────────────────────────
+// ── PARAM ROUTING ─────────────────────────────────────────────────────────────
 
-function getHash() {
-  const hash = window.location.hash || '';
-  const raw = hash.replace(/^#/, '');
+function getParams() {
   const params = {};
-  if (!raw) return params;
-  raw.split('&').forEach(pair => {
-    const [k, v] = pair.split('=');
-    if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
-  });
+  const searchParams = new URL(window.location).searchParams;
+  for (const [k, v] of searchParams.entries()) {
+    if (v) params[k] = v;
+  }
   return params;
 }
 
-function setHash(obj) {
-  const str = Object.entries(obj)
-    .filter(([, v]) => v)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join('&');
-  window.location.hash = str;
+function setParams(obj) {
+  const url = new URL(window.location);
+  // Remove existing routing params
+  ['substance', 'view', 'token'].forEach(p => url.searchParams.delete(p));
+  
+  // Set new params
+  for (const [k, v] of Object.entries(obj)) {
+    if (v) url.searchParams.set(k, v);
+  }
+  
+  window.history.pushState({}, '', url.pathname + url.search);
   updatePageMeta();
 }
 
-function clearHash() {
+function clearParams() {
   const url = new URL(window.location);
-  url.hash = '';
-  history.replaceState(null, '', url.pathname + url.search);
+  ['substance', 'view', 'token'].forEach(p => url.searchParams.delete(p));
+  window.history.replaceState({}, '', url.pathname + url.search);
   updatePageMeta();
 }
 
 function updatePageMeta() {
-  const { substance: slug, view } = getHash();
+  const { substance: slug, view } = getParams();
   const s = SUBSTANCES.find(x => x.slug === slug);
   if (s && view === 'quiz') {
     document.title = `Am I Addicted to ${s.name}? DSM-5 Quiz — QuitMantra`;
@@ -1475,7 +1477,7 @@ function updatePageMeta() {
 }
 
 function handleRoute() {
-  const { substance: slug, view } = getHash();
+  const { substance: slug, view } = getParams();
   console.log('Routing:', { slug, view });
   
   const s = SUBSTANCES.find(x => x.slug === slug);
@@ -1520,7 +1522,7 @@ function showScreen(id) {
 }
 
 function goHome(updateUrl = true) {
-  if (updateUrl) clearHash();
+  if (updateUrl) clearParams();
   current = null; qIdx = 0; answers = new Array(11).fill(null);
   showScreen('screen-landing');
   updatePageMeta();
@@ -1551,7 +1553,7 @@ function onSubstanceClick(slug) {
       const data = JSON.parse(saved);
       current = s;
       answers = data.answers;
-      setHash({ substance: slug, view: 'results' });
+      setParams({ substance: slug, view: 'results' });
       showResults();
     } catch (e) {
       console.error('Failed to restore assessment:', e);
@@ -1569,7 +1571,7 @@ function startQuiz(s, updateUrl = true) {
   current = s;
   qIdx = 0;
   answers = new Array(11).fill(null);
-  if (updateUrl) setHash({ substance: s.slug, view: 'quiz' });
+  if (updateUrl) setParams({ substance: s.slug, view: 'quiz' });
 
   const sName = i18n.t ? i18n.t(`substance.${s.slug}.name`) : s.name;
   const label = document.getElementById('quiz-substance-label');
@@ -1725,8 +1727,8 @@ function showResults() {
   // Save to DB
   saveToDb(met, resKey);
 
-  // set hash after screen is shown so hashchange doesn't interfere
-  setTimeout(() => setHash({ substance: current.slug, view: 'results' }), 0);
+  // set params after screen is shown
+  setTimeout(() => setParams({ substance: current.slug, view: 'results' }), 0);
 
   // animate ring
   setTimeout(() => {
@@ -1796,14 +1798,14 @@ function faqToggle(btn) {
 
 // ── BROWSER BACK/FORWARD ──────────────────────────────────────────────────────
 
-window.addEventListener('hashchange', handleRoute);
+window.addEventListener('popstate', handleRoute);
 window.addEventListener('languageChanged', (e) => {
     const langSelect = document.getElementById('lang-select');
     if (langSelect) langSelect.value = e.detail.language;
     buildGrid();
     if (current) {
-        if (getHash().view === 'quiz') renderQ();
-        if (getHash().view === 'results') {
+        if (getParams().view === 'quiz') renderQ();
+        if (getParams().view === 'results') {
             showResults();
             document.title = `Your ${i18n.t(`substance.${current.slug}.name`)} Assessment Results — QuitMantra`;
         }
@@ -1842,7 +1844,7 @@ window._bootInterval = setInterval(tryBoot, 300);
 
 window.addEventListener('i18nReady', () => tryBoot());
 window.addEventListener('authReady', () => tryBoot());
-window.addEventListener('hashchange', handleRoute);
+window.addEventListener('popstate', handleRoute);
 </script>
 </body>
 </html>

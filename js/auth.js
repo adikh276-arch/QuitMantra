@@ -18,37 +18,35 @@ const Auth = {
                 this.userId = storedId;
                 
                 const url = new URL(window.location);
-                let paramsMigrated = false;
-                const searchStr = url.searchParams.toString();
-                if (searchStr && !url.hash) {
-                    url.hash = '#' + searchStr;
-                    paramsMigrated = true;
+                if (url.hash) {
+                    // Migrate legacy hash links to search params
+                    const hashParams = new URLSearchParams(url.hash.substring(1));
+                    for (const [k, v] of hashParams) {
+                        url.searchParams.set(k, v);
+                    }
+                    url.hash = '';
+                    window.history.replaceState({}, '', url.pathname + url.search);
                 }
-                if (searchStr) {
-                    url.search = '';
-                    paramsMigrated = true;
-                }
-                if (paramsMigrated) {
-                    window.history.replaceState({}, '', url.pathname + url.hash);
-                }
-                
                 this.hideLoader();
             } else {
                 console.log('Auth: no token or session, redirecting');
                 // Phase 7 - Step 4: Failure Handling
-                let hashToSave = window.location.hash;
-                if (!hashToSave && window.location.search) {
-                    const tempParams = new URL(window.location).searchParams;
-                    tempParams.delete('token');
-                    if (tempParams.toString()) hashToSave = '#' + tempParams.toString();
+                let paramsToSave = window.location.search;
+                if (!paramsToSave && window.location.hash) {
+                    paramsToSave = '?' + window.location.hash.substring(1);
                 }
-                if (hashToSave) {
-                    sessionStorage.setItem('saved_hash', hashToSave);
+                if (paramsToSave) {
+                    const tempParams = new URLSearchParams(paramsToSave);
+                    tempParams.delete('token');
+                    if (tempParams.toString()) {
+                        sessionStorage.setItem('saved_params', '?' + tempParams.toString());
+                    }
                 }
                 
                 let targetUrl = 'https://web.mantracare.com/app/quit_assessments';
                 if (window.location.search) targetUrl += window.location.search;
-                if (window.location.hash) targetUrl += window.location.hash;
+                else if (window.location.hash) targetUrl += '?' + window.location.hash.substring(1);
+                
                 window.location.href = targetUrl;
             }
         }
@@ -76,21 +74,22 @@ const Auth = {
             const url = new URL(window.location);
             url.searchParams.delete('token');
             
-            // Migrate remaining search params to hash
-            const remainingSearch = url.searchParams.toString();
-            if (remainingSearch && !url.hash) {
-                url.hash = '#' + remainingSearch;
+            // Migrate any legacy hash to search params
+            if (url.hash) {
+                const legacyHash = new URLSearchParams(url.hash.substring(1));
+                for (const [k, v] of legacyHash) url.searchParams.set(k, v);
+                url.hash = '';
             }
-            url.search = '';
             
-            const savedHash = sessionStorage.getItem('saved_hash');
-            if (savedHash && !url.hash) {
-                url.hash = savedHash;
+            const savedParams = sessionStorage.getItem('saved_params');
+            if (savedParams) {
+                const sp = new URLSearchParams(savedParams);
+                for (const [k, v] of sp) url.searchParams.set(k, v);
+                sessionStorage.removeItem('saved_params');
             }
-            sessionStorage.removeItem('saved_hash');
 
-            // Reconstruct URL to prevent losing hash or getting double slashes
-            window.history.replaceState({}, '', url.pathname + url.hash);
+            // Reconstruct URL with search params
+            window.history.replaceState({}, '', url.pathname + url.search);
             
             this.hideLoader();
         } catch (err) {
