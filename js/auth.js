@@ -16,14 +16,40 @@ const Auth = {
             if (storedId) {
                 console.log('Auth: existing user session found', storedId);
                 this.userId = storedId;
+                
+                const url = new URL(window.location);
+                let paramsMigrated = false;
+                const searchStr = url.searchParams.toString();
+                if (searchStr && !url.hash) {
+                    url.hash = '#' + searchStr;
+                    paramsMigrated = true;
+                }
+                if (searchStr) {
+                    url.search = '';
+                    paramsMigrated = true;
+                }
+                if (paramsMigrated) {
+                    window.history.replaceState({}, '', url.pathname + url.hash);
+                }
+                
                 this.hideLoader();
             } else {
                 console.log('Auth: no token or session, redirecting');
                 // Phase 7 - Step 4: Failure Handling
-                if (window.location.hash) {
-                    sessionStorage.setItem('saved_hash', window.location.hash);
+                let hashToSave = window.location.hash;
+                if (!hashToSave && window.location.search) {
+                    const tempParams = new URL(window.location).searchParams;
+                    tempParams.delete('token');
+                    if (tempParams.toString()) hashToSave = '#' + tempParams.toString();
                 }
-                window.location.href = 'https://web.mantracare.com/app/quit_assessments'; // Redirect to get token via web auth flow
+                if (hashToSave) {
+                    sessionStorage.setItem('saved_hash', hashToSave);
+                }
+                
+                let targetUrl = 'https://web.mantracare.com/app/quit_assessments';
+                if (window.location.search) targetUrl += window.location.search;
+                if (window.location.hash) targetUrl += window.location.hash;
+                window.location.href = targetUrl;
             }
         }
     },
@@ -50,6 +76,13 @@ const Auth = {
             const url = new URL(window.location);
             url.searchParams.delete('token');
             
+            // Migrate remaining search params to hash
+            const remainingSearch = url.searchParams.toString();
+            if (remainingSearch && !url.hash) {
+                url.hash = '#' + remainingSearch;
+            }
+            url.search = '';
+            
             const savedHash = sessionStorage.getItem('saved_hash');
             if (savedHash && !url.hash) {
                 url.hash = savedHash;
@@ -57,7 +90,7 @@ const Auth = {
             sessionStorage.removeItem('saved_hash');
 
             // Reconstruct URL to prevent losing hash or getting double slashes
-            window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+            window.history.replaceState({}, '', url.pathname + url.hash);
             
             this.hideLoader();
         } catch (err) {
