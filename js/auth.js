@@ -19,8 +19,17 @@ const Auth = {
                 this.hideLoader();
             } else {
                 console.log('Auth: no token or session, redirecting');
-                // Phase 7 - Step 4: Failure Handling
-                window.location.href = 'https://api.mantracare.com/token'; // Redirect to get token
+
+                // Encode the current hash (e.g. #substance=alcohol&view=quiz) as a
+                // plain query param so it survives the full cross-domain redirect
+                // chain. Hashes are always stripped by browsers when crossing origins,
+                // and sessionStorage is origin-scoped, so this is the only reliable way.
+                const currentHash = window.location.hash;
+                let tokenUrl = 'https://api.mantracare.com/token';
+                if (currentHash && currentHash !== '#') {
+                    tokenUrl += '?redirect_hash=' + encodeURIComponent(currentHash);
+                }
+                window.location.href = tokenUrl;
             }
         }
     },
@@ -43,10 +52,31 @@ const Auth = {
             this.userId = data.user_id;
             sessionStorage.setItem('user_id', this.userId);
             
-            // Phase 7 - Step 3: Remove token from URL
+            // Remove token from URL, then restore any saved deep-link hash.
             const url = new URL(window.location);
             url.searchParams.delete('token');
-            // Reconstruct URL to prevent losing hash or getting double slashes
+
+            // Method 1: redirect_hash was threaded through the token API as a query param.
+            // The token API should echo it back in the redirect to platform (or it
+            // lands on platform's URL as-is if the API passes query params through).
+            const redirectHash = url.searchParams.get('redirect_hash');
+            if (redirectHash) {
+                url.hash = redirectHash; // e.g. #substance=alcohol&view=quiz
+                url.searchParams.delete('redirect_hash');
+            }
+
+            // Method 2 (fallback): in case the api.mantracare.com/token endpoint
+            // doesn't forward query params, we also check sessionStorage (works when
+            // the redirect stays on the same origin or the token API is on the same
+            // parent domain with shared storage).
+            if (!redirectHash) {
+                const savedHash = sessionStorage.getItem('post_auth_hash');
+                if (savedHash && savedHash !== '#') {
+                    url.hash = savedHash;
+                    sessionStorage.removeItem('post_auth_hash');
+                }
+            }
+
             window.history.replaceState({}, '', url.pathname + url.search + url.hash);
             
             this.hideLoader();
